@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Issue Split"
+  short_description: "Split requirements into GitLab work"
+  default_prompt: "Use $gj-issue-split to split this requirement into development, test, release, and doc Issues."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ MR Review"
+  short_description: "Review MRs for policy and risk"
+  default_prompt: "Use $gj-mr-review to review this merge request for workflow, risk, and tests."

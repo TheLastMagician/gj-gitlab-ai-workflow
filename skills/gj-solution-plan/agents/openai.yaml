@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Solution Plan"
+  short_description: "Draft solution plans and risks"
+  default_prompt: "Use $gj-solution-plan to draft a technical solution, risks, and review checklist."

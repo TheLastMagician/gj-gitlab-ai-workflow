@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Codebase Map"
+  short_description: "Map codebases into AI context docs"
+  default_prompt: "Use $gj-codebase-map to map this repository into AI-readable context docs."

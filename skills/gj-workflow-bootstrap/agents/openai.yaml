@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Workflow Bootstrap"
+  short_description: "Bootstrap GitLab AI workflow assets"
+  default_prompt: "Use $gj-workflow-bootstrap to install and verify the GitLab AI workflow assets."

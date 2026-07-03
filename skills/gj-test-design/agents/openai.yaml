@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Test Design"
+  short_description: "Design acceptance and regression tests"
+  default_prompt: "Use $gj-test-design to design test cases and regression scope for this workflow item."

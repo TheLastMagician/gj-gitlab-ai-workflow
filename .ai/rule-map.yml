@@ -1,0 +1,32 @@
+rules:
+  - id: database
+    paths:
+      - "db/migration/**"
+      - "**/migrations/**"
+    standards:
+      - "docs/standards/04-database-standard.md"
+      - "docs/standards/06-release-standard.md"
+    require_owner_ack:
+      - "dba"
+      - "tech-lead"
+
+  - id: security
+    paths:
+      - "src/**/auth/**"
+      - "src/**/permission/**"
+      - "orchestrator/**"
+    standards:
+      - "docs/standards/08-security-standard.md"
+    require_owner_ack:
+      - "security"
+
+  - id: workflow-policy
+    paths:
+      - ".gitlab-ci.yml"
+      - "scripts/policy_check.py"
+      - "templates/**"
+    standards:
+      - "docs/standards/05-review-standard.md"
+      - "docs/standards/09-ai-development-boundary.md"
+    require_owner_ack:
+      - "tech-lead"

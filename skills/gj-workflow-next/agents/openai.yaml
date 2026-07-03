@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Workflow Next"
+  short_description: "Decide the next workflow action"
+  default_prompt: "Use $gj-workflow-next to inspect current workflow state and choose the next action."

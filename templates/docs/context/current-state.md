@@ -1,0 +1,16 @@
+# Current State
+
+## 项目定位
+
+本项目使用 GitLab Issue、Merge Request、Pipeline 和仓库文档承载 AI 辅助交付流程。
+
+## 当前事实
+
+- GitLab 是需求、方案、任务、MR、测试、发布和复盘的事实源。
+- AI 输出必须写回 GitLab 评论或仓库文档。
+- 高风险变更需要人工 owner ack。
+
+## 待人工确认
+
+- 真实 GitLab 项目 ID、默认分支和 owner 列表。
+- 受保护分支、合并规则和 Pipeline 必须成功策略是否已开启。

@@ -1,0 +1,36 @@
+project:
+  name: gj-workflow-demo
+  default_branch: main
+  gitlab_url: https://gitlab.example.com
+
+owners:
+  product: ["@product-owner"]
+  tech_lead: ["@tech-lead"]
+  qa: ["@qa-owner"]
+  devops: ["@devops-owner"]
+  security: ["@security-owner"]
+
+ai_features:
+  requirement_analysis: true
+  solution_draft: true
+  task_split: true
+  code_review: true
+  test_case_generation: true
+  release_note: true
+  retrospective: true
+  context_extract: true
+
+context:
+  index: ".ai/context-index.yml"
+  current_state: "docs/context/current-state.md"
+  module_map: "docs/context/module-map.md"
+  glossary: "docs/context/glossary.md"
+  iterations_root: "docs/iterations"
+  modules_root: "docs/modules"
+  adr_root: "docs/architecture/adr"
+  load_full_history_by_default: false
+
+security:
+  redact_secrets: true
+  store_prompt: false
+  store_ai_response: true

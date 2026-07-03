@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Bug Fix"
+  short_description: "Analyze bugs and regression scope"
+  default_prompt: "Use $gj-bug-fix to analyze this bug and propose fix plus regression tests."

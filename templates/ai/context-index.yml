@@ -1,0 +1,28 @@
+version: 1
+
+global:
+  always_load:
+    - "docs/context/current-state.md"
+    - "docs/context/module-map.md"
+    - "docs/context/glossary.md"
+
+modules:
+  app:
+    name: 应用模块
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "docs/modules/**"
+    docs:
+      - "docs/modules/order.md"
+    active_decisions: []
+    recent_iteration_summaries:
+      - "docs/iterations/2026-07-v1.0-order-approval/ai-context-summary.md"
+    ai_focus:
+      - "申请人不得审批自己的订单"
+      - "审批状态转换必须可追溯"
+
+iteration_policy:
+  require_ai_context_summary: true
+  update_current_state_on_release: true
+  max_recent_summaries_per_module: 3
