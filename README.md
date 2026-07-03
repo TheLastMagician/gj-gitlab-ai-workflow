@@ -12,11 +12,13 @@ approval project before the stable actions were extracted into skills.
 
 - GitLab issue and merge request templates.
 - AI context templates under `templates/ai` and `templates/docs`.
+- Role-map and handoff standards for GitLab assignee/reviewer/@mention ownership.
 - A target-project CI/CD template: policy, workflow asset check, test, and
   release dry run.
 - An orchestrator skeleton for GitLab webhook command routing.
 - A small demo project plus a recorded end-to-end demo run.
 - A complete workflow skill set derived from the demo artifacts.
+- A GitLab API inbox skill that reads Todos, assignments, review requests, and mentions.
 - Human-authorized merge assistance that checks readiness before executing a merge.
 - Dev/test environment deployment policy with shared test locks and human confirmation.
 
@@ -64,6 +66,10 @@ It does not contain `skill_validate` or `package_open_source`. Skills are used b
 people through Codex to help with requirement refinement, review, QA, release
 prep, and retrospectives; they are not pipeline stages in every business
 project.
+
+Personal workflow inboxes are read from GitLab API state. Enterprise WeCom,
+email, or similar company channels can deliver GitLab notifications, but this
+project does not require a separate email inbox reader.
 
 Use a GitLab Runner with Docker executor and `python:3.12-slim` for the most
 repeatable result.

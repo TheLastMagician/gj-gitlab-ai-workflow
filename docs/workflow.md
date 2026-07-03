@@ -13,6 +13,7 @@
   -> AI 方案草案
   -> Tech Lead 评审
   -> AI 拆分开发 / 测试 / 发布任务
+  -> GitLab 指派 / @mention 交接
   -> 开发创建分支和 MR
   -> CI / policy_check / AI Review
   -> 开发环境验证（可自动）
@@ -35,6 +36,7 @@
 8. 迭代结束必须生成 `ai-context-summary.md`。
 9. MR 分支默认不自动覆盖共享测试环境。
 10. 共享测试环境必须有人确认、环境锁、版本记录和回滚目标。
+11. 需要人处理的节点必须有 GitLab assignee / reviewer / @mention 交接。
 
 ## 分流
 
@@ -53,6 +55,7 @@
   -> .ai/project.yml
   -> .ai/rule-map.yml
   -> .ai/context-index.yml
+  -> .ai/role-map.yml
   -> docs/context/current-state.md
   -> 命中模块的 docs/modules/*.md
   -> 有效 ADR
@@ -84,11 +87,30 @@ release/* / tag:
 
 如果只有一个测试环境，必须使用 GitLab `resource_group` 或等价环境锁，确保同一时间只有一个部署占用测试环境。每次部署要记录 branch、MR、commit SHA、pipeline、部署人、当前占用、回滚目标和 QA 窗口。
 
+## 角色分配与通知
+
+角色分配属于初始化能力，由 `gj-workflow-bootstrap` 安装并提示维护
+`.ai/role-map.yml`。不要单独拆一个角色分配 skill。
+
+工作流的责任来源是 GitLab：
+
+- Issue 的 `assignee` 表示当前处理人。
+- MR 的 `reviewer` 表示当前 Review 责任人。
+- 交接评论里必须 `@username`，用于触发 GitLab Todo/通知。
+- 企业微信或邮件只是 GitLab 通知的投递渠道，不作为工作流状态源。
+
+每个需要人处理的节点，只有在 GitLab 上完成“处理人 + 状态/标签 + 明确动作 +
+必要时限 + @mention”后，才算真正交接。个人待办由 `gj-workflow-inbox` 通过
+GitLab API 读取 Todos、assigned issues、review requests、mentions、失败
+pipeline 和未解决讨论，再路由到对应 workflow skill。
+
 ## 当前 MVP 范围
 
 - 标签、模板、目录和 CI 门禁。
+- `.ai/role-map.yml` 角色映射和 GitLab handoff 规则。
 - `policy_check.py` 检查 MR 描述、风险路径和疑似 secret。
 - `gj-codebase-map` 生成既有项目上下文草案。
+- `gj-workflow-inbox` 读取 GitLab API 待办并推荐下一步 skill。
 - `gj-workflow-triage` 判断流程路径。
 - 需求分析、Bug 修复、MR Review、复盘上下文提取。
 

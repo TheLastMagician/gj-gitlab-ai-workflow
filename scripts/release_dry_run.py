@@ -15,11 +15,14 @@ REQUIRED_PACKAGE_PATHS = [
     "docs/quickstart.md",
     "docs/skills.md",
     "templates/ai/project.yml",
+    "templates/ai/role-map.yml",
     "templates/gitlab/.gitlab/merge_request_templates/Default.md",
     "skills/gj-workflow-bootstrap/SKILL.md",
+    "skills/gj-workflow-inbox/SKILL.md",
     "skills/gj-merge-assist/SKILL.md",
     "skills/gj-env-deploy-assist/SKILL.md",
     "templates/docs/standards/10-environment-standard.md",
+    "templates/docs/standards/11-notification-standard.md",
     "examples/demo-run/00-run-log.md",
 ]
 

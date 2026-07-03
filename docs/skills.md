@@ -11,6 +11,7 @@ python scripts/install_skills.py --force
 | Workflow stage | Skill | Purpose |
 | --- | --- | --- |
 | Bootstrap | `gj-workflow-bootstrap` | Install labels, templates, AI config, docs, CI, and preflight checks. |
+| Inbox | `gj-workflow-inbox` | Inspect GitLab Todos, assignments, review requests, mentions, and route each item to the right skill. |
 | Existing project map | `gj-codebase-map` | Map codebase facts into docs/codebase, docs/context, docs/modules, and context-index drafts. |
 | Triage | `gj-workflow-triage` | Route work to standard, small change, bug fix, or hotfix flow. |
 | Requirement | `gj-requirement-refine` | Clarify requirements, acceptance criteria, non-goals, risks, and DoR. |
@@ -34,3 +35,13 @@ AI can assist every role, including review, approval preparation, merge
 operation support, human-authorized merge execution, and release preparation. It must not autonomously approve,
 merge, overwrite shared test/staging, deploy, or bypass human confirmation. The human role remains the decision
 maker and accountable owner.
+
+## Inbox And Notifications
+
+`gj-workflow-inbox` uses GitLab API state as the inbox source: Todos, assigned
+Issues, assigned MRs, review-requested MRs, mentions, unresolved discussions,
+and failed pipelines. It does not read email or Enterprise WeCom directly.
+
+Bootstrap owns role setup through `.ai/role-map.yml`. Handoffs should assign the
+right person in GitLab and mention them in a comment so GitLab can create Todos
+and send whatever company notification channel is configured.

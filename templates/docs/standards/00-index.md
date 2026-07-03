@@ -10,3 +10,4 @@
 - `08-security-standard.md`
 - `09-ai-development-boundary.md`
 - `10-environment-standard.md`
+- `11-notification-standard.md`

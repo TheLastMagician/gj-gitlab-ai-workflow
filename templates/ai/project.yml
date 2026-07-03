@@ -2,6 +2,7 @@ project:
   name: gj-workflow-demo
   default_branch: main
   gitlab_url: http://gitlab.example.com
+  role_map: ".ai/role-map.yml"
 
 owners:
   product: ["@product-owner"]

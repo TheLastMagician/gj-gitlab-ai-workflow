@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Workflow Inbox"
+  short_description: "Inspect GitLab workflow todos"
+  default_prompt: "Use $gj-workflow-inbox to inspect my GitLab todos and route each item to the right workflow skill."

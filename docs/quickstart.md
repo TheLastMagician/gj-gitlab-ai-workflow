@@ -25,9 +25,11 @@ Then customize:
 - `.ai/project.yml`
 - `.ai/rule-map.yml`
 - `.ai/context-index.yml`
+- `.ai/role-map.yml`
 - `CODEOWNERS`
 - `.gitlab-ci.yml`
 - `docs/standards/10-environment-standard.md`
+- `docs/standards/11-notification-standard.md`
 
 Decide early whether MR branches deploy only to isolated dev/review
 environments or whether a human may manually deploy them to shared test. Do not
@@ -38,6 +40,12 @@ let every MR branch automatically overwrite a single shared test environment.
 Create the workflow labels from `examples/demo-run/gitlab/labels.md`, then add a
 milestone for the first iteration. Protect the default branch and require a
 passing pipeline before merge.
+
+Replace placeholders in `.ai/role-map.yml` with real GitLab usernames. For every
+human handoff, assign the Issue/MR owner or reviewer and add an `@username`
+comment. `gj-workflow-inbox` reads GitLab API state directly; company channels
+such as Enterprise WeCom or email should be configured in GitLab notification
+settings, not as a separate workflow inbox.
 
 ## 4. Run The Demo Flow
 
@@ -89,6 +97,7 @@ After the first run, update only the first-batch skills:
 - `gj-workflow-bootstrap`
 - `gj-codebase-map`
 - `gj-workflow-triage`
+- `gj-workflow-inbox`
 - `gj-requirement-refine`
 - `gj-mr-review`
 - `gj-bug-fix`

@@ -13,6 +13,7 @@ SKILLS_ROOT = ROOT / "skills"
 NAME_RE = re.compile(r"^[a-z0-9-]{1,63}$")
 REQUIRED_SKILLS = {
     "gj-workflow-bootstrap",
+    "gj-workflow-inbox",
     "gj-codebase-map",
     "gj-workflow-triage",
     "gj-requirement-refine",
