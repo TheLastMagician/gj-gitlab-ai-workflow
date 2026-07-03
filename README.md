@@ -17,6 +17,7 @@ approval project before the stable actions were extracted into skills.
 - An orchestrator skeleton for GitLab webhook command routing.
 - A small demo project plus a recorded end-to-end demo run.
 - A complete workflow skill set derived from the demo artifacts.
+- Human-authorized merge assistance that checks readiness before executing a merge.
 
 ## Current Run
 

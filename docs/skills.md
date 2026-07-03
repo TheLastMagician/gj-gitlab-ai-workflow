@@ -18,6 +18,7 @@ python scripts/install_skills.py --force
 | Split | `gj-issue-split` | Create traceable development, test, release, and follow-up Issues. |
 | Development | `gj-dev-context` | Load focused implementation context before coding. |
 | Review | `gj-mr-review` | Review MR policy, risk paths, code risks, tests, and context updates. |
+| Merge | `gj-merge-assist` | Check merge readiness and execute GitLab merge only after explicit human authorization. |
 | Test | `gj-test-design` | Design acceptance, regression, permission, and release validation tests. |
 | Bug fix | `gj-bug-fix` | Analyze defects, root cause, fix scope, and regression tests. |
 | Hotfix | `gj-hotfix` | Guide urgent fixes with minimum safe checks and post-fix follow-up. |
@@ -29,6 +30,6 @@ python scripts/install_skills.py --force
 ## Decision Boundary
 
 AI can assist every role, including review, approval preparation, merge
-operation support, and release preparation. It must not autonomously approve,
+operation support, human-authorized merge execution, and release preparation. It must not autonomously approve,
 merge, deploy, or bypass human confirmation. The human role remains the decision
 maker and accountable owner.

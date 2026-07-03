@@ -22,6 +22,7 @@ REQUIRED_SKILLS = {
     "gj-bug-fix",
     "gj-hotfix",
     "gj-mr-review",
+    "gj-merge-assist",
     "gj-test-design",
     "gj-release-prep",
     "gj-retro-learnings",

@@ -17,6 +17,7 @@ REQUIRED_PACKAGE_PATHS = [
     "templates/ai/project.yml",
     "templates/gitlab/.gitlab/merge_request_templates/Default.md",
     "skills/gj-workflow-bootstrap/SKILL.md",
+    "skills/gj-merge-assist/SKILL.md",
     "examples/demo-run/00-run-log.md",
 ]
 
