@@ -4,6 +4,7 @@ stages:
   - policy
   - workflow
   - test
+  - deploy
   - release
 
 default:
@@ -24,6 +25,34 @@ smoke_check:
   stage: test
   script:
     - python scripts/smoke_check.py
+
+# Optional project-specific deployment jobs:
+#
+# deploy_dev may be automatic for isolated dev/review environments.
+# deploy_test should be manual, locked, and version-recorded for shared test.
+#
+# deploy_dev:
+#   stage: deploy
+#   rules:
+#     - if: '$CI_COMMIT_BRANCH == "develop"'
+#     - if: '$CI_MERGE_REQUEST_IID'
+#   environment:
+#     name: dev/$CI_COMMIT_REF_SLUG
+#     auto_stop_in: 2 days
+#   script:
+#     - ./scripts/deploy_dev.sh
+#
+# deploy_test:
+#   stage: deploy
+#   when: manual
+#   rules:
+#     - if: '$CI_COMMIT_BRANCH == "develop"'
+#     - if: '$CI_COMMIT_BRANCH =~ /^release\//'
+#   resource_group: test-env
+#   environment:
+#     name: test
+#   script:
+#     - ./scripts/deploy_test.sh
 
 release_dry_run:
   stage: release

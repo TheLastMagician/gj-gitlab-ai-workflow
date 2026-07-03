@@ -9,3 +9,4 @@
 - `07-test-standard.md`
 - `08-security-standard.md`
 - `09-ai-development-boundary.md`
+- `10-environment-standard.md`

@@ -18,6 +18,8 @@ REQUIRED_PACKAGE_PATHS = [
     "templates/gitlab/.gitlab/merge_request_templates/Default.md",
     "skills/gj-workflow-bootstrap/SKILL.md",
     "skills/gj-merge-assist/SKILL.md",
+    "skills/gj-env-deploy-assist/SKILL.md",
+    "templates/docs/standards/10-environment-standard.md",
     "examples/demo-run/00-run-log.md",
 ]
 

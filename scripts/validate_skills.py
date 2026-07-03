@@ -24,6 +24,7 @@ REQUIRED_SKILLS = {
     "gj-mr-review",
     "gj-merge-assist",
     "gj-test-design",
+    "gj-env-deploy-assist",
     "gj-release-prep",
     "gj-retro-learnings",
     "gj-context-extract",

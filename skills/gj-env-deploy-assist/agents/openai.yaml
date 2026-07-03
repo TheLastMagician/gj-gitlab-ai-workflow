@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Env Deploy Assist"
+  short_description: "Plan and guard dev/test environment deployments"
+  default_prompt: "Use $gj-env-deploy-assist to plan a dev or test environment deployment with environment locks and human confirmation."

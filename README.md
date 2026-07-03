@@ -18,6 +18,7 @@ approval project before the stable actions were extracted into skills.
 - A small demo project plus a recorded end-to-end demo run.
 - A complete workflow skill set derived from the demo artifacts.
 - Human-authorized merge assistance that checks readiness before executing a merge.
+- Dev/test environment deployment policy with shared test locks and human confirmation.
 
 ## Current Run
 

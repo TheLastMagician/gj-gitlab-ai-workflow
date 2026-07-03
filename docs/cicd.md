@@ -11,6 +11,7 @@ workflow project.
 | policy | `policy_check` | Check MR description, owner ack, risk paths, and committed secrets. |
 | workflow | `workflow_assets_check` | Check that `.ai`, GitLab templates, context docs, and policy scripts are installed. |
 | test | `smoke_check` | Run the target project smoke test command. |
+| deploy | `deploy_dev`, `deploy_test` | Optional project-specific deployment jobs. Dev may be automatic; shared test must be manual and locked. |
 | release | `release_dry_run` | Emit a business release checklist artifact. |
 
 ## Runner Requirement
@@ -32,12 +33,53 @@ locally, configure the runner with:
 ## Expected Pipeline
 
 ```text
-policy -> workflow -> test -> release
+policy -> workflow -> test -> deploy(optional) -> release
 ```
 
 `skill_validate` belongs to this workflow project's own maintenance checks, not
 to every installed target project. `package_open_source` also belongs only to a
 future release process for this workflow project.
+
+## Environment Deployment Policy
+
+The template does not deploy by default because deploy scripts are project
+specific. Add deployment jobs only after the project has a real deploy command.
+
+Recommended defaults:
+
+- MR branches may auto-deploy only to isolated dev/review environments.
+- `develop` or `integration` may auto-deploy to dev.
+- Shared `test` or `staging` must be `when: manual`.
+- Shared environments must use `resource_group`, for example `resource_group: test-env`.
+- Every shared test deploy must record branch, MR, commit SHA, pipeline URL,
+  deployer, previous version, rollback target, and QA owner.
+
+Example:
+
+```yaml
+deploy_dev:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+    - if: '$CI_MERGE_REQUEST_IID'
+  environment:
+    name: dev/$CI_COMMIT_REF_SLUG
+    auto_stop_in: 2 days
+  script:
+    - ./scripts/deploy_dev.sh
+
+deploy_test:
+  stage: deploy
+  when: manual
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+    - if: '$CI_COMMIT_BRANCH =~ /^release\//'
+  resource_group: test-env
+  environment:
+    name: test
+  script:
+    - ./scripts/deploy_test.sh
+```
 
 ## Artifacts
 

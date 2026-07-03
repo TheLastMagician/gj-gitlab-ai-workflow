@@ -27,6 +27,11 @@ Then customize:
 - `.ai/context-index.yml`
 - `CODEOWNERS`
 - `.gitlab-ci.yml`
+- `docs/standards/10-environment-standard.md`
+
+Decide early whether MR branches deploy only to isolated dev/review
+environments or whether a human may manually deploy them to shared test. Do not
+let every MR branch automatically overwrite a single shared test environment.
 
 ## 3. Configure GitLab
 

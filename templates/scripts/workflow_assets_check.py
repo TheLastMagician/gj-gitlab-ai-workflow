@@ -16,6 +16,7 @@ REQUIRED = [
     "docs/context/current-state.md",
     "docs/modules/order.md",
     "docs/standards/00-index.md",
+    "docs/standards/10-environment-standard.md",
     "scripts/policy_check.py",
     "scripts/smoke_check.py",
     "scripts/release_dry_run.py",
