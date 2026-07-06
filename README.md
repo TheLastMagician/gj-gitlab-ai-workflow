@@ -12,6 +12,7 @@ approval project before the stable actions were extracted into skills.
 
 - GitLab issue and merge request templates.
 - AI context templates under `templates/ai` and `templates/docs`.
+- Product, technical, QA, release, and documentation standards/templates.
 - Role-map and handoff standards for GitLab assignee/reviewer/@mention ownership.
 - A target-project CI/CD template: policy, workflow asset check, test, and
   release dry run.
@@ -70,6 +71,10 @@ project.
 Personal workflow inboxes are read from GitLab API state. Enterprise WeCom,
 email, or similar company channels can deliver GitLab notifications, but this
 project does not require a separate email inbox reader.
+
+GitLab comments are the discussion trail. Repository docs are the durable source
+for PRDs, product designs, prototypes, technical solutions, test plans, release
+notes, and long-term AI context.
 
 Use a GitLab Runner with Docker executor and `python:3.12-slim` for the most
 repeatable result.

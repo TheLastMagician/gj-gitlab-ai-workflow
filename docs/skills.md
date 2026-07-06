@@ -45,3 +45,20 @@ and failed pipelines. It does not read email or Enterprise WeCom directly.
 Bootstrap owns role setup through `.ai/role-map.yml`. Handoffs should assign the
 right person in GitLab and mention them in a comment so GitLab can create Todos
 and send whatever company notification channel is configured.
+
+## Documentation Impact
+
+Core workflow skills include a documentation impact check. The expected rule is:
+GitLab Issues and MR comments record discussion; repository docs record durable
+conclusions.
+
+Common routing:
+
+| Durable change | Document target |
+| --- | --- |
+| Product behavior or acceptance criteria | `docs/product/requirements/<feature>.md` |
+| UI, user flow, screen state, copy, prototype | `docs/product/designs/<feature>.md`, `docs/product/prototypes/<feature>.md` |
+| Architecture, API, data, permission, rollout, rollback | `docs/technical/solutions/<feature>.md` |
+| Acceptance, regression, permission, release validation | `docs/qa/test-plans/<feature>.md`, `docs/qa/test-reports/<feature>.md` |
+| User-visible release scope or rollback | `docs/releases/<version>.md` |
+| Long-term AI context | `docs/context`, `docs/modules`, `.ai/context-index.yml`, `docs/iterations/*/ai-context-summary.md` |

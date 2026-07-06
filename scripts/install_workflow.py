@@ -16,6 +16,10 @@ COPY_PATHS = [
     ("templates/docs/context", "docs/context"),
     ("templates/docs/modules", "docs/modules"),
     ("templates/docs/standards", "docs/standards"),
+    ("templates/docs/product", "docs/product"),
+    ("templates/docs/technical", "docs/technical"),
+    ("templates/docs/qa", "docs/qa"),
+    ("templates/docs/releases", "docs/releases"),
     ("templates/scripts", "scripts"),
 ]
 

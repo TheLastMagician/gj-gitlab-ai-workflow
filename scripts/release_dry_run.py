@@ -23,6 +23,14 @@ REQUIRED_PACKAGE_PATHS = [
     "skills/gj-env-deploy-assist/SKILL.md",
     "templates/docs/standards/10-environment-standard.md",
     "templates/docs/standards/11-notification-standard.md",
+    "templates/docs/standards/12-document-standard.md",
+    "templates/docs/product/requirements/PRD.md",
+    "templates/docs/product/designs/product-design.md",
+    "templates/docs/product/prototypes/prototype-record.md",
+    "templates/docs/technical/solutions/solution-design.md",
+    "templates/docs/qa/test-plans/test-plan.md",
+    "templates/docs/qa/test-reports/test-report.md",
+    "templates/docs/releases/release-note.md",
     "examples/demo-run/00-run-log.md",
 ]
 

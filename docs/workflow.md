@@ -37,6 +37,7 @@
 9. MR 分支默认不自动覆盖共享测试环境。
 10. 共享测试环境必须有人确认、环境锁、版本记录和回滚目标。
 11. 需要人处理的节点必须有 GitLab assignee / reviewer / @mention 交接。
+12. Issue 记录讨论过程，仓库 docs 记录稳定结论。
 
 ## 分流
 
@@ -56,6 +57,9 @@
   -> .ai/rule-map.yml
   -> .ai/context-index.yml
   -> .ai/role-map.yml
+  -> docs/product/requirements/*.md
+  -> docs/product/designs/*.md
+  -> docs/technical/solutions/*.md
   -> docs/context/current-state.md
   -> 命中模块的 docs/modules/*.md
   -> 有效 ADR
@@ -104,10 +108,34 @@ release/* / tag:
 GitLab API 读取 Todos、assigned issues、review requests、mentions、失败
 pipeline 和未解决讨论，再路由到对应 workflow skill。
 
+## 文档治理
+
+正式结论必须落到仓库文档，不能只留在 GitLab 评论里。Issue / MR 适合记录讨论、
+澄清、人工确认和交接；`docs/` 适合保存未来开发、测试、发布和 AI 上下文会依赖
+的稳定事实。
+
+默认文档位置：
+
+| 文档 | 路径 | 触发场景 |
+| --- | --- | --- |
+| PRD | `docs/product/requirements/<feature>.md` | 新需求、行为变化、验收标准、权限/金额/流程规则 |
+| 产品设计 | `docs/product/designs/<feature>.md` | UI、交互、用户流、页面状态、错误文案 |
+| 原型记录 | `docs/product/prototypes/<feature>.md` | Figma/Axure/截图/HTML 原型/可点击 demo |
+| 技术方案 | `docs/technical/solutions/<feature>.md` | 架构、接口、数据、权限、兼容、发布/回滚决策 |
+| 测试计划 | `docs/qa/test-plans/<feature>.md` | 验收、回归、权限、失败路径、发布验证 |
+| 测试报告 | `docs/qa/test-reports/<feature>.md` | QA 执行结果、失败项、发布阻塞 |
+| 发布说明 | `docs/releases/<version>.md` | 用户可见变化、部署、回滚、验证 |
+| AI 上下文摘要 | `docs/iterations/<iteration>/ai-context-summary.md` | 迭代结束或重大变更完成 |
+
+每个核心 skill 都必须输出 `Documentation impact`：本次是否要创建/更新正式文档，
+如果不需要，要说明原因。如果文档影响开发、测试、发布或长期 AI 上下文，优先通过
+MR 更新仓库文档。
+
 ## 当前 MVP 范围
 
 - 标签、模板、目录和 CI 门禁。
 - `.ai/role-map.yml` 角色映射和 GitLab handoff 规则。
+- `docs/standards/12-document-standard.md` 文档治理规则和正式文档模板。
 - `policy_check.py` 检查 MR 描述、风险路径和疑似 secret。
 - `gj-codebase-map` 生成既有项目上下文草案。
 - `gj-workflow-inbox` 读取 GitLab API 待办并推荐下一步 skill。

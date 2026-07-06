@@ -18,15 +18,17 @@ description: Install and verify the GitLab AI workflow skeleton in a repository.
    - `.gitlab/merge_request_templates/`
    - `.ai/project.yml`, `.ai/rule-map.yml`, `.ai/context-index.yml`, `.ai/role-map.yml`
    - `docs/context/`, `docs/modules/`, `docs/standards/`
+   - `docs/product/`, `docs/technical/`, `docs/qa/`, `docs/releases/`
    - `.gitlab-ci.yml`, `scripts/policy_check.py`, `scripts/smoke_check.py`
    - `CODEOWNERS`
 3. Ask the maintainer to replace placeholder roles in `.ai/role-map.yml` with
    real GitLab usernames before relying on notifications.
-4. Create GitLab labels, milestone, and starter Issues idempotently.
-5. Assign human-owned starter Issues/MRs from `.ai/role-map.yml` when requested
+4. Ask the maintainer to review document templates and `docs/standards/12-document-standard.md`.
+5. Create GitLab labels, milestone, and starter Issues idempotently.
+6. Assign human-owned starter Issues/MRs from `.ai/role-map.yml` when requested
    and add `@username` handoff comments when notification is expected.
-6. Run local validation.
-7. Write a bootstrap summary with created, skipped, failed, and manual-confirmation items.
+7. Run local validation.
+8. Write a bootstrap summary with created, skipped, failed, and manual-confirmation items.
 
 ## Output
 
@@ -46,6 +48,8 @@ Local files changed:
 Validation:
 
 Human confirmation needed:
+
+Documentation templates installed:
 
 Friction found:
 ```

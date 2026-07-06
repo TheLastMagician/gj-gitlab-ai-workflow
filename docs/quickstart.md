@@ -30,10 +30,23 @@ Then customize:
 - `.gitlab-ci.yml`
 - `docs/standards/10-environment-standard.md`
 - `docs/standards/11-notification-standard.md`
+- `docs/standards/12-document-standard.md`
+- `docs/product/requirements/PRD.md`
+- `docs/product/designs/product-design.md`
+- `docs/product/prototypes/prototype-record.md`
+- `docs/technical/solutions/solution-design.md`
+- `docs/qa/test-plans/test-plan.md`
+- `docs/qa/test-reports/test-report.md`
+- `docs/releases/release-note.md`
 
 Decide early whether MR branches deploy only to isolated dev/review
 environments or whether a human may manually deploy them to shared test. Do not
 let every MR branch automatically overwrite a single shared test environment.
+
+Keep GitLab Issues/MRs as the discussion trail and repository docs as the
+durable source. For each requirement or MR, require a documentation impact
+answer: update PRD/design/prototype/solution/test/release/context docs, or
+explain why no doc update is needed.
 
 ## 3. Configure GitLab
 

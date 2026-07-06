@@ -74,7 +74,12 @@ Read `references/gitlab-inbox.md` when using GitLab API endpoints.
    - Missing `@username` mention on a handoff comment.
    - Missing due date or milestone when the task is time-bound.
    - Todo exists but the linked item has no clear next action.
-6. Present the inbox and wait for the human to choose actions unless the request
+6. Identify documentation gaps:
+   - Requirement or solution work with no linked durable doc.
+   - MR waiting on review with undocumented product, technical, test, release,
+     or context changes.
+   - QA or release work with missing test report or release note.
+7. Present the inbox and wait for the human to choose actions unless the request
    already names a safe read-only action.
 
 ## Output
@@ -95,6 +100,9 @@ Fetched:
 | --- | --- | --- | --- |
 
 ### Handoff Gaps
+- ...
+
+### Documentation Gaps
 - ...
 
 ### Recommended Next Action

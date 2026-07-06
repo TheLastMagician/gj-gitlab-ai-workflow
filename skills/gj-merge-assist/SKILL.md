@@ -31,6 +31,7 @@ Assist a human with GitLab MR merge decisions and merge execution. Never approve
    - MR description includes linked Issue, change summary, test result, risks, rollback, config/database changes, and AI usage.
    - Required owner acknowledgements are present for high-risk paths.
    - Release and rollback notes are clear.
+   - Documentation impact is addressed in the MR or linked follow-up Issue.
 4. If authorization is absent, output a readiness report and the exact human confirmation sentence needed to merge.
 5. If authorization is present and all checks pass, execute the merge with the normal GitLab merge API or project-approved tool.
 6. After merge, report final state, merge commit SHA when available, closed Issues, and any follow-up actions.
@@ -58,6 +59,7 @@ Checks:
 - Tests:
 - Rollback:
 - AI usage boundary:
+- Documentation impact:
 
 Recommendation:
 

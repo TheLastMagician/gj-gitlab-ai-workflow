@@ -12,7 +12,11 @@ description: Guide urgent GitLab hotfix flow without skipping accountability. Us
 3. Define the smallest safe fix and minimum review path.
 4. Require explicit human owner confirmation for risk acceptance.
 5. Define release validation and rollback.
-6. Create post-fix requirements: root cause, tests, docs, context, and retro.
+6. Check documentation impact:
+   - Release note and rollback record for the hotfix.
+   - Test report for emergency validation.
+   - Root-cause/context/module docs after the immediate fix.
+7. Create post-fix requirements: root cause, tests, docs, context, and retro.
 
 ## Output
 
@@ -30,6 +34,8 @@ Minimum review:
 Release validation:
 
 Rollback:
+
+Documentation impact:
 
 Owner confirmations:
 

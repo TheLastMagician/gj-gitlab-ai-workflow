@@ -16,7 +16,10 @@ description: Split confirmed requirements and solution plans into traceable GitL
    - follow-up risks or bugs.
 3. Keep each task independently reviewable and linked back to source Issues.
 4. Add labels, dependencies, expected files/modules, acceptance criteria, test requirements, and AI usage notes.
-5. Mark any split that needs human owner assignment.
+5. Add explicit documentation Issues when PRD, product design, prototype record,
+   technical solution, test plan, release note, module docs, or context updates
+   are needed but should not be bundled into the development task.
+6. Mark any split that needs human owner assignment.
 
 ## Output
 
@@ -34,6 +37,8 @@ Issues to create:
 Dependencies:
 
 Suggested labels:
+
+Documentation tasks:
 
 Human owner assignment needed:
 

@@ -21,7 +21,11 @@ description: Classify GitLab work into standard requirement, small change, bug f
    - hotfix.
    - Hotfix
 4. List required workflow objects and which steps can be skipped.
-5. Add explicit human confirmation points.
+5. Identify likely documentation needs:
+   - PRD/design/prototype for standard requirements.
+   - solution/test/release docs for risky or release-bound work.
+   - bug report/test report/context update for bug and hotfix paths.
+6. Add explicit human confirmation points.
 
 ## Output
 
@@ -39,6 +43,8 @@ Required steps:
 Suggested labels:
 
 Risk notes:
+
+Documentation impact:
 
 Human confirmation needed:
 ```

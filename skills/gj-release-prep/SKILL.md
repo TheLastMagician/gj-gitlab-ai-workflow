@@ -10,8 +10,12 @@ description: Prepare GitLab release readiness artifacts. Use when a milestone or
 1. Read release Issue, milestone, merged or ready MRs, test results, and known risks.
 2. List included Issues/MRs and user-visible changes.
 3. Check database, config, permission, and operations changes.
-4. Draft release note, rollout plan, rollback plan, and validation checklist.
-5. Mark manual confirmations for DevOps, Tech Lead, QA, security, or DBA.
+4. Check documentation impact:
+   - Create or update `docs/releases/<version>.md`.
+   - Confirm linked test report and rollback notes exist.
+   - Identify context/module docs that need post-release updates.
+5. Draft release note, rollout plan, rollback plan, and validation checklist.
+6. Mark manual confirmations for DevOps, Tech Lead, QA, security, or DBA.
 
 ## Output
 
@@ -27,6 +31,8 @@ Testing result:
 Config / database / permission changes:
 
 Release note:
+
+Documentation impact:
 
 Rollout checklist:
 

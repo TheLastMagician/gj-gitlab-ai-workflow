@@ -15,8 +15,12 @@ description: Extract iteration retrospectives, process learnings, improvement ac
    - `docs/modules/*.md`
    - `.ai/context-index.yml`
    - ADRs
-5. Generate `docs/iterations/<iteration>/06-retro.md`.
-6. Generate `docs/iterations/<iteration>/ai-context-summary.md`.
+5. Identify document quality issues:
+   - missing PRD/design/prototype/solution/test/release docs.
+   - stale docs that misled implementation, review, or QA.
+   - templates or standards that need improvement.
+6. Generate `docs/iterations/<iteration>/06-retro.md`.
+7. Generate `docs/iterations/<iteration>/ai-context-summary.md`.
 
 ## Output
 
@@ -36,6 +40,8 @@ AI suggestions adopted:
 AI misses:
 
 Process improvements:
+
+Documentation improvements:
 
 Long-term context updates:
 

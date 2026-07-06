@@ -45,8 +45,13 @@ Use these defaults unless the repository documents a stricter policy:
    - Require explicit human confirmation before deploy.
    - Record rollback target before deploy.
 6. If authorization is missing, output readiness and required confirmation.
-7. If authorization is present and checks pass, execute only the project-approved deploy command or GitLab manual job trigger.
-8. After deploy, report deployed version and follow-up QA/recovery actions.
+7. Check documentation impact:
+   - Update release note or deployment record when shared test/staging is
+     overwritten.
+   - Link test report or QA window for shared environment validation.
+   - Update environment standard if the project discovers a new deploy rule.
+8. If authorization is present and checks pass, execute only the project-approved deploy command or GitLab manual job trigger.
+9. After deploy, report deployed version and follow-up QA/recovery actions.
 
 ## Readiness Output
 
@@ -64,6 +69,7 @@ Checks:
 - Lock/resource group:
 - Current deployed version:
 - Rollback target:
+- Documentation impact:
 - Human confirmation:
 - Risk:
 

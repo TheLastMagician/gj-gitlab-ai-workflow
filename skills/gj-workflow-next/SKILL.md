@@ -16,8 +16,10 @@ description: Decide the next best action in an installed GitLab AI workflow. Use
    - unresolved review comments.
    - missing owner ack.
    - missing context update.
+   - missing documentation impact answer or required repo docs.
 4. Recommend the next skill and concrete action.
-5. Keep the answer action-oriented and include evidence links or file paths.
+5. Include document updates when they are the next unblocker.
+6. Keep the answer action-oriented and include evidence links or file paths.
 
 ## Output
 
@@ -33,6 +35,8 @@ Blockers:
 Recommended next skill:
 
 Next action:
+
+Documentation impact:
 
 Human confirmation needed:
 

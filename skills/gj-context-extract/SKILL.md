@@ -14,6 +14,13 @@ description: Extract durable AI context from completed GitLab workflow artifacts
    - `docs/context/module-map.md`
    - `docs/context/glossary.md`
    - `docs/modules/*.md`
+   - `docs/product/requirements/*.md`
+   - `docs/product/designs/*.md`
+   - `docs/product/prototypes/*.md`
+   - `docs/technical/solutions/*.md`
+   - `docs/qa/test-plans/*.md`
+   - `docs/qa/test-reports/*.md`
+   - `docs/releases/*.md`
    - `docs/architecture/adr/*.md`
    - `.ai/context-index.yml`
    - iteration `ai-context-summary.md`
@@ -34,6 +41,8 @@ Historical-only notes:
 Conflicts:
 
 Files to update:
+
+Documentation impact:
 
 Proposed changes:
 

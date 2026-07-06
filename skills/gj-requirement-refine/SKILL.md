@@ -15,8 +15,16 @@ description: Refine rough GitLab requirements into clear questions, acceptance c
    - relevant `docs/modules/*.md`
 3. Identify missing facts, ambiguity, hidden permission/data/API risks, and non-goals.
 4. Draft acceptance criteria that can be tested.
-5. Decide whether the requirement satisfies Definition of Ready.
-6. Write a GitLab-ready comment. Do not mark the requirement approved unless a
+5. Check documentation impact:
+   - Create or update `docs/product/requirements/<feature>.md` when durable
+     product intent or acceptance criteria changes.
+   - Create or update `docs/product/designs/<feature>.md` when UX, user flow,
+     permission visibility, screen states, or copy matters.
+   - Create or update `docs/product/prototypes/<feature>.md` when there is a
+     prototype, screenshot, Figma/Axure link, or clickable demo.
+   - If no repo doc is needed, state why in the GitLab comment.
+6. Decide whether the requirement satisfies Definition of Ready.
+7. Write a GitLab-ready comment. Do not mark the requirement approved unless a
    human product owner explicitly confirms or asks for assisted approval.
 
 ## Output
@@ -33,6 +41,8 @@ Missing questions:
 Ambiguity and risks:
 
 Acceptance criteria draft:
+
+Documentation impact:
 
 Suggested non-goals:
 

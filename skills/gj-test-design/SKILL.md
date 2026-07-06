@@ -11,7 +11,11 @@ description: Design QA and regression tests for GitLab workflow items. Use when 
 2. Cover happy path, failure path, permission path, regression path, and release validation.
 3. Map every test to a requirement or risk.
 4. State test data, steps, expected result, and automation/manual status.
-5. If a test fails, create or draft a Bug Issue instead of hiding the failure in the report.
+5. Check documentation impact:
+   - Create or update `docs/qa/test-plans/<feature>.md` for planned coverage.
+   - Create or update `docs/qa/test-reports/<feature>.md` after execution.
+   - Link failed checks to Bug Issues.
+6. If a test fails, create or draft a Bug Issue instead of hiding the failure in the report.
 
 ## Output
 
@@ -21,6 +25,8 @@ description: Design QA and regression tests for GitLab workflow items. Use when 
 Scope:
 
 Test matrix:
+
+Documentation impact:
 
 Regression scope:
 

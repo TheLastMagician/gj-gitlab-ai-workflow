@@ -18,8 +18,14 @@ description: Review GitLab merge requests for workflow compliance, risk paths, c
    - AI usage.
 3. Match changed paths against `.ai/rule-map.yml`.
 4. Load relevant module context from `.ai/context-index.yml`.
-5. Review code for bugs, regressions, missing tests, and missing docs.
-6. Lead with findings ordered by severity. Keep summaries secondary.
+5. Check documentation impact:
+   - MR description lists docs changed or explains why none are needed.
+   - PRD/design/prototype/solution/test/release docs are updated when durable
+     facts changed.
+   - `docs/context`, `docs/modules`, ADRs, or `ai-context-summary.md` are updated
+     when long-term AI context changed.
+6. Review code for bugs, regressions, missing tests, and missing docs.
+7. Lead with findings ordered by severity. Keep summaries secondary.
 
 ## Output
 
@@ -33,6 +39,8 @@ Workflow policy:
 Risk paths:
 
 Test gaps:
+
+Documentation gaps:
 
 Context updates needed:
 

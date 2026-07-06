@@ -13,7 +13,12 @@ description: Analyze GitLab Bug Issues or QA failures and produce reproduction, 
 4. Identify likely root cause and affected paths.
 5. Propose the smallest safe fix.
 6. Define regression tests and validation steps.
-7. If the bug reveals unclear requirements or architecture risk, recommend upgrading the workflow path.
+7. Check documentation impact:
+   - Update `docs/qa/test-reports/<feature>.md` with failed checks and fix
+     validation when QA execution exists.
+   - Update PRD, product design, technical solution, module docs, or context docs
+     when the bug changes durable behavior or exposes a wrong assumption.
+8. If the bug reveals unclear requirements or architecture risk, recommend upgrading the workflow path.
 
 ## Output
 
@@ -31,6 +36,8 @@ Likely root cause:
 Fix scope:
 
 Regression tests:
+
+Documentation impact:
 
 Risk and human confirmation:
 
