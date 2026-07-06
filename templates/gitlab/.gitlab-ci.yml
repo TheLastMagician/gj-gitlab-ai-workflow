@@ -20,6 +20,7 @@ workflow_assets_check:
   stage: workflow
   script:
     - python scripts/workflow_assets_check.py
+    - python scripts/validate_role_map.py
 
 smoke_check:
   stage: test

@@ -31,6 +31,8 @@ REQUIRED_PACKAGE_PATHS = [
     "templates/docs/qa/test-plans/test-plan.md",
     "templates/docs/qa/test-reports/test-report.md",
     "templates/docs/releases/release-note.md",
+    "scripts/validate_role_map.py",
+    "templates/scripts/validate_role_map.py",
     "examples/demo-run/00-run-log.md",
 ]
 

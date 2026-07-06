@@ -8,8 +8,8 @@ workflow project.
 
 | Stage | Job | Purpose |
 | --- | --- | --- |
-| policy | `policy_check` | Check MR description, owner ack, risk paths, and committed secrets. |
-| workflow | `workflow_assets_check` | Check that `.ai`, GitLab templates, context docs, and policy scripts are installed. |
+| policy | `policy_check` | Check MR description, documentation impact, owner ack from `.ai/rule-map.yml`, risk paths, and committed secrets. |
+| workflow | `workflow_assets_check`, `validate_role_map` | Check that `.ai`, GitLab templates, context/docs templates, policy scripts, and role ownership are installed. |
 | test | `smoke_check` | Run the target project smoke test command. |
 | deploy | `deploy_dev`, `deploy_test` | Optional project-specific deployment jobs. Dev may be automatic; shared test must be manual and locked. |
 | release | `release_dry_run` | Emit a business release checklist artifact. |

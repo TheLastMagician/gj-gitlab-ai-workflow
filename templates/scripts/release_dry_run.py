@@ -68,7 +68,7 @@ human-authorized release.
 - Product owner confirms the acceptance criteria are still correct.
 - Reviewer confirms the MR can be approved or merged with human authorization.
 - QA confirms the latest test report is acceptable.
-- DevOps confirms rollback uses the previous order approval service revision.
+- DevOps confirms rollback target and previous deployed version are known.
 - PM confirms `ai-context-summary.md` is updated after release.
 """,
         encoding="utf-8",

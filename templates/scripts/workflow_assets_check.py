@@ -15,7 +15,7 @@ REQUIRED = [
     ".gitlab/issue_templates/Requirement.md",
     ".gitlab/merge_request_templates/Default.md",
     "docs/context/current-state.md",
-    "docs/modules/order.md",
+    "docs/context/module-map.md",
     "docs/standards/00-index.md",
     "docs/standards/10-environment-standard.md",
     "docs/standards/11-notification-standard.md",
@@ -28,13 +28,19 @@ REQUIRED = [
     "docs/qa/test-reports/test-report.md",
     "docs/releases/release-note.md",
     "scripts/policy_check.py",
+    "scripts/validate_role_map.py",
     "scripts/smoke_check.py",
     "scripts/release_dry_run.py",
+]
+
+REQUIRED_DIRS = [
+    "docs/modules",
 ]
 
 
 def main() -> int:
     missing = [path for path in REQUIRED if not Path(path).exists()]
+    missing.extend(path for path in REQUIRED_DIRS if not Path(path).is_dir())
     if missing:
         print("missing workflow assets:")
         for path in missing:

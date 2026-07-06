@@ -54,6 +54,9 @@ Install the GitLab workflow assets into another repository:
 python scripts/install_workflow.py --target C:\path\to\your-project
 ```
 
+For existing projects, use `--only-missing` first. Use `--force --backup` only
+when you intentionally replace installed workflow assets.
+
 ## Target Project CI/CD
 
 The GitLab CI template installed into target projects is a business-project
@@ -67,6 +70,10 @@ It does not contain `skill_validate` or `package_open_source`. Skills are used b
 people through Codex to help with requirement refinement, review, QA, release
 prep, and retrospectives; they are not pipeline stages in every business
 project.
+
+The policy stage checks MR documentation impact and owner acknowledgements from
+`.ai/rule-map.yml`. The workflow stage checks installed assets and `.ai/role-map.yml`
+ownership placeholders.
 
 Personal workflow inboxes are read from GitLab API state. Enterprise WeCom,
 email, or similar company channels can deliver GitLab notifications, but this

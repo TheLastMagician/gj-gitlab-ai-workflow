@@ -20,6 +20,18 @@ Install the reusable assets into a target GitLab repository:
 python scripts/install_workflow.py --target C:\path\to\your-project
 ```
 
+For an existing project, prefer a non-destructive install:
+
+```powershell
+python scripts/install_workflow.py --target C:\path\to\your-project --only-missing
+```
+
+When you intentionally replace existing workflow assets, create a backup:
+
+```powershell
+python scripts/install_workflow.py --target C:\path\to\your-project --force --backup
+```
+
 Then customize:
 
 - `.ai/project.yml`
@@ -60,6 +72,15 @@ comment. `gj-workflow-inbox` reads GitLab API state directly; company channels
 such as Enterprise WeCom or email should be configured in GitLab notification
 settings, not as a separate workflow inbox.
 
+Validate role ownership after editing `.ai/role-map.yml`:
+
+```powershell
+python scripts/validate_role_map.py
+```
+
+For live GitLab membership checks, provide a token through `GITLAB_TOKEN` and
+pass `--gitlab-url` plus `--project-id`.
+
 ## 4. Run The Demo Flow
 
 Use a small target project such as `gj-workflow-demo` to run the workflow once:
@@ -75,6 +96,7 @@ The recorded inputs, outputs, failures, and human confirmations are in
 
 ```powershell
 python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt
+python scripts/validate_role_map.py --role-map templates/ai/role-map.yml --allow-placeholders
 python scripts/validate_skills.py
 python scripts/install_skills.py --dry-run
 python scripts/install_workflow.py --target C:\path\to\your-project --dry-run
@@ -88,6 +110,7 @@ After installing into a business project, run the target project checks there:
 
 ```powershell
 python scripts/workflow_assets_check.py
+python scripts/validate_role_map.py
 python scripts/smoke_check.py
 python scripts/release_dry_run.py --output build/release-dry-run.md
 ```
