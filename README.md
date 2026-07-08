@@ -92,11 +92,12 @@ python scripts/install_workflow.py --target C:\path\to\your-project --force --ba
 
 ## 一个新需求怎么流转
 
-标准需求建议按下面顺序走。小改动、Bug、Hotfix 可以由 `gj-workflow-triage` 分流到轻量流程。
+新需求的入口是创建 GitLab Issue。`gj-workflow-inbox` 不是需求提交入口，它只是在
+后续节点被指派给某个人以后，用来读取个人待办。
 
 ```mermaid
 flowchart TD
-  A["任意成员（Member）：gj-workflow-inbox<br/>读取 GitLab 待办"] --> B["产品经理（PdM）/项目经理（PM）：gj-workflow-triage<br/>需求分流"]
+  A["任意成员（Member）/产品经理（PdM）：提交需求 Issue<br/>填写背景、目标、期望结果"] --> B["产品经理（PdM）/项目经理（PM）：gj-workflow-triage<br/>确认流程类型和优先级"]
   B --> C{"工作类型"}
 
   C -- "标准需求" --> D["产品经理（PdM）：gj-requirement-refine<br/>澄清需求和验收标准"]
@@ -128,7 +129,7 @@ flowchart TD
 
 | 阶段 | 角色 | 使用 skill | 产物 |
 | --- | --- | --- | --- |
-| 待办读取 | 任意成员（Member） | `gj-workflow-inbox` | 当前 GitLab Todo、分配给自己的 Issue/MR、审阅请求、失败 pipeline、下一步建议 |
+| 需求提交 | 任意成员（Member）/ 产品经理（PdM） | GitLab Issue 模板；需要 AI 起草时可用 `gj-requirement-refine` | 需求 Issue，包含背景、目标、期望结果、初步优先级、相关截图/链接 |
 | 需求分流 | 产品经理（PdM）/ 项目经理（PM） | `gj-workflow-triage` | 判断走标准需求、小改动、Bug 修复还是 Hotfix |
 | 需求澄清 | 产品经理（PdM） | `gj-requirement-refine` | 需求 Issue、验收标准、非目标、风险、文档影响 |
 | 方案设计 | 开发经理（Dev Lead） | `gj-solution-plan` | 技术方案、影响范围、测试策略、发布和回滚思路 |
@@ -144,6 +145,10 @@ flowchart TD
 | 复盘沉淀 | 项目经理（PM）/ 开发经理（Dev Lead） | `gj-retro-learnings` | 复盘结论、流程改进、遗留问题 |
 | 上下文更新 | 项目经理（PM）/ 开发经理（Dev Lead） | `gj-context-extract` | `ai-context-summary.md`、模块文档、ADR、context index 更新 |
 | 下一步判断 | 任意成员（Member） | `gj-workflow-next` | 根据当前 GitLab 状态推荐下一步动作和 skill |
+
+每个节点完成后，都要在 GitLab 上设置下一个处理人的 assignee/reviewer，并用
+`@username` 评论交接。被指派的人可以用 `gj-workflow-inbox` 查看自己的待办，再进入
+对应节点的 skill。
 
 关键规则：
 
