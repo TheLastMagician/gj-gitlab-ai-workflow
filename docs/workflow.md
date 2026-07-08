@@ -108,6 +108,36 @@ release/* / tag:
 GitLab API 读取 Todos、assigned issues、review requests、mentions、失败
 pipeline 和未解决讨论，再路由到对应 workflow skill。
 
+## 个人基于 AI 的工作方式
+
+个人每天不需要从所有 Issue、MR、Pipeline 和评论里手动找工作入口。标准做法是：
+
+```text
+gj-workflow-inbox 获取我的 GitLab 待办
+  -> 选择一个待办
+  -> AI 判断待办类型并推荐 workflow skill
+  -> 人确认处理方式
+  -> AI 辅助分析 / 起草 / 编码 / 审阅 / 测试 / 发布检查
+  -> 人审阅并确认结果
+  -> 写回 GitLab 评论、Issue、MR 或仓库 docs / 代码
+  -> 设置 assignee / reviewer，并用 @username 交接给下一个人
+```
+
+常见待办路由：
+
+| 待办类型 | 常用 skill | 人保留的决定权 |
+| --- | --- | --- |
+| 需求 Issue | `gj-workflow-triage`、`gj-requirement-refine` | 需求类型、优先级、验收标准、是否进入开发。 |
+| 方案或拆分任务 | `gj-solution-plan`、`gj-issue-split` | 技术方案、影响范围、任务边界、风险是否可接受。 |
+| 开发任务 | `gj-dev-context` | 实现范围、测试方式、是否需要更新正式文档。 |
+| MR 审阅请求 | `gj-mr-review` | Review 意见是否成立、是否阻塞、是否建议合并。 |
+| 合并待办 | `gj-merge-assist` | pipeline、讨论、审批、文档影响是否满足合并条件；是否授权合并。 |
+| 测试待办 | `gj-test-design`、`gj-bug-fix` | 测试用例、测试结论、缺陷是否阻塞发布。 |
+| 部署或发布待办 | `gj-env-deploy-assist`、`gj-release-prep` | 环境锁、部署版本、验证结果、回滚目标、发布窗口。 |
+| 复盘或上下文沉淀 | `gj-retro-learnings`、`gj-context-extract` | 哪些结论需要写入长期文档和 AI 上下文。 |
+
+AI 可以辅助人完成当前节点，但不能替代人做审批、合并、覆盖共享测试环境或发布决定。
+
 ## 文档治理
 
 正式结论必须落到仓库文档，不能只留在 GitLab 评论里。Issue / MR 适合记录讨论、

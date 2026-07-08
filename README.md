@@ -161,6 +161,42 @@ flowchart TD
 - 每个需要人处理的节点都要设置 assignee/reviewer，并用 `@username` 评论交接。
 - Issue/MR 记录讨论过程，仓库 `docs/` 记录稳定结论。
 
+## 个人如何用 AI 处理待办
+
+对个人来说，日常入口就是 GitLab 待办。每天先用 `gj-workflow-inbox` 读取分配给自己的
+Todo、Issue、MR、审阅请求、失败 pipeline 和未解决讨论，再让 AI 判断应该进入哪个
+workflow skill。
+
+```mermaid
+flowchart TD
+  A["任意成员（Member）：gj-workflow-inbox<br/>读取我的 GitLab 待办"] --> B["选择一个待办<br/>Issue / MR / 审阅 / Pipeline / 讨论"]
+  B --> C["AI 判断待办类型<br/>推荐对应 workflow skill"]
+  C --> D{"人确认处理方式？"}
+  D -- "确认" --> E["AI 辅助处理<br/>分析、草稿、代码、审阅、测试或发布检查"]
+  D -- "暂不处理" --> K["处理下一项待办或结束"]
+  E --> F["人审阅和确认结果"]
+  F --> G{"结果写回哪里？"}
+  G -- "GitLab" --> H["评论 / 更新 Issue / 更新 MR / 指派下一人"]
+  G -- "仓库" --> I["提交代码 / 更新 docs / 提交 MR"]
+  H --> J["设置 assignee/reviewer + @username 交接"]
+  I --> J
+  J --> K
+```
+
+| 待办类型 | 常用 skill | 人需要确认什么 |
+| --- | --- | --- |
+| 需求 Issue | `gj-workflow-triage`、`gj-requirement-refine` | 需求类型、优先级、验收标准、是否进入开发。 |
+| 方案或拆分任务 | `gj-solution-plan`、`gj-issue-split` | 技术方案、影响范围、任务边界、风险是否可接受。 |
+| 开发任务 | `gj-dev-context` | 实现范围、测试方式、是否需要更新正式文档。 |
+| MR 审阅请求 | `gj-mr-review` | Review 意见是否成立、是否阻塞、是否建议合并。 |
+| 合并待办 | `gj-merge-assist` | pipeline、讨论、审批、文档影响是否满足合并条件；是否授权合并。 |
+| 测试待办 | `gj-test-design`、`gj-bug-fix` | 测试用例、测试结论、缺陷是否阻塞发布。 |
+| 部署或发布待办 | `gj-env-deploy-assist`、`gj-release-prep` | 环境锁、部署版本、验证结果、回滚目标、发布窗口。 |
+| 复盘或上下文沉淀 | `gj-retro-learnings`、`gj-context-extract` | 哪些结论需要写入长期文档和 AI 上下文。 |
+
+这不是“AI 自动把所有事情做完”。正确边界是：AI 帮人读取上下文、生成草稿、做检查、
+执行被明确授权的操作；人负责判断、确认、提交、审批、合并、发布和交接。
+
 ## 常用 skill 使用场景
 
 | Skill | 什么时候用 |
