@@ -1,12 +1,19 @@
 # Merge Request
 
-## 关联 Issue
+<!--
+创建 MR 时必须在 GitLab Labels 中选择一个且只能选择一个：
+flow::fast / flow::standard / flow::hotfix
+-->
+
+## 关联 Issue（Standard / Hotfix 必填）
 
 Closes #
 
 ## 变更内容
 
 ## 自测结果
+
+<!-- 要证据,不要"已自测":粘贴测试输出、接口调用记录或截图说明。 -->
 
 ## 风险点
 
@@ -22,6 +29,6 @@ Closes #
 
 ## AI 使用范围
 
-## Reviewer 重点关注
+<!-- Fast 可填写“未使用”；Standard / Hotfix 记录 AI 参与范围。 -->
 
-## 高风险确认记录
+## Reviewer 重点关注

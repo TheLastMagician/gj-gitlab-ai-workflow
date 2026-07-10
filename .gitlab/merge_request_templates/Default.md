@@ -1,5 +1,10 @@
 # Merge Request
 
+<!--
+创建 MR 时必须在 GitLab Labels 中选择一个且只能选择一个：
+flow::fast / flow::standard / flow::hotfix
+-->
+
 ## 关联 Issue
 
 Closes #
@@ -17,7 +22,3 @@ Closes #
 ## AI 使用范围
 
 ## Reviewer 重点关注
-
-## 高风险确认记录
-
-<!-- 如命中风险路径，请粘贴 /owner-ack 记录。 -->

@@ -8,7 +8,8 @@
 
 - GitLab 是需求、方案、任务、MR、测试、发布和复盘的事实源。
 - AI 输出必须写回 GitLab 评论或仓库文档。
-- 高风险变更需要人工 owner ack。
+- 高风险 changed files 不能使用 `flow::fast`;最终合并由成功 Pipeline、
+  受保护分支和受限合并权限控制。
 
 ## 待人工确认
 

@@ -12,7 +12,8 @@
 Release checklist:
 
 - CI has `policy` and `test` stages.
-- `policy_check.py` verifies MR required sections, high-risk owner ack, and committed secrets.
+- `policy_check.py` verifies the unique flow label, MR evidence, high-risk
+  changed files, and committed secrets.
 - `smoke_check.py` runs demo unit tests.
 - Rollback is reverting the MR.
 

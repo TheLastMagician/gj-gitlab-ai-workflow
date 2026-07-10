@@ -1,6 +1,6 @@
 ---
 name: gj-mr-review
-description: Review GitLab merge requests for workflow compliance, risk paths, code issues, test coverage, rollback readiness, and AI context updates. Use when an MR is opened, marked ready, or explicitly requested for AI review.
+description: Review GitLab merge requests for workflow compliance, code risks, test and documentation gaps, and merge readiness. Use when an MR is opened, marked ready, has review feedback, or needs a decision-ready report before a human chooses whether to merge.
 ---
 
 # GJ MR Review
@@ -25,7 +25,12 @@ description: Review GitLab merge requests for workflow compliance, risk paths, c
    - `docs/context`, `docs/modules`, ADRs, or `ai-context-summary.md` are updated
      when long-term AI context changed.
 6. Review code for bugs, regressions, missing tests, and missing docs.
-7. Lead with findings ordered by severity. Keep summaries secondary.
+7. Check merge readiness: open non-draft MR, successful head pipeline, resolved
+   discussions, valid flow evidence, linked Issue when required, test evidence,
+   and rollback readiness.
+8. Lead with findings ordered by severity. Keep summaries secondary.
+9. Stop at the human gate. Never approve, merge, deploy, force, skip CI, or
+   bypass unresolved discussions.
 
 ## Output
 
@@ -44,6 +49,8 @@ Documentation gaps:
 
 Context updates needed:
 
+Merge readiness:
+
 Open questions:
 
 Summary:
@@ -51,4 +58,6 @@ Summary:
 
 ## References
 
-Read `references/demo-run.md` for the first MR review example.
+- Read `references/demo-run.md` for the first MR review example.
+- Read `references/gitlab-readiness.md` when live MR and pipeline evidence is
+  needed.

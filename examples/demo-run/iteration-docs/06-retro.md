@@ -24,7 +24,7 @@
 - Add a template warning about local token helpers.
 - Keep skill metadata short and validate after generation.
 - Make skill tooling read UTF-8 explicitly or document the `--name` workaround.
-- Require QA failure -> Bug Issue conversion in `gj-test-design` or QA guidance.
+- Require QA failure -> Bug Issue conversion in `gj-plan-change` or QA guidance.
 - Add runner availability and executor type checks to `gj-workflow-bootstrap`
   preflight.
 

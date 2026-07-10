@@ -1,4 +1,0 @@
-interface:
-  display_name: "GJ Release Prep"
-  short_description: "Prepare release and rollback notes"
-  default_prompt: "Use $gj-release-prep to prepare release notes, rollout checks, and rollback steps."

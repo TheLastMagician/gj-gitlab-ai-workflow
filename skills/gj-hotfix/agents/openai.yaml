@@ -1,4 +1,0 @@
-interface:
-  display_name: "GJ Hotfix"
-  short_description: "Guide urgent fixes and follow-up"
-  default_prompt: "Use $gj-hotfix to handle an urgent production fix with minimum safe checks and retro items."

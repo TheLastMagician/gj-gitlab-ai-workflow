@@ -14,7 +14,7 @@ default:
 policy_check:
   stage: policy
   script:
-    - python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt
+    - python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt --labels flow::standard
 
 workflow_contract:
   stage: workflow
@@ -29,6 +29,7 @@ workflow_contract:
 installer_dry_run:
   stage: test
   script:
+    - python -m unittest discover -s tests -v
     - python scripts/validate_skills.py
     - python scripts/install_skills.py --dry-run
 

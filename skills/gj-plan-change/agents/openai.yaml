@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Plan Change"
+  short_description: "Plan GitLab changes by selected flow"
+  default_prompt: "Use $gj-plan-change to turn this GitLab work item into the right-sized plan for its flow label."

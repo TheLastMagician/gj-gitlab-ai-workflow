@@ -1,4 +1,0 @@
-interface:
-  display_name: "GJ Context Extract"
-  short_description: "Extract durable AI project context"
-  default_prompt: "Use $gj-context-extract to update current context, module docs, ADRs, and context index."

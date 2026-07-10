@@ -1,8 +1,8 @@
 # gj-gitlab-ai-workflow
 
 这是一个面向 GitLab CE 项目的 AI 协作工作流骨架。它提供 GitLab 模板、项目
-上下文目录、CI 门禁脚本、角色交接规则，以及一组可以安装到 Codex 的 workflow
-skills。
+上下文目录、CI 门禁脚本、角色交接规则，以及一组遵循 Agent Skills 开放格式、
+可同时用于 Codex、Claude Code 和 OpenCode 的 workflow skills。
 
 核心目标不是让 AI 自主审批、合并或发布，而是让团队里的产品经理（PdM）、项目经理
 （PM）、开发经理（Dev Lead）、开发（Dev）、代码审阅（Reviewer）、测试（QA）、运维
@@ -11,15 +11,17 @@ skills。
 
 ## 这个项目提供什么
 
-- GitLab Issue / MR 模板和标签建议。
+- GitLab Issue / MR 模板，以及 `flow::fast`、`flow::standard`、
+  `flow::hotfix` 三个流程标签。
 - `.ai/project.yml`、`.ai/rule-map.yml`、`.ai/context-index.yml`、`.ai/role-map.yml`
   等 AI 工作流配置。
 - `docs/context`、`docs/modules`、`docs/iterations` 等长期上下文目录。
 - PRD、产品设计、原型记录、技术方案、测试计划、测试报告、发布说明等文档模板。
-- 目标业务项目可用的 CI 模板：`policy -> workflow -> test -> release`。
+- 目标业务项目 CI：MR 运行 `policy -> workflow -> test`，tag 或手工发布再运行 `release`。
 - `policy_check.py`、`workflow_assets_check.py`、`validate_role_map.py` 等检查脚本。
 - GitLab webhook Orchestrator 骨架。
-- 一组从真实 demo 流程提炼出来的 Codex skills。
+- 八个从真实 demo 流程提炼出来的跨 Agent workflow skills。
+- 所有 Skill 固定使用 `gj-` 前缀；GJ 是“公交”工作流的简称。
 - `examples/demo-project` 和 `examples/demo-run`，用于查看一次端到端模拟留下的样例产物。
 
 ## 角色怎么理解
@@ -34,23 +36,49 @@ skills。
 | 合并（Maintainer） | 负责最终合并判断和合并操作，通常需要 GitLab 维护者权限。 |
 | 测试（QA） | 负责测试计划、验收测试、回归测试、测试报告、缺陷跟踪。 |
 | 运维（DevOps） | 负责 CI/CD、环境部署、共享测试环境锁、发布准备、回滚方案。 |
-| 任意成员（Member） | 通过 `gj-workflow-inbox` 查看分配给自己的 GitLab 待办。 |
+| 任意成员（Member） | 通过 `gj-workflow-next` 查看待办、确认 flow 和下一步。 |
+
+这些是责任帽子，不代表必须有对应人数；同一个人可以承担多个角色。高风险改动仍建议由第二个人确认。
 
 ## 新项目怎么初始化
 
 这里的“新项目”指你自己的业务项目，不是把业务项目打包成这个开源项目。
 
-1. 先在本仓库安装 Codex skills：
+1. 在目标业务项目根目录，用同一个 GitHub 地址安装全部 workflow skills：
 
 ```powershell
-python scripts/install_skills.py --force
+npx --yes skills@1.5.15 add https://github.com/TheLastMagician/gj-gitlab-ai-workflow --skill '*' -a codex -a claude-code -a opencode --copy -y
 ```
 
-2. 在目标业务项目里安装工作流资产。全新项目可以直接安装：
+这条命令从仓库的 `skills/*/SKILL.md` 读取唯一源码，并安装到：
+
+| Agent | 项目内发现目录 |
+| --- | --- |
+| Codex | `.agents/skills` |
+| Claude Code | `.claude/skills` |
+| OpenCode | `.agents/skills` |
+
+`--copy` 避免 Windows 的符号链接权限问题。安装完成后新开一个 Agent 会话即可发现
+skills。GitHub 链接本身不会、也不应该绕过本机安全策略自动执行；用户需要显式运行
+上面的命令，或者明确让当前 Agent 执行安装。
+
+没有 Node.js 时，可以 clone 本仓库后使用 Python 兜底安装器：
+
+```powershell
+python scripts/install_skills.py --agent all --project-root C:\path\to\your-project --force
+```
+
+不要维护三套 `SKILL.md`。`AGENTS.md`、`CLAUDE.md` 是项目入口说明，不是 Skill
+安装包；只有未来需要 hooks、MCP 或 Agent 专属启动逻辑时，才增加对应插件清单。
+
+2. 在目标业务项目里一次性安装工作流资产：
 
 ```powershell
 python scripts/install_workflow.py --target C:\path\to\your-project
 ```
+
+安装只做一次。日常流程由工作项和 MR 的 `flow::*` 标签决定，
+不需要重新安装或升级工作流。
 
 已有项目建议先只补缺失文件：
 
@@ -67,12 +95,14 @@ python scripts/install_workflow.py --target C:\path\to\your-project --force --ba
 3. 使用 `gj-workflow-bootstrap` 辅助初始化目标项目：
 
 - 确认 GitLab labels、Issue/MR 模板、CI、目录结构是否完整。
+- 创建 `flow::fast`、`flow::standard`、`flow::hotfix` 标签。
 - 填写 `.ai/project.yml` 的项目基本信息。
-- 填写 `.ai/role-map.yml`，把产品经理（PdM）、项目经理（PM）、开发经理（Dev Lead）、
+- 按需填写 `.ai/role-map.yml`，把产品经理（PdM）、项目经理（PM）、开发经理（Dev Lead）、
   开发（Dev）、代码审阅（Reviewer）、合并（Maintainer）、测试（QA）、运维（DevOps）
   映射到真实 GitLab 用户。
 - 确认 `.ai/rule-map.yml` 的 MR 门禁规则。
-- 确认 `CODEOWNERS`、保护分支、必须通过 pipeline 后才能 merge。
+- 确认保护分支、可合并角色、必须通过 Pipeline 后才能 merge。
+- `CODEOWNERS` 仅用于推荐 Reviewer，不作为 GitLab CE 强制审批证据。
 
 4. 如果是已有代码项目，继续使用 `gj-codebase-map`：
 
@@ -88,137 +118,119 @@ python scripts/install_workflow.py --target C:\path\to\your-project --force --ba
 - GitLab MR 的 `reviewer` 是当前代码审阅。
 - 交接评论必须 `@username`。
 - 企业微信、邮箱等只是 GitLab 通知投递渠道。
-- 个人待办统一由 `gj-workflow-inbox` 通过 GitLab API 读取，不绕到邮件里解析。
+- 个人待办统一由 `gj-workflow-next` 通过 GitLab API 读取，不绕到邮件里解析。
 
 ## 一个新需求怎么流转
 
-新需求的入口是创建 GitLab Issue。`gj-workflow-inbox` 不是需求提交入口，它只是在
-后续节点被指派给某个人以后，用来读取个人待办。
+新需求的入口是 GitLab Issue。日常只需要从 `gj-workflow-next` 开始，它读取待办、
+推荐 flow 和下一步；人确认唯一 flow 标签后，AI 才按对应深度继续。
+
+最短操作路径：
+
+```text
+创建工作项
+  -> gj-workflow-next 推荐 flow
+  -> 人在编码前确认唯一 flow 标签
+  -> plan-change（Fast 可极简）
+  -> develop-change 开发和自测
+  -> 创建 MR，并选择同一个 flow 标签
+  -> CI + mr-review
+  -> 人决定合并和发布
+  -> close-loop 更新长期上下文
+```
 
 ```mermaid
 flowchart TD
-  A["任意成员（Member）/产品经理（PdM）：提交需求 Issue<br/>填写背景、目标、期望结果"] --> B["产品经理（PdM）/项目经理（PM）：gj-workflow-triage<br/>确认流程类型和优先级"]
-  B --> C{"工作类型"}
-
-  C -- "标准需求" --> D["产品经理（PdM）：gj-requirement-refine<br/>澄清需求和验收标准"]
-  D --> E["开发经理（Dev Lead）：gj-solution-plan<br/>技术方案和风险评估"]
-  E --> F["开发经理（Dev Lead）/项目经理（PM）：gj-issue-split<br/>拆分开发/测试/发布/文档任务"]
-
-  F --> G["开发（Dev）：gj-dev-context<br/>读取上下文并实现"]
-  F --> H["测试（QA）：gj-test-design<br/>设计验收和回归用例"]
-  G --> I["开发（Dev）：提交 MR<br/>代码、测试、文档影响"]
-  I --> J["代码审阅（Reviewer）：gj-mr-review<br/>审代码和风险"]
-  J --> K{"审阅通过？"}
-  K -- "否" --> G
-  K -- "是" --> L["运维（DevOps）/测试（QA）：gj-env-deploy-assist<br/>部署 dev/review 或申请共享 test"]
-  H --> M["测试（QA）：执行测试<br/>记录测试报告"]
-  L --> M
-  M --> N{"发现缺陷？"}
-  N -- "是" --> O["开发（Dev）/测试（QA）：gj-bug-fix<br/>定位、修复、回归"]
-  O --> I
-  N -- "否" --> P["合并（Maintainer）：gj-merge-assist<br/>人工授权后合并"]
-  P --> Q["运维（DevOps）/项目经理（PM）：gj-release-prep<br/>发布说明、上线检查、回滚方案"]
-  Q --> R["项目经理（PM）/开发经理（Dev Lead）：gj-retro-learnings<br/>复盘"]
-  R --> S["项目经理（PM）/开发经理（Dev Lead）：gj-context-extract<br/>沉淀长期 AI 上下文"]
-
-  C -- "小改动" --> G
-  C -- "Bug 修复" --> O
-  C -- "Hotfix" --> T["运维（DevOps）/开发经理（Dev Lead）：gj-hotfix<br/>紧急修复和事后补齐"]
-  T --> P
+  A["提交工作项或选择 GitLab 待办"] --> B["gj-workflow-next<br/>读取状态并推荐 flow"]
+  B --> C{"人确认唯一 flow 标签"}
+  C -- "flow::standard" --> D["gj-plan-change<br/>需求、方案、任务和测试"]
+  C -- "flow::fast" --> E["gj-develop-change<br/>边界明确后直接实现"]
+  C -- "flow::hotfix" --> E
+  D --> E
+  E --> F["创建 MR<br/>选择相同 flow 标签"]
+  F --> G["CI policy / workflow / test"]
+  G --> H["gj-mr-review<br/>问题审阅与合并就绪检查"]
+  H --> I{"存在阻塞问题？"}
+  I -- "是" --> E
+  I -- "否" --> J["人决定并执行合并"]
+  J --> K["gj-release-readiness<br/>发布、验证和回滚证据"]
+  K --> L["人决定并执行发布"]
+  L --> M["gj-close-loop<br/>复盘并更新长期上下文"]
 ```
 
 | 阶段 | 角色 | 使用 skill | 产物 |
 | --- | --- | --- | --- |
-| 需求提交 | 任意成员（Member）/ 产品经理（PdM） | GitLab Issue 模板；需要 AI 起草时可用 `gj-requirement-refine` | 需求 Issue，包含背景、目标、期望结果、初步优先级、相关截图/链接 |
-| 需求分流 | 产品经理（PdM）/ 项目经理（PM） | `gj-workflow-triage` | 判断走标准需求、小改动、Bug 修复还是 Hotfix |
-| 需求澄清 | 产品经理（PdM） | `gj-requirement-refine` | 需求 Issue、验收标准、非目标、风险、文档影响 |
-| 方案设计 | 开发经理（Dev Lead） | `gj-solution-plan` | 技术方案、影响范围、测试策略、发布和回滚思路 |
-| 任务拆分 | 开发经理（Dev Lead）/ 项目经理（PM） | `gj-issue-split` | 开发、测试、发布、文档、后续事项等可追踪 Issue |
-| 开发准备 | 开发（Dev） | `gj-dev-context` | 当前 Issue 相关上下文、应读文件、风险点、实现边界 |
-| 提交 MR | 开发（Dev） | 常规开发 + MR 模板 | 代码、测试、文档影响说明、关联 Issue |
-| MR 审阅 | 代码审阅（Reviewer） | `gj-mr-review` | 审阅意见、阻塞项、风险路径、是否建议合并 |
-| 环境部署 | 运维（DevOps）/ 测试（QA） | `gj-env-deploy-assist` | dev/test 部署计划、环境锁、版本记录、回滚目标 |
-| 测试设计与执行 | 测试（QA） | `gj-test-design` | 测试计划、验收用例、回归用例、失败路径、测试报告 |
-| 缺陷处理 | 开发（Dev）/ 测试（QA） | `gj-bug-fix` | Bug 根因、修复范围、回归验证、修复 MR |
-| 合并辅助 | 代码审阅（Reviewer）/ 合并（Maintainer） | `gj-merge-assist` | 合并前检查、pipeline 状态、讨论状态、人工授权后的 merge 操作 |
-| 发布准备 | 运维（DevOps）/ 项目经理（PM） | `gj-release-prep` | 发布说明、上线检查、回滚方案、发布确认 |
-| 复盘沉淀 | 项目经理（PM）/ 开发经理（Dev Lead） | `gj-retro-learnings` | 复盘结论、流程改进、遗留问题 |
-| 上下文更新 | 项目经理（PM）/ 开发经理（Dev Lead） | `gj-context-extract` | `ai-context-summary.md`、模块文档、ADR、context index 更新 |
-| 下一步判断 | 任意成员（Member） | `gj-workflow-next` | 根据当前 GitLab 状态推荐下一步动作和 skill |
+| 入口和分流 | 任意成员（Member） | `gj-workflow-next` | 待办、flow 建议、阻塞项和下一步；人确认标签 |
+| 变更计划 | 产品经理（PdM）/开发经理（Dev Lead） | `gj-plan-change` | 与 flow 匹配的验收、方案、任务、测试和回滚计划 |
+| 开发和修复 | 开发（Dev） | `gj-develop-change` | 功能、Fast 改动、Bug 或 Hotfix 的实现、测试和文档 |
+| MR 审阅 | 代码审阅（Reviewer） | `gj-mr-review` | 按严重级别排列的问题和合并就绪结论 |
+| 合并 | 合并（Maintainer） | GitLab | 人检查证据并决定、执行合并 |
+| 发布准备 | 运维（DevOps）/测试（QA） | `gj-release-readiness` | 环境锁、发布说明、验证、回滚和人工确认项 |
+| 发布 | 运维（DevOps）/Maintainer | GitLab CI/CD | 人决定、执行发布 |
+| 收尾 | 项目经理（PM）/开发经理（Dev Lead） | `gj-close-loop` | 复盘、模块文档、ADR、context index 和摘要更新 |
 
 每个节点完成后，都要在 GitLab 上设置下一个处理人的 assignee/reviewer，并用
-`@username` 评论交接。被指派的人可以用 `gj-workflow-inbox` 查看自己的待办，再进入
+`@username` 评论交接。被指派的人可以用 `gj-workflow-next` 查看自己的待办，再进入
 对应节点的 skill。
 
 关键规则：
 
-- 没有 Issue 不开发。
+- Standard / Hotfix 必须关联 Issue；Fast 低风险 MR 可以不建 Issue。
+- 工作开始前由人确认唯一通道标签：`flow::fast`、`flow::standard` 或 `flow::hotfix`。
+- 创建 MR 时选择同一个 flow 标签；CI 校验缺失、冲突和高风险误用。
 - 没有验收标准不排期。
 - 复杂需求没有方案评审不进入开发。
 - 代码必须通过 MR 合并。
 - Pipeline 必须成功才能合并。
+- 低风险 Fast MR 不要求额外审批人数；高风险 changed files 不能走 Fast。
+- GitLab CE 的硬门禁是成功 Pipeline、保护分支和受限合并权限，
+  不使用 `/owner-ack` 字符串伪装审批。
 - AI 可以辅助审批判断、审阅、合并检查、发布准备，但不能脱离人的明确授权自主审批、自主合并、自主发布。
 - 每个需要人处理的节点都要设置 assignee/reviewer，并用 `@username` 评论交接。
 - Issue/MR 记录讨论过程，仓库 `docs/` 记录稳定结论。
 
 ## 个人如何用 AI 处理待办
 
-对个人来说，日常入口就是 GitLab 待办。每天先用 `gj-workflow-inbox` 读取分配给自己的
-Todo、Issue、MR、审阅请求、失败 pipeline 和未解决讨论，再让 AI 判断应该进入哪个
-workflow skill。
+对个人来说，日常入口只有 `gj-workflow-next`。它读取 GitLab Todo、Issue、MR、
+审阅请求、失败 Pipeline 和未解决讨论，推荐 flow 和下一步 Skill；人确认后再执行。
 
 ```mermaid
 flowchart TD
-  A["任意成员（Member）：gj-workflow-inbox<br/>读取我的 GitLab 待办"] --> B["选择一个待办<br/>Issue / MR / 审阅 / Pipeline / 讨论"]
-  B --> C["AI 判断待办类型<br/>推荐对应 workflow skill"]
-  C --> D{"人确认处理方式？"}
-  D -- "确认" --> E["AI 辅助处理<br/>分析、草稿、代码、审阅、测试或发布检查"]
-  D -- "暂不处理" --> K["处理下一项待办或结束"]
-  E --> F["人审阅和确认结果"]
-  F --> G{"结果写回哪里？"}
-  G -- "GitLab" --> H["评论 / 更新 Issue / 更新 MR / 指派下一人"]
-  G -- "仓库" --> I["提交代码 / 更新 docs / 提交 MR"]
-  H --> J["设置 assignee/reviewer + @username 交接"]
-  I --> J
-  J --> K
+  A["gj-workflow-next<br/>读取 GitLab 待办和项目状态"] --> B["选择一个待办"]
+  B --> C["AI 推荐 flow 和下一步 Skill"]
+  C --> D{"人确认标签和处理方式？"}
+  D -- "确认" --> E["plan / develop / review / release / close"]
+  D -- "暂不处理" --> I["处理下一项或结束"]
+  E --> F["人审阅 AI 结果"]
+  F --> G["写回 GitLab 或仓库"]
+  G --> H["设置 assignee/reviewer + @username 交接"]
+  H --> I
 ```
 
 | 待办类型 | 常用 skill | 人需要确认什么 |
 | --- | --- | --- |
-| 需求 Issue | `gj-workflow-triage`、`gj-requirement-refine` | 需求类型、优先级、验收标准、是否进入开发。 |
-| 方案或拆分任务 | `gj-solution-plan`、`gj-issue-split` | 技术方案、影响范围、任务边界、风险是否可接受。 |
-| 开发任务 | `gj-dev-context` | 实现范围、测试方式、是否需要更新正式文档。 |
-| MR 审阅请求 | `gj-mr-review` | Review 意见是否成立、是否阻塞、是否建议合并。 |
-| 合并待办 | `gj-merge-assist` | pipeline、讨论、审批、文档影响是否满足合并条件；是否授权合并。 |
-| 测试待办 | `gj-test-design`、`gj-bug-fix` | 测试用例、测试结论、缺陷是否阻塞发布。 |
-| 部署或发布待办 | `gj-env-deploy-assist`、`gj-release-prep` | 环境锁、部署版本、验证结果、回滚目标、发布窗口。 |
-| 复盘或上下文沉淀 | `gj-retro-learnings`、`gj-context-extract` | 哪些结论需要写入长期文档和 AI 上下文。 |
+| 新工作、Bug 或流程阻塞 | `gj-workflow-next` | flow 标签、优先级和下一步。 |
+| 需求、方案、任务和测试设计 | `gj-plan-change` | 验收、方案、风险、任务边界和测试覆盖。 |
+| 开发、Bug 修复或 Hotfix | `gj-develop-change` | 实现范围、测试、文档和回滚。 |
+| MR 审阅或合并前检查 | `gj-mr-review` | 阻塞问题和是否进入人的合并决定。 |
+| 环境或发布准备 | `gj-release-readiness` | 环境锁、部署版本、验证、回滚和发布窗口。 |
+| 复盘或上下文沉淀 | `gj-close-loop` | 长期事实、文档更新和后续事项。 |
 
 这不是“AI 自动把所有事情做完”。正确边界是：AI 帮人读取上下文、生成草稿、做检查、
-执行被明确授权的操作；人负责判断、确认、提交、审批、合并、发布和交接。
+执行范围明确的分析、代码、文档和测试；人负责 flow、审批、合并、发布和交接。
 
 ## 常用 skill 使用场景
 
 | Skill | 什么时候用 |
 | --- | --- |
-| `gj-workflow-bootstrap` | 新项目接入工作流、初始化模板/目录/CI/角色映射/门禁规则 |
-| `gj-codebase-map` | 旧项目第一次接入，或项目结构变化很大，需要重新整理 AI 上下文 |
-| `gj-workflow-inbox` | 每天开始工作、切换上下文、检查分配给自己的 GitLab 待办 |
-| `gj-workflow-triage` | 新 Issue 进入时，判断是标准需求、小改动、Bug 还是 Hotfix |
-| `gj-requirement-refine` | 需求还不清楚、验收标准不足、需要补 PRD 或产品设计 |
-| `gj-solution-plan` | 需求涉及接口、数据、权限、流程、环境、回滚或跨模块影响 |
-| `gj-issue-split` | 方案明确后，把一个大需求拆成开发、测试、发布、文档等子任务 |
-| `gj-dev-context` | 开发动手前，让 AI 读取当前 Issue/MR 相关上下文和代码范围 |
-| `gj-mr-review` | 代码审阅（Reviewer）审 MR 时，用 AI 辅助看风险、测试、文档影响和遗漏 |
-| `gj-merge-assist` | 合并（Maintainer）已决定可以合并，需要 AI 做合并前检查或执行被授权的 merge |
-| `gj-test-design` | 测试（QA）设计验收、回归、权限、失败路径、发布验证用例 |
-| `gj-env-deploy-assist` | 需要部署 dev/review/test 环境，尤其是共享测试环境需要环境锁和人工确认 |
-| `gj-bug-fix` | 测试（QA）或线上发现缺陷，需要复现、定位根因、修复和回归 |
-| `gj-hotfix` | P0/P1、生产阻塞、安全风险等紧急问题 |
-| `gj-release-prep` | 准备发布说明、上线检查、回滚方案、发布确认 |
-| `gj-retro-learnings` | 迭代结束后复盘流程问题、失败点、人工确认点和改进项 |
-| `gj-context-extract` | 把一次需求/修复/发布的稳定结论沉淀到长期 AI 上下文 |
-| `gj-workflow-next` | 不确定当前该做什么时，让 AI 根据 GitLab 状态推荐下一步 |
+| `gj-workflow-bootstrap` | 新项目接入，安装并检查标签、模板、上下文和 CI 门禁 |
+| `gj-codebase-map` | 旧项目第一次接入或大型重构后刷新代码库上下文 |
+| `gj-workflow-next` | 每天开始工作、检查待办、推荐 flow 或判断下一步 |
+| `gj-plan-change` | 需求、方案、任务、测试或回滚需要按 flow 规划 |
+| `gj-develop-change` | 实现功能、Fast 改动、Bug 修复或 Hotfix |
+| `gj-mr-review` | 审 MR、检查风险和测试，并给出合并就绪结论 |
+| `gj-release-readiness` | 准备环境、发布说明、验证、监控和回滚证据 |
+| `gj-close-loop` | 完成后复盘并更新长期文档和 AI 上下文 |
 
 ## 文档怎么维护
 
@@ -247,17 +259,21 @@ flowchart TD
 安装到业务项目里的 GitLab CI 是业务项目流水线：
 
 ```text
-policy -> workflow -> test -> release
+Fast / Standard MR: policy -> workflow -> test
+Tag / 手工主分支发布: policy -> workflow -> test -> release
 ```
 
 它不包含 `skill_validate` 或 `package_open_source`。这些是维护本开源工作流项目时才需要的检查，不应该出现在每个业务项目的流水线里。
 
 各阶段含义：
 
-- `policy`：检查 MR 描述、文档影响、规则责任人确认、疑似 secret 等。
-- `workflow`：检查工作流资产是否完整，`.ai/role-map.yml` 是否已经映射到真实人员。
+- `policy`：要求唯一 `flow::*` 标签，并检查 MR 内容、文档影响、changed-file 风险和疑似 secret。
+- `workflow`：检查工作流资产；角色映射校验按需开启。
 - `test`：运行目标项目自己的测试或 smoke check。
 - `release`：生成 release dry run，用于发布前人工确认。
+
+Fast MR 默认只跑 policy、workflow assets 和 test。上下文新鲜度只在相关
+文档变化时运行；release dry run 只在 tag 或手工主分支流水线运行。
 
 环境建议：
 
@@ -270,7 +286,7 @@ policy -> workflow -> test -> release
 这些命令用于维护 `gj-gitlab-ai-workflow` 这个开源项目本身：
 
 ```powershell
-python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt
+python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt --labels flow::standard
 python scripts/validate_role_map.py --role-map templates/ai/role-map.yml --allow-placeholders
 python scripts/validate_skills.py
 python scripts/install_skills.py --dry-run

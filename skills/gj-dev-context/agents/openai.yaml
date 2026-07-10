@@ -1,4 +1,0 @@
-interface:
-  display_name: "GJ Dev Context"
-  short_description: "Load focused context before coding"
-  default_prompt: "Use $gj-dev-context to load the focused project context needed before implementation."

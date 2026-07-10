@@ -1,5 +1,7 @@
 # 需求 Issue
 
+/label ~"type-requirement" ~"flow::standard"
+
 ## 需求背景
 
 ## 业务目标

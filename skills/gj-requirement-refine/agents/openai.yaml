@@ -1,4 +1,0 @@
-interface:
-  display_name: "GJ Requirement Refine"
-  short_description: "Refine requirements into DoR outputs"
-  default_prompt: "Use $gj-requirement-refine to clarify this requirement and draft acceptance criteria."

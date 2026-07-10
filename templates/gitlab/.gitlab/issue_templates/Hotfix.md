@@ -1,5 +1,7 @@
 # Hotfix Issue
 
+/label ~"type-hotfix" ~"flow::hotfix"
+
 ## 故障等级和影响范围
 
 ## 当前止血方案

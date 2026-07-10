@@ -1,4 +1,0 @@
-interface:
-  display_name: "GJ Retro Learnings"
-  short_description: "Extract retros and AI context"
-  default_prompt: "Use $gj-retro-learnings to summarize this milestone and draft ai-context-summary."

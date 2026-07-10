@@ -1,4 +1,0 @@
-interface:
-  display_name: "GJ Workflow Triage"
-  short_description: "Route GitLab work to the right flow"
-  default_prompt: "Use $gj-workflow-triage to classify this GitLab issue and list required workflow steps and human confirmations."

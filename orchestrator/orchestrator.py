@@ -10,18 +10,12 @@ from typing import Any
 
 
 COMMAND_TO_SKILL = {
-    "/ai-triage": "gj-workflow-triage",
-    "/ai-analyze": "gj-requirement-refine",
-    "/ai-draft-solution": "gj-solution-plan",
-    "/ai-split-tasks": "gj-issue-split",
-    "/ai-load-context": "gj-dev-context",
-    "/ai-update-context": "gj-context-extract",
-    "/ai-review-mr": "gj-mr-review",
-    "/ai-bug-fix": "gj-bug-fix",
-    "/ai-hotfix": "gj-hotfix",
-    "/ai-test-cases": "gj-test-design",
-    "/ai-release-note": "gj-release-prep",
-    "/ai-retro": "gj-retro-learnings",
+    "/ai-next": "gj-workflow-next",
+    "/ai-plan": "gj-plan-change",
+    "/ai-develop": "gj-develop-change",
+    "/ai-review": "gj-mr-review",
+    "/ai-release": "gj-release-readiness",
+    "/ai-close": "gj-close-loop",
 }
 
 
@@ -51,12 +45,16 @@ def route_event(payload: dict[str, Any]) -> Route | None:
 
     if event == "issue":
         labels = {label.get("title") for label in payload.get("labels", []) if isinstance(label, dict)}
+        flow_labels = labels & {"flow::fast", "flow::standard", "flow::hotfix"}
+        if "type-hotfix" in labels and "flow::hotfix" in flow_labels:
+            return Route(event=event, skill="gj-develop-change", reason="confirmed hotfix issue")
+        if "type-bug" in labels and len(flow_labels) == 1:
+            return Route(event=event, skill="gj-develop-change", reason="bug issue with confirmed flow")
         if "type-bug" in labels:
-            return Route(event=event, skill="gj-bug-fix", reason="issue opened with type-bug")
-        if "type-hotfix" in labels:
-            return Route(event=event, skill="gj-hotfix", reason="issue opened with type-hotfix")
+            return Route(event=event, skill="gj-workflow-next", reason="bug issue needs flow confirmation")
         if "type-requirement" in labels:
-            return Route(event=event, skill="gj-requirement-refine", reason="issue opened with type-requirement")
+            return Route(event=event, skill="gj-plan-change", reason="requirement issue needs a change plan")
+        return Route(event=event, skill="gj-workflow-next", reason="issue needs workflow routing")
 
     if event == "merge_request":
         attrs = payload.get("object_attributes", {})
@@ -66,7 +64,7 @@ def route_event(payload: dict[str, Any]) -> Route | None:
     if event == "pipeline":
         attrs = payload.get("object_attributes", {})
         if attrs.get("status") == "failed":
-            return Route(event=event, skill="gj-workflow-triage", reason="pipeline failed")
+            return Route(event=event, skill="gj-workflow-next", reason="pipeline failed")
 
     return None
 

@@ -22,7 +22,7 @@ def main() -> int:
 
 ## Pipeline Stages
 
-1. policy: MR policy, owner ack, and secret checks.
+1. policy: flow label, MR evidence, changed-file risk, and secret checks.
 2. workflow: orchestrator routing and workflow contract checks.
 3. test: demo project smoke tests.
 4. package: full skill package validation and open-source package artifact.
@@ -32,7 +32,7 @@ def main() -> int:
 
 - GitLab labels, milestone, issues, notes, and MR are recorded in `examples/demo-run/`.
 - The order approval demo verifies submit, approve, reject, self-approval blocking, and repeated approval blocking.
-- Draft skills are validated as repository artifacts.
+- The eight cross-agent workflow skills are validated as repository artifacts.
 """,
         encoding="utf-8",
     )

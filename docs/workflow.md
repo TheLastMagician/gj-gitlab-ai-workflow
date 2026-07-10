@@ -7,26 +7,19 @@
 ## 流程总览
 
 ```text
-需求进入
-  -> AI 需求澄清
-  -> 产品确认
-  -> AI 方案草案
-  -> Tech Lead 评审
-  -> AI 拆分开发 / 测试 / 发布任务
-  -> GitLab 指派 / @mention 交接
-  -> 开发创建分支和 MR
-  -> CI / policy_check / AI Review
-  -> 开发环境验证（可自动）
-  -> 人工 Review
-  -> 测试环境申请 / 验收（需人工确认）
-  -> 发布 / 回滚准备
-  -> 复盘
-  -> 更新 AI 上下文
+工作进入 -> gj-workflow-next 推荐 flow -> 人确认标签
+  -> gj-plan-change（Fast 可极简）
+  -> gj-develop-change
+  -> MR + CI + gj-mr-review
+  -> 人决定合并
+  -> gj-release-readiness
+  -> 人决定发布
+  -> gj-close-loop
 ```
 
 ## 必守原则
 
-1. 没有 Issue 不开发。
+1. Standard / Hotfix 必须关联 Issue；Fast 低风险 MR 可以不建 Issue。
 2. 没有验收标准不排期。
 3. 复杂需求没有方案评审不进入开发。
 4. 代码必须通过 MR 合并。
@@ -43,10 +36,36 @@
 
 | 类型 | 适用场景 | 必须保留 |
 | --- | --- | --- |
-| 标准需求 | 新功能、复杂改造、跨模块、审批、权限、金额、生产配置 | 需求、方案、任务、MR、测试、发布、复盘 |
-| 小改动 | 低风险局部改动，通常半天内完成 | 轻量 Issue、MR、CI、Review、自测 |
-| Bug 修复 | 有复现路径的缺陷 | Bug Issue、根因、修复 MR、回归验证 |
-| Hotfix | P0/P1、生产阻塞、安全风险 | Hotfix Issue、最小 Review、发布验证、事后复盘 |
+| Fast | 低风险局部改动，通常一天内完成 | MR、风险说明、自测证据、文档影响；需要协作时再建 SmallChange Issue |
+| Standard | 新功能、复杂改造、跨模块、审批、权限、金额、生产配置 | 需求、方案、任务、MR、测试、发布、复盘 |
+| Hotfix | P0/P1、生产阻塞、安全或数据风险 | Hotfix Issue、最小 Review、发布验证、事后复盘 |
+
+低风险局部工作选择 Fast；Requirement 模板预填 Standard；生产事故选择
+Hotfix。命中 `.ai/rule-map.yml` 高风险路径时，CI 要求从 Fast 改为
+Standard 或 Hotfix。Bug 可以按风险进入 Fast 或 Standard，不单独增加流程重量。
+
+## 通道确认与标签
+
+通道在开始实现前由人确认，并记录为 GitLab 标签：
+
+- Requirement Issue 模板预填 `flow::standard`。
+- SmallChange Issue 模板预填 `flow::fast`。
+- Hotfix Issue 模板预填 `flow::hotfix`。
+- Bug 由 `gj-workflow-next` 根据影响范围推荐 Fast 或 Standard。
+- 创建 MR 时选择与当前工作一致的唯一 `flow::*` 标签。
+
+CI 从 `CI_MERGE_REQUEST_LABELS` 读取状态。没有 flow 标签、同时选择多个
+flow 标签，或者 `flow::fast` 命中高风险路径，都会阻止 policy job。
+CI 只负责复核和兜底，不替人决定业务紧急程度或风险是否可接受。
+
+## GitLab CE 合并门禁
+
+- 默认项目按低风险处理，Fast MR 不要求额外审批人数。
+- `.ai/rule-map.yml` 只定义最低流程；高风险 changed files 不能走 Fast。
+- Standard / Hotfix 必须有关联 Issue、风险、自测和回滚证据。
+- 默认分支必须保护，限制可合并角色，并要求 Pipeline 成功后才能合并。
+- `CODEOWNERS` 和可选 Approve 操作用于辅助 Review，不作为硬门禁。
+- 工作流不接受 `/owner-ack`、标签或勾选框作为强制审批已经发生的证据。
 
 ## 上下文读取顺序
 
@@ -104,7 +123,7 @@ release/* / tag:
 - 企业微信或邮件只是 GitLab 通知的投递渠道，不作为工作流状态源。
 
 每个需要人处理的节点，只有在 GitLab 上完成“处理人 + 状态/标签 + 明确动作 +
-必要时限 + @mention”后，才算真正交接。个人待办由 `gj-workflow-inbox` 通过
+必要时限 + @mention”后，才算真正交接。个人待办由 `gj-workflow-next` 通过
 GitLab API 读取 Todos、assigned issues、review requests、mentions、失败
 pipeline 和未解决讨论，再路由到对应 workflow skill。
 
@@ -113,7 +132,7 @@ pipeline 和未解决讨论，再路由到对应 workflow skill。
 个人每天不需要从所有 Issue、MR、Pipeline 和评论里手动找工作入口。标准做法是：
 
 ```text
-gj-workflow-inbox 获取我的 GitLab 待办
+gj-workflow-next 获取我的 GitLab 待办并推荐 flow/下一步
   -> 选择一个待办
   -> AI 判断待办类型并推荐 workflow skill
   -> 人确认处理方式
@@ -127,14 +146,12 @@ gj-workflow-inbox 获取我的 GitLab 待办
 
 | 待办类型 | 常用 skill | 人保留的决定权 |
 | --- | --- | --- |
-| 需求 Issue | `gj-workflow-triage`、`gj-requirement-refine` | 需求类型、优先级、验收标准、是否进入开发。 |
-| 方案或拆分任务 | `gj-solution-plan`、`gj-issue-split` | 技术方案、影响范围、任务边界、风险是否可接受。 |
-| 开发任务 | `gj-dev-context` | 实现范围、测试方式、是否需要更新正式文档。 |
-| MR 审阅请求 | `gj-mr-review` | Review 意见是否成立、是否阻塞、是否建议合并。 |
-| 合并待办 | `gj-merge-assist` | pipeline、讨论、审批、文档影响是否满足合并条件；是否授权合并。 |
-| 测试待办 | `gj-test-design`、`gj-bug-fix` | 测试用例、测试结论、缺陷是否阻塞发布。 |
-| 部署或发布待办 | `gj-env-deploy-assist`、`gj-release-prep` | 环境锁、部署版本、验证结果、回滚目标、发布窗口。 |
-| 复盘或上下文沉淀 | `gj-retro-learnings`、`gj-context-extract` | 哪些结论需要写入长期文档和 AI 上下文。 |
+| 新工作、Bug 或阻塞 | `gj-workflow-next` | flow 标签、优先级和下一步。 |
+| 需求、方案、拆分或测试设计 | `gj-plan-change` | 验收标准、技术方案、任务边界和风险。 |
+| 开发、Bug 修复或 Hotfix | `gj-develop-change` | 实现范围、测试、文档和回滚。 |
+| MR 审阅或合并就绪检查 | `gj-mr-review` | 阻塞问题和是否进入人工合并决策。 |
+| 环境或发布准备 | `gj-release-readiness` | 环境锁、版本、验证、回滚和发布窗口。 |
+| 复盘或上下文沉淀 | `gj-close-loop` | 长期事实、文档更新和后续事项。 |
 
 AI 可以辅助人完成当前节点，但不能替代人做审批、合并、覆盖共享测试环境或发布决定。
 
@@ -165,18 +182,19 @@ MR 更新仓库文档。
 
 - 标签、模板、目录和 CI 门禁。
 - `.ai/role-map.yml` 角色映射和 GitLab handoff 规则。
-- `docs/standards/12-document-standard.md` 文档治理规则和正式文档模板。
+- 文档治理规则(生命周期、回写门禁、DoR/DoD)已并入 `docs/standards/06-release-standard.md`。
 - `policy_check.py` 检查 MR 描述、风险路径和疑似 secret。
 - `gj-codebase-map` 生成既有项目上下文草案。
-- `gj-workflow-inbox` 读取 GitLab API 待办并推荐下一步 skill。
-- `gj-workflow-triage` 判断流程路径。
-- 需求分析、Bug 修复、MR Review、复盘上下文提取。
+- `gj-workflow-next` 读取 GitLab API 待办、推荐 flow 和下一步 skill。
+- `gj-plan-change`、`gj-develop-change` 按 flow 调整交付深度。
+- `gj-mr-review`、`gj-release-readiness`、`gj-close-loop` 完成审阅、发布准备和上下文闭环。
 
 ## Skill Layer
 
-每个工作流节点都有对应 skill，见 `docs/skills.md`。这些 skill 让团队成员可以
-用 AI 辅助完成需求澄清、方案、拆分、开发上下文、Review、测试、发布、复盘和
-上下文沉淀。AI 可以辅助审批判断、合并操作和发布准备，但不能脱离人的明确授权
-自主审批、自主合并、自主覆盖共享测试环境或自主发布。
+八个 Skill 覆盖完整工作流，见 `docs/skills.md`。它们按 flow 深度辅助规划、
+开发、Review、发布准备和上下文闭环。AI 可以准备判断依据，但不能自主审批、
+合并、覆盖共享测试环境或发布。
 
-完整方案见仓库根目录的 `gitlab_ai_project_workflow_ce_integrated.md`。
+早期详细设计背景见仓库根目录的
+`gitlab_ai_project_workflow_ce_integrated.md`；当前可执行流程以本文、
+`README.md` 和 `docs/skills.md` 为准。

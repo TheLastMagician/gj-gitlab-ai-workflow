@@ -2,11 +2,14 @@
 
 ## Observed Facts
 
-- `python scripts/policy_check.py` checks MR template sections, owner ack for
-  risky paths, and committed secrets.
+- `python scripts/policy_check.py` checks the unique flow label, MR evidence,
+  changed-file risk paths, and committed secrets. High-risk paths cannot use
+  `flow::fast`; no `/owner-ack` string is accepted as approval evidence.
 - `python scripts/smoke_check.py` runs demo unit tests.
 - Demo tests use `unittest`.
-- Skill validation uses Codex skill-creator `quick_validate.py`.
+- Repository validation enforces the eight-skill catalog and portable
+  `SKILL.md` metadata; Codex skill-creator `quick_validate.py` can provide an
+  additional compatibility check.
 
 ## Needs Confirmation
 

@@ -11,7 +11,7 @@ examples/demo-project/       Tiny order approval project
 examples/demo-run/           First end-to-end run artifacts
 orchestrator/                Webhook routing skeleton
 scripts/                     CI and utility scripts
-skills/                      Draft Codex skills
+skills/                      Eight cross-agent workflow skills
 templates/                   Reusable assets for target projects
 ```
 

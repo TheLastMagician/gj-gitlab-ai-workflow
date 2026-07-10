@@ -6,9 +6,7 @@ rules:
     standards:
       - "docs/standards/04-database-standard.md"
       - "docs/standards/06-release-standard.md"
-    require_owner_ack:
-      - "dba"
-      - "tech-lead"
+    minimum_flow: "standard"
 
   - id: security
     paths:
@@ -17,16 +15,16 @@ rules:
       - "orchestrator/**"
     standards:
       - "docs/standards/08-security-standard.md"
-    require_owner_ack:
-      - "security"
+    minimum_flow: "standard"
 
   - id: workflow-policy
     paths:
       - ".gitlab-ci.yml"
       - "scripts/policy_check.py"
       - "templates/**"
+      - "docs/standards/**"
+      - ".ai/**"
     standards:
       - "docs/standards/05-review-standard.md"
       - "docs/standards/09-ai-development-boundary.md"
-    require_owner_ack:
-      - "tech-lead"
+    minimum_flow: "standard"

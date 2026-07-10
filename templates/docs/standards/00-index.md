@@ -11,4 +11,3 @@
 - `09-ai-development-boundary.md`
 - `10-environment-standard.md`
 - `11-notification-standard.md`
-- `12-document-standard.md`

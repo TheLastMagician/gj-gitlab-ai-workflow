@@ -17,7 +17,7 @@ roles:
     notification_channels: ["gitlab"]
 
   reviewer:
-    description: "Owns MR review and approval decision."
+    description: "Owns MR review and merge recommendation."
     gitlab_users: ["@reviewer"]
     notification_channels: ["gitlab"]
 

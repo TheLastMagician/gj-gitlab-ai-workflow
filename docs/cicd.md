@@ -8,11 +8,11 @@ workflow project.
 
 | Stage | Job | Purpose |
 | --- | --- | --- |
-| policy | `policy_check` | Check MR description, documentation impact, owner ack from `.ai/rule-map.yml`, risk paths, and committed secrets. |
-| workflow | `workflow_assets_check`, `validate_role_map` | Check that `.ai`, GitLab templates, context/docs templates, policy scripts, and role ownership are installed. |
+| policy | `policy_check` | Require exactly one `flow::*` MR label; check MR content, changed-file risk paths, and committed secrets. |
+| workflow | `workflow_assets_check`, optional `validate_role_map` / `context_freshness_check` | Check installed assets; enable role validation explicitly and run context checks only for relevant changes. |
 | test | `smoke_check` | Run the target project smoke test command. |
 | deploy | `deploy_dev`, `deploy_test` | Optional project-specific deployment jobs. Dev may be automatic; shared test must be manual and locked. |
-| release | `release_dry_run` | Emit a business release checklist artifact. |
+| release | optional `release_dry_run` | On tags or manual default-branch pipelines, emit a release checklist artifact. |
 
 ## Runner Requirement
 
@@ -20,6 +20,16 @@ The demo should run with a project runner using Docker executor and
 `python:3.12-slim`. A shell runner on Windows exposed a GitLab Runner PowerShell
 working-directory issue, so Docker executor is the recommended path for
 repeatable target-project validation.
+
+## GitLab CE Enforcement
+
+- Protect the default branch and limit who can merge to it.
+- Require a successful Pipeline before merge.
+- Low-risk Fast MRs do not require an additional approval count.
+- High-risk changed files cannot use `flow::fast`; Standard/Hotfix evidence and
+  a human merge decision are required.
+- CODEOWNERS and an optional Approve action may guide review, but the workflow
+  does not treat labels or `/owner-ack` text as mandatory approval evidence.
 
 If Docker Hub access is restricted but `python:3.12-slim` is already available
 locally, configure the runner with:
@@ -33,7 +43,8 @@ locally, configure the runner with:
 ## Expected Pipeline
 
 ```text
-policy -> workflow -> test -> deploy(optional) -> release
+Fast MR: policy -> workflow -> test
+Release: policy -> workflow -> test -> deploy(optional) -> release
 ```
 
 `skill_validate` belongs to this workflow project's own maintenance checks, not

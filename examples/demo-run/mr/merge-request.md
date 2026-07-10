@@ -19,7 +19,7 @@ Related: #1 #2 #3 #5 #6 #7 #8
 
 ## 自测结果
 
-- `python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt`
+- `python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt --labels flow::standard`
 - `python scripts/smoke_check.py`
 
 ## 风险点
@@ -52,13 +52,5 @@ the supplied workflow document and the first end-to-end run.
 ## Reviewer 重点关注
 
 - Ensure `gitlab-api.ps1` and tokens are not committed.
-- Check `policy_check.py` secret scanning and owner ack behavior.
+- Check `policy_check.py` secret scanning and minimum-flow behavior.
 - Confirm skill drafts are not overclaiming maturity.
-
-## 高风险确认记录
-
-/owner-ack tech-lead "同意本 MR 修改 workflow policy 和模板，作为 demo 验证。"
-
-/owner-ack security "Orchestrator 当前仅为骨架，不接收真实 webhook，不处理生产数据。"
-
-/owner-ack devops "CI 门禁可作为 MVP，protected branch 规则需在 GitLab UI 另行确认。"

@@ -30,6 +30,12 @@
 - `status-已关闭`
 - `status-阻塞`
 
+## Workflow Flow
+
+- `flow::fast`
+- `flow::standard`
+- `flow::hotfix`
+
 ## Priority / Risk / AI
 
 - `priority-P1`

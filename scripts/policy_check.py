@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Minimal GitLab MR policy check for the GJ AI workflow."""
+"""Minimal GitLab MR policy check for the GJ AI workflow.
+
+High-risk rules are read from .ai/rule-map.yml when present, so installed
+projects control their own risk paths without editing this script.
+"""
 
 from __future__ import annotations
 
@@ -12,7 +16,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-REQUIRED_MR_SECTIONS = [
+STANDARD_REQUIRED_MR_SECTIONS = [
     "关联 Issue",
     "变更内容",
     "自测结果",
@@ -22,21 +26,39 @@ REQUIRED_MR_SECTIONS = [
     "AI 使用范围",
 ]
 
+FAST_REQUIRED_MR_SECTIONS = [
+    "变更内容",
+    "自测结果",
+    "风险点",
+    "文档影响",
+]
+
+VALID_FLOWS = {"fast", "standard", "hotfix"}
+FLOW_LABELS = {f"flow::{flow}": flow for flow in VALID_FLOWS}
+
 DEFAULT_HIGH_RISK_RULES = [
     {
         "id": "database",
         "paths": ["db/migration/**", "**/migrations/**"],
-        "require_owner_ack": ["dba", "tech-lead"],
+        "minimum_flow": "standard",
     },
     {
         "id": "security",
         "paths": ["src/**/auth/**", "src/**/permission/**", "orchestrator/**"],
-        "require_owner_ack": ["security"],
+        "minimum_flow": "standard",
     },
     {
         "id": "workflow-policy",
-        "paths": [".gitlab-ci.yml", "scripts/policy_check.py", "templates/**"],
-        "require_owner_ack": ["tech-lead"],
+        # The standards and AI-context config govern every other gate;
+        # changing them must itself be a high-risk change.
+        "paths": [
+            ".gitlab-ci.yml",
+            "scripts/policy_check.py",
+            "templates/**",
+            "docs/standards/**",
+            ".ai/**",
+        ],
+        "minimum_flow": "standard",
     },
 ]
 
@@ -110,16 +132,20 @@ def parse_simple_yaml_rule_map(path: Path) -> list[dict[str, object]]:
             current = {
                 "id": stripped.split(":", 1)[1].strip().strip('"'),
                 "paths": [],
-                "require_owner_ack": [],
+                "minimum_flow": "standard",
             }
             rules.append(current)
             list_key = None
             continue
         if current is None:
             continue
-        if stripped in {"paths:", "require_owner_ack:"}:
+        if stripped == "paths:":
             list_key = stripped[:-1]
             current.setdefault(list_key, [])
+            continue
+        if stripped.startswith("minimum_flow:"):
+            current["minimum_flow"] = stripped.split(":", 1)[1].strip().strip('"').strip("'")
+            list_key = None
             continue
         if stripped == "standards:":
             list_key = None
@@ -146,18 +172,15 @@ def matches_any_path(path: str, patterns: Iterable[str]) -> bool:
 
 
 def scan_candidate_files(changed_files: Iterable[str]) -> list[Path]:
-    files = []
-    for item in run_git(["ls-files"]):
+    # Tracked files plus changed-but-untracked files, deduplicated so no file
+    # is scanned twice.
+    seen: set[Path] = set()
+    files: list[Path] = []
+    for item in [*run_git(["ls-files"]), *changed_files]:
         path = Path(item)
-        if any(part in SKIP_DIRS for part in path.parts):
+        if path in seen:
             continue
-        if path.name in SKIP_FILES:
-            continue
-        if path.exists() and path.is_file():
-            files.append(path)
-
-    for item in changed_files:
-        path = Path(item)
+        seen.add(path)
         if any(part in SKIP_DIRS for part in path.parts):
             continue
         if path.name in SKIP_FILES:
@@ -168,47 +191,99 @@ def scan_candidate_files(changed_files: Iterable[str]) -> list[Path]:
     return files
 
 
-def check_required_sections(description: str) -> list[str]:
+def split_sections(description: str) -> dict[str, str]:
+    """Map each markdown heading to the body text before the next heading."""
+    sections: dict[str, str] = {}
+    current: str | None = None
+    body: list[str] = []
+    for line in description.splitlines():
+        heading = re.match(r"#{1,6}\s+(.*)", line)
+        if heading:
+            if current is not None:
+                sections[current] = "\n".join(body)
+            current = heading.group(1).strip()
+            body = []
+        elif current is not None:
+            body.append(line)
+    if current is not None:
+        sections[current] = "\n".join(body)
+    return sections
+
+
+def section_has_content(body: str) -> bool:
+    text = re.sub(r"<!--.*?-->", "", body, flags=re.DOTALL)
+    for line in text.splitlines():
+        stripped = line.strip()
+        # An unchecked empty checkbox, a bare "Closes #", or a template label
+        # with nothing after the colon is template residue, not content.
+        if stripped in {"", "- [ ]", "Closes #"}:
+            continue
+        if re.fullmatch(r"-?\s*(已更新|不需要更新，?原因|后续文档 Issue)[：:]\s*", stripped):
+            continue
+        return True
+    return False
+
+
+def resolve_flow(description: str, labels_text: str) -> tuple[str, list[str]]:
+    configured = os.environ.get("GJ_WORKFLOW_FLOW", "").strip().lower()
+    if configured in VALID_FLOWS:
+        return configured, []
+
+    labels = {label.strip().lower() for label in labels_text.split(",") if label.strip()}
+    selected = sorted(FLOW_LABELS[label] for label in labels if label in FLOW_LABELS)
+    if len(selected) == 1:
+        return selected[0], []
+    if len(selected) > 1:
+        return "standard", [
+            "MR 只能选择一个工作流标签：flow::fast、flow::standard、flow::hotfix"
+        ]
+
+    return "standard", [
+        "MR 缺少工作流标签，请在 Labels 中选择 flow::fast、"
+        "flow::standard 或 flow::hotfix"
+    ]
+
+
+def check_required_sections(description: str, flow: str) -> list[str]:
     missing = []
-    for section in REQUIRED_MR_SECTIONS:
-        if section not in description:
+    sections = split_sections(description)
+    required = (
+        FAST_REQUIRED_MR_SECTIONS
+        if flow == "fast"
+        else STANDARD_REQUIRED_MR_SECTIONS
+    )
+    for section in required:
+        matched = next((title for title in sections if section in title), None)
+        if matched is None:
             missing.append(f"MR 描述缺少章节：{section}")
-    if "Closes #" not in description and "关联 Issue" in description:
-        missing.append("MR 描述需要用 Closes #<issue> 或明确链接关联 Issue")
+        elif not section_has_content(sections[matched]):
+            missing.append(f"MR 章节内容为空：{section}")
+    if flow != "fast" and not re.search(
+        r"(Closes|Relates?|Fixes)\s+#\d+", description, re.IGNORECASE
+    ):
+        missing.append("MR 描述需要 Closes #<数字> 关联具体 Issue")
     return missing
 
 
-def check_documentation_impact(description: str) -> list[str]:
-    if "文档影响" not in description:
-        return []
-    section = description.split("文档影响", 1)[1].split("## ", 1)[0]
-    has_updated = "已更新" in section and not re.search(r"已更新[：:]\s*(?:$|-?\s*$)", section, re.MULTILINE)
-    has_not_needed = "不需要更新" in section and not re.search(r"不需要更新，?原因[：:]\s*(?:$|-?\s*$)", section, re.MULTILINE)
-    has_follow_up = "后续文档 Issue" in section and not re.search(r"后续文档 Issue[：:]\s*(?:$|-?\s*$)", section, re.MULTILINE)
-    if not (has_updated or has_not_needed or has_follow_up):
-        return ["文档影响章节需要填写已更新、不需要更新原因，或后续文档 Issue"]
-    return []
-
-
-def check_high_risk_ack(
-    description: str,
+def check_risk_flow(
     changed_files: Iterable[str],
     rules: Iterable[dict[str, object]],
+    flow: str,
 ) -> list[str]:
     risky = []
     for changed in changed_files:
         for rule in rules:
             paths = [str(item) for item in rule.get("paths", [])]  # type: ignore[union-attr]
-            owners = [str(item) for item in rule.get("require_owner_ack", [])]  # type: ignore[union-attr]
-            if paths and owners and matches_any_path(changed, paths):
+            minimum_flow = str(rule.get("minimum_flow", "standard"))
+            if paths and minimum_flow != "fast" and matches_any_path(changed, paths):
                 risky.append(
                     f"{changed.replace('\\', '/')} "
-                    f"(rule={rule.get('id', 'unknown')}, owners={','.join(owners)})"
+                    f"(rule={rule.get('id', 'unknown')}, minimum_flow={minimum_flow})"
                 )
 
-    if risky and "/owner-ack" not in description:
+    if risky and flow == "fast":
         return [
-            "命中高风险路径但缺少 /owner-ack："
+            "flow::fast 命中高风险路径，请改为 flow::standard 或 flow::hotfix："
             + ", ".join(sorted(set(risky)))
         ]
     return []
@@ -232,17 +307,20 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--mr-description", help="Path to a markdown MR description.")
     parser.add_argument("--changed-files", help="Path to newline-separated changed files.")
+    parser.add_argument("--labels", help="Comma-separated MR labels; defaults to CI labels.")
     args = parser.parse_args()
 
     description = load_text(args.mr_description)
     changed_files = load_changed_files(args.changed_files)
+    labels_text = args.labels if args.labels is not None else os.environ.get("CI_MERGE_REQUEST_LABELS", "")
     rules = parse_simple_yaml_rule_map(Path(".ai/rule-map.yml"))
 
     errors = []
     if description:
-        errors.extend(check_required_sections(description))
-        errors.extend(check_documentation_impact(description))
-        errors.extend(check_high_risk_ack(description, changed_files, rules))
+        flow, flow_errors = resolve_flow(description, labels_text)
+        errors.extend(flow_errors)
+        errors.extend(check_required_sections(description, flow))
+        errors.extend(check_risk_flow(changed_files, rules, flow))
     elif os.environ.get("CI_MERGE_REQUEST_ID"):
         errors.append("CI_MERGE_REQUEST_DESCRIPTION 为空，无法检查 MR 模板。")
 

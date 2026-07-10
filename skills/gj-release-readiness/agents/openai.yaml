@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Release Readiness"
+  short_description: "Prepare environment and release readiness"
+  default_prompt: "Use $gj-release-readiness to check deployment or release readiness, rollback, validation, and human gates."

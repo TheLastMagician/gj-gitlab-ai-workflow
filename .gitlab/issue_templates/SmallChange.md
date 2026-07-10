@@ -1,5 +1,7 @@
 # 轻量 Issue
 
+/label ~"flow::fast"
+
 ## 改动说明
 
 ## 影响范围

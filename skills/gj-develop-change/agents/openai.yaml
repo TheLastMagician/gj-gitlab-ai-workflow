@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Develop Change"
+  short_description: "Implement features, fixes, and hotfixes"
+  default_prompt: "Use $gj-develop-change to load focused context and implement this change according to its flow label."

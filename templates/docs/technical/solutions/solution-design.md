@@ -58,9 +58,9 @@ Describe the recommended technical approach.
 - Rollback:
 - Monitoring:
 
-## Risks And Owner Acknowledgement
+## Risks, Minimum Flow, And Review Needs
 
-| Risk | Owner | Ack required | Status |
+| Risk | Minimum flow | Human review needed | Status |
 | --- | --- | --- | --- |
 | | | | |
 

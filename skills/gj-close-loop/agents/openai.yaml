@@ -1,0 +1,4 @@
+interface:
+  display_name: "GJ Close Loop"
+  short_description: "Close work and refresh project context"
+  default_prompt: "Use $gj-close-loop to capture lessons and update durable project context after this change."

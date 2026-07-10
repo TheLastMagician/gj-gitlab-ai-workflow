@@ -1,4 +1,0 @@
-interface:
-  display_name: "GJ Merge Assist"
-  short_description: "Human-authorized GitLab MR merge assistance"
-  default_prompt: "Use $gj-merge-assist to check a GitLab MR and execute merge only after explicit human authorization."

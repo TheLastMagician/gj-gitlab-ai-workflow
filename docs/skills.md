@@ -1,58 +1,82 @@
 # Skills
 
-The project ships a complete workflow skill set. Install them with:
+Install the complete workflow skill set from one GitHub source into Codex,
+Claude Code, and OpenCode with:
 
 ```powershell
-python scripts/install_skills.py --force
+npx --yes skills@1.5.15 add https://github.com/TheLastMagician/gj-gitlab-ai-workflow --skill '*' -a codex -a claude-code -a opencode --copy -y
 ```
 
-## Workflow Mapping
+All agents consume the same `skills/*/SKILL.md` source. The Python fallback is
+`python scripts/install_skills.py --agent all --project-root <project> --force`.
+Every Skill uses the `gj-` namespace; GJ is the project abbreviation for
+Chinese `公交`.
 
-| Workflow stage | Skill | Purpose |
+Daily work starts from `gj-workflow-next`; users do not need to memorize the
+other names.
+
+## The Eight Skills
+
+| Stage | Skill | Purpose |
 | --- | --- | --- |
-| Bootstrap | `gj-workflow-bootstrap` | Install labels, templates, AI config, docs, CI, and preflight checks. |
-| Inbox | `gj-workflow-inbox` | Inspect GitLab Todos, assignments, review requests, mentions, and route each item to the right skill. |
-| Existing project map | `gj-codebase-map` | Map codebase facts into docs/codebase, docs/context, docs/modules, and context-index drafts. |
-| Triage | `gj-workflow-triage` | Route work to standard, small change, bug fix, or hotfix flow. |
-| Requirement | `gj-requirement-refine` | Clarify requirements, acceptance criteria, non-goals, risks, and DoR. |
-| Solution | `gj-solution-plan` | Draft technical solution, impact, risks, tests, rollout, and rollback. |
-| Split | `gj-issue-split` | Create traceable development, test, release, and follow-up Issues. |
-| Development | `gj-dev-context` | Load focused implementation context before coding. |
-| Review | `gj-mr-review` | Review MR policy, risk paths, code risks, tests, and context updates. |
-| Merge | `gj-merge-assist` | Check merge readiness and execute GitLab merge only after explicit human authorization. |
-| Test | `gj-test-design` | Design acceptance, regression, permission, and release validation tests. |
-| Environment deploy | `gj-env-deploy-assist` | Plan dev/test deployment, environment locks, version records, and human confirmation. |
-| Bug fix | `gj-bug-fix` | Analyze defects, root cause, fix scope, and regression tests. |
-| Hotfix | `gj-hotfix` | Guide urgent fixes with minimum safe checks and post-fix follow-up. |
-| Release | `gj-release-prep` | Prepare release notes, rollout, rollback, and validation. |
-| Retro | `gj-retro-learnings` | Extract retrospective lessons and improvement actions. |
-| Context update | `gj-context-extract` | Update durable AI context, module docs, ADRs, and context index. |
-| Next action | `gj-workflow-next` | Inspect state and choose the next skill/action. |
+| Bootstrap | `gj-workflow-bootstrap` | Install and verify labels, templates, AI config, docs, CI, and project gates. |
+| Existing project map | `gj-codebase-map` | Map codebase facts into focused context and module documentation. |
+| Route | `gj-workflow-next` | Read inbox/current state, recommend one flow label, and choose the next action. |
+| Plan | `gj-plan-change` | Scale requirements, solution, task boundaries, tests, docs, rollout, and rollback to the flow. |
+| Develop | `gj-develop-change` | Implement features, small changes, bugs, and hotfixes with focused context and tests. |
+| Review | `gj-mr-review` | Review policy, code, tests, documentation, and merge readiness; stop at the human merge gate. |
+| Release | `gj-release-readiness` | Prepare environment and release evidence, rollout, rollback, and validation; stop at the human deploy gate. |
+| Close | `gj-close-loop` | Capture lessons and refresh durable project context after completed work. |
+
+## Flow Depth
+
+| Flow | Plan and delivery depth |
+| --- | --- |
+| `flow::fast` | Bounded change, self-test, documentation impact, MR, and review. No extra planning Issues by default. |
+| `flow::standard` | Linked Issue, acceptance criteria, technical approach, risks, tests, rollout, rollback, and durable docs. |
+| `flow::hotfix` | Incident impact, smallest safe fix, minimum review, release validation, rollback, and mandatory follow-up. |
+
+The Issue template proposes a flow, a human confirms it before coding, the MR
+uses the same single `flow::*` label, and CI validates the choice against
+changed paths. Skills recommend and enforce the selected depth; they do not
+decide business risk for the human.
+
+## Comment Commands
+
+The optional orchestrator exposes only these commands:
+
+```text
+/ai-next
+/ai-plan
+/ai-develop
+/ai-review
+/ai-release
+/ai-close
+```
+
+`gj-workflow-bootstrap` and `gj-codebase-map` are invoked directly when needed.
 
 ## Decision Boundary
 
-AI can assist every role, including review, approval preparation, merge
-operation support, human-authorized merge execution, and release preparation. It must not autonomously approve,
-merge, overwrite shared test/staging, deploy, or bypass human confirmation. The human role remains the decision
-maker and accountable owner.
+AI may inspect, draft, edit, test, and prepare decision evidence. It must not
+autonomously approve, merge, tag, deploy, overwrite a shared environment, or
+bypass protections. Humans confirm the flow label and make merge and release
+decisions.
 
 ## Inbox And Notifications
 
-`gj-workflow-inbox` uses GitLab API state as the inbox source: Todos, assigned
-Issues, assigned MRs, review-requested MRs, mentions, unresolved discussions,
-and failed pipelines. It does not read email or Enterprise WeCom directly.
+`gj-workflow-next` uses GitLab API state as the inbox source: Todos, assigned
+Issues/MRs, review requests, mentions, unresolved discussions, and failed
+pipelines. Email or Enterprise WeCom may deliver notifications but is not a
+workflow state source.
 
-Bootstrap owns role setup through `.ai/role-map.yml`. Handoffs should assign the
-right person in GitLab and mention them in a comment so GitLab can create Todos
-and send whatever company notification channel is configured.
+Handoffs should assign the responsible person in GitLab and mention them in a
+comment so GitLab creates the expected Todo and notification.
 
 ## Documentation Impact
 
-Core workflow skills include a documentation impact check. The expected rule is:
-GitLab Issues and MR comments record discussion; repository docs record durable
-conclusions.
-
-Common routing:
+Every delivery Skill reports documentation impact. GitLab Issues and MR
+comments hold discussion; repository docs hold durable conclusions.
 
 | Durable change | Document target |
 | --- | --- |

@@ -16,19 +16,20 @@ COPY_PATHS = [
     ("templates/gitlab/.gitlab", ".gitlab"),
     ("templates/ai", ".ai"),
     ("templates/docs/context", "docs/context"),
-    ("templates/docs/modules", "docs/modules"),
     ("templates/docs/standards", "docs/standards"),
+    ("templates/scripts", "scripts"),
     ("templates/docs/product", "docs/product"),
     ("templates/docs/technical", "docs/technical"),
     ("templates/docs/qa", "docs/qa"),
     ("templates/docs/releases", "docs/releases"),
-    ("templates/scripts", "scripts"),
 ]
 
 COPY_FILES = [
     ("templates/gitlab/.gitlab-ci.yml", ".gitlab-ci.yml"),
     ("CODEOWNERS", "CODEOWNERS"),
 ]
+
+ENSURE_DIRS = ["docs/modules"]
 
 
 def backup_path(dest: Path, backup_root: Path, target_root: Path, dry_run: bool) -> None:
@@ -102,7 +103,6 @@ def main() -> int:
 
     if args.force and args.only_missing:
         raise RuntimeError("--force and --only-missing cannot be used together")
-
     target = args.target.resolve()
     if not target.exists():
         raise FileNotFoundError(target)
@@ -134,6 +134,12 @@ def main() -> int:
             backup_root,
             args.dry_run,
         )
+
+    for directory in ENSURE_DIRS:
+        destination = target / directory
+        print(f"ensure directory {destination}")
+        if not args.dry_run:
+            destination.mkdir(parents=True, exist_ok=True)
 
     print("workflow install complete")
     if args.force and not args.backup:

@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -13,24 +14,40 @@ SKILLS_ROOT = ROOT / "skills"
 NAME_RE = re.compile(r"^[a-z0-9-]{1,63}$")
 REQUIRED_SKILLS = {
     "gj-workflow-bootstrap",
-    "gj-workflow-inbox",
     "gj-codebase-map",
-    "gj-workflow-triage",
-    "gj-requirement-refine",
-    "gj-solution-plan",
-    "gj-issue-split",
-    "gj-dev-context",
-    "gj-bug-fix",
-    "gj-hotfix",
-    "gj-mr-review",
-    "gj-merge-assist",
-    "gj-test-design",
-    "gj-env-deploy-assist",
-    "gj-release-prep",
-    "gj-retro-learnings",
-    "gj-context-extract",
     "gj-workflow-next",
+    "gj-plan-change",
+    "gj-develop-change",
+    "gj-mr-review",
+    "gj-release-readiness",
+    "gj-close-loop",
 }
+
+
+def validate_catalog(actual: set[str]) -> list[str]:
+    path = ROOT / "skills.sh.json"
+    if not path.exists():
+        return ["missing skills.sh.json package catalog"]
+    try:
+        catalog = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        return [f"invalid skills.sh.json: {exc}"]
+
+    listed = [
+        skill
+        for grouping in catalog.get("groupings", [])
+        for skill in grouping.get("skills", [])
+    ]
+    errors: list[str] = []
+    if len(listed) != len(set(listed)):
+        errors.append("skills.sh.json contains duplicate skills")
+    missing = sorted(actual - set(listed))
+    unknown = sorted(set(listed) - actual)
+    if missing:
+        errors.append("skills.sh.json is missing: " + ", ".join(missing))
+    if unknown:
+        errors.append("skills.sh.json contains unknown skills: " + ", ".join(unknown))
+    return errors
 
 
 def parse_frontmatter(path: Path) -> dict[str, str]:
@@ -68,6 +85,8 @@ def validate_skill(skill_dir: Path) -> list[str]:
         errors.append(f"{skill_dir.name}: frontmatter name does not match folder")
     if not NAME_RE.match(name):
         errors.append(f"{skill_dir.name}: invalid skill name")
+    if not name.startswith("gj-"):
+        errors.append(f"{skill_dir.name}: skill name must use the gj- prefix")
     if len(description) < 80:
         errors.append(f"{skill_dir.name}: description is too short for reliable trigger")
 
@@ -93,10 +112,11 @@ def main() -> int:
         errors.append(f"missing required skill: {name}")
     extra = sorted(actual - REQUIRED_SKILLS)
     if extra:
-        print("extra skill directories:", ", ".join(extra))
+        errors.append("extra skill directories: " + ", ".join(extra))
 
     for skill_dir in sorted(path for path in SKILLS_ROOT.iterdir() if path.is_dir()):
         errors.extend(validate_skill(skill_dir))
+    errors.extend(validate_catalog(actual))
 
     if errors:
         print("skill validation failed:")

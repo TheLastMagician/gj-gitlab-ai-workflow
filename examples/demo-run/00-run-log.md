@@ -17,7 +17,7 @@ Merge request: [!1 feat(workflow): 初始化 GitLab AI 工作流骨架](https://
 | 3 | Tech Lead | Requirement Issue #2 | Solution Issue #3 | Permission risk needs owner attention | Tech Lead accepts minimal state machine for demo |
 | 4 | Tech Lead | Requirement + solution | Task Issue #4, Test Issue #5, Release Issue #7 | Task split is easy to overdo for a tiny demo | Keep Web API, DB, notification out of scope |
 | 5 | Developer | Task Issue #4 | Demo service and tests | Initial implementation missed self-approval rule | Developer adds regression test and fix |
-| 6 | Reviewer | MR description and changed files | AI review notes | High-risk path detection requires `/owner-ack` text | Reviewer checks policy and rollback sections |
+| 6 | Reviewer | MR description and changed files | AI review notes | Original policy relied on forgeable `/owner-ack` text; current policy uses minimum flow | Reviewer checks risk, test, rollback, and merge readiness |
 | 7 | QA | Acceptance criteria | QA failure and Bug Issue #6 | Failure must not be hidden in test report | QA upgrades failure to Bug Issue |
 | 8 | Developer | Bug Issue #6 | `_ensure_not_self_approval` and regression test | Need same rule in approve and reject | Reviewer confirms both paths |
 | 9 | DevOps | Release Issue #7 | Release and rollback checklist | Protected branch settings require GitLab UI/admin confirmation | DevOps confirms before merge |
@@ -73,7 +73,8 @@ Validation result:
 
 - Validate GitLab project identity before any write.
 - Bootstrap labels, templates, `.ai`, docs, CI, and CODEOWNERS.
-- Use triage to select standard / small / bug / hotfix path.
+- Use triage to recommend one `flow::fast`, `flow::standard`, or
+  `flow::hotfix` label for human confirmation.
 - Convert rough requirements into missing questions and acceptance criteria.
 - Review MR descriptions against workflow policy.
 - Convert QA failures into Bug Issues with root cause and regression scope.

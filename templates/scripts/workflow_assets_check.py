@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate that core workflow assets exist in an installed project."""
+"""Validate that reusable workflow assets are installed."""
 
 from __future__ import annotations
 
@@ -13,13 +13,18 @@ REQUIRED = [
     ".ai/context-index.yml",
     ".ai/role-map.yml",
     ".gitlab/issue_templates/Requirement.md",
+    ".gitlab/issue_templates/SmallChange.md",
     ".gitlab/merge_request_templates/Default.md",
     "docs/context/current-state.md",
     "docs/context/module-map.md",
+    "scripts/policy_check.py",
+    "scripts/smoke_check.py",
     "docs/standards/00-index.md",
     "docs/standards/10-environment-standard.md",
     "docs/standards/11-notification-standard.md",
-    "docs/standards/12-document-standard.md",
+    "scripts/context_freshness_check.py",
+    "scripts/validate_role_map.py",
+    "scripts/release_dry_run.py",
     "docs/product/requirements/PRD.md",
     "docs/product/designs/product-design.md",
     "docs/product/prototypes/prototype-record.md",
@@ -27,10 +32,6 @@ REQUIRED = [
     "docs/qa/test-plans/test-plan.md",
     "docs/qa/test-reports/test-report.md",
     "docs/releases/release-note.md",
-    "scripts/policy_check.py",
-    "scripts/validate_role_map.py",
-    "scripts/smoke_check.py",
-    "scripts/release_dry_run.py",
 ]
 
 REQUIRED_DIRS = [
@@ -46,6 +47,7 @@ def main() -> int:
         for path in missing:
             print(f"- {path}")
         return 1
+
     print("workflow assets check passed")
     return 0
 

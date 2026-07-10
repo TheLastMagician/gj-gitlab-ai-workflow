@@ -1,5 +1,9 @@
 # Bug Issue
 
+/label ~"type-bug"
+
+<!-- 先根据影响范围选择 flow::fast 或 flow::standard。 -->
+
 ## 缺陷现象
 
 ## 复现步骤

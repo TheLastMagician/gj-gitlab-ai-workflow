@@ -10,6 +10,7 @@ Review lessons:
 
 1. Check workflow sections before code details.
 2. Match changed files against `.ai/rule-map.yml`.
-3. Require `/owner-ack` when policy or orchestrator files change.
+3. Reject `flow::fast` when policy or orchestrator files change; require
+   Standard/Hotfix evidence and a human merge decision.
 4. Confirm local token helpers are not committed.
 5. Keep draft skill maturity honest.

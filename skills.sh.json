@@ -1,0 +1,38 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Setup and Route",
+      "description": "Install, map, inspect, and route the GitLab workflow.",
+      "skills": [
+        "gj-workflow-bootstrap",
+        "gj-codebase-map",
+        "gj-workflow-next"
+      ]
+    },
+    {
+      "title": "Plan",
+      "description": "Create the right-sized plan for the selected flow.",
+      "skills": [
+        "gj-plan-change"
+      ]
+    },
+    {
+      "title": "Deliver",
+      "description": "Implement features or fixes and review the resulting MR.",
+      "skills": [
+        "gj-develop-change",
+        "gj-mr-review"
+      ]
+    },
+    {
+      "title": "Release and Learn",
+      "description": "Prepare release evidence and close the context loop.",
+      "skills": [
+        "gj-release-readiness",
+        "gj-close-loop"
+      ]
+    }
+  ]
+}

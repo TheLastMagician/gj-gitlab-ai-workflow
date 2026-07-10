@@ -2,13 +2,27 @@
 
 ## 1. Install Skills
 
-Install the bundled skills into Codex:
+From the target project root, install the same skill source for Codex, Claude
+Code, and OpenCode:
 
 ```powershell
-python scripts/install_skills.py --force
+npx --yes skills@1.5.15 add https://github.com/TheLastMagician/gj-gitlab-ai-workflow --skill '*' -a codex -a claude-code -a opencode --copy -y
 ```
 
-Use `--dest` when you want to install into a custom skills directory.
+The repository keeps one portable source under `skills/*/SKILL.md`. The
+installer writes project-local discovery entries to `.agents/skills` for Codex
+and OpenCode and `.claude/skills` for Claude Code. Start a new agent session
+after installation.
+
+Pasting a GitHub URL must not silently execute code. Run the command explicitly
+or ask the current agent to install it. If Node.js is unavailable, clone this
+repository and use the Python fallback:
+
+```powershell
+python scripts/install_skills.py --agent all --project-root C:\path\to\your-project --force
+```
+
+Use `--dest` only for a custom single skills directory.
 
 The full skill list and workflow mapping are in `docs/skills.md`.
 
@@ -19,6 +33,9 @@ Install the reusable assets into a target GitLab repository:
 ```powershell
 python scripts/install_workflow.py --target C:\path\to\your-project
 ```
+
+Install once. Fast / Standard / Hotfix are runtime workflow routes, not
+different installation editions.
 
 For an existing project, prefer a non-destructive install:
 
@@ -32,24 +49,14 @@ When you intentionally replace existing workflow assets, create a backup:
 python scripts/install_workflow.py --target C:\path\to\your-project --force --backup
 ```
 
-Then customize:
+Minimum setup after installation:
 
 - `.ai/project.yml`
 - `.ai/rule-map.yml`
-- `.ai/context-index.yml`
-- `.ai/role-map.yml`
-- `CODEOWNERS`
-- `.gitlab-ci.yml`
-- `docs/standards/10-environment-standard.md`
-- `docs/standards/11-notification-standard.md`
-- `docs/standards/12-document-standard.md`
-- `docs/product/requirements/PRD.md`
-- `docs/product/designs/product-design.md`
-- `docs/product/prototypes/prototype-record.md`
-- `docs/technical/solutions/solution-design.md`
-- `docs/qa/test-plans/test-plan.md`
-- `docs/qa/test-reports/test-report.md`
-- `docs/releases/release-note.md`
+- `.gitlab-ci.yml` or `GJ_TEST_COMMAND` for the real project test command
+
+Update `.ai/context-index.yml`, `.ai/role-map.yml`, `CODEOWNERS`, and the
+provided documentation templates when those capabilities are actually used.
 
 Decide early whether MR branches deploy only to isolated dev/review
 environments or whether a human may manually deploy them to shared test. Do not
@@ -66,9 +73,19 @@ Create the workflow labels from `examples/demo-run/gitlab/labels.md`, then add a
 milestone for the first iteration. Protect the default branch and require a
 passing pipeline before merge.
 
-Replace placeholders in `.ai/role-map.yml` with real GitLab usernames. For every
+For GitLab CE, also limit who may merge to the default branch. Low-risk Fast
+MRs do not require an extra approval count. CODEOWNERS and an optional Approve
+action can guide review, but the workflow does not depend on paid approval
+rules or `/owner-ack` text.
+
+Before implementation, confirm exactly one route label on the Issue or work
+item. When creating the MR, select the same `flow::fast`, `flow::standard`, or
+`flow::hotfix` label in GitLab. The policy job rejects missing or conflicting
+flow labels.
+
+When role routing is needed, replace placeholders in `.ai/role-map.yml` with real GitLab usernames. For every
 human handoff, assign the Issue/MR owner or reviewer and add an `@username`
-comment. `gj-workflow-inbox` reads GitLab API state directly; company channels
+comment. `gj-workflow-next` reads GitLab API state directly; company channels
 such as Enterprise WeCom or email should be configured in GitLab notification
 settings, not as a separate workflow inbox.
 
@@ -106,38 +123,47 @@ These commands are for maintaining this standalone workflow and skills project.
 
 ## 6. Validate An Installed Target Project
 
-After installing into a business project, run the target project checks there:
+After installation, run the checks used by every project:
 
 ```powershell
 python scripts/workflow_assets_check.py
-python scripts/validate_role_map.py
 python scripts/smoke_check.py
+```
+
+Run role, context, and release checks when those capabilities are in use:
+
+```powershell
+python scripts/validate_role_map.py
+python scripts/context_freshness_check.py
 python scripts/release_dry_run.py --output build/release-dry-run.md
 ```
 
 ## 7. Run CI/CD In A Target Project
 
-Configure a GitLab Runner with Docker executor. The demo pipeline uses:
+Configure a GitLab Runner with Docker executor. Fast MRs use the first three
+stages; release runs only for tags or a manual default-branch pipeline:
 
 ```text
-policy -> workflow -> test -> release
+Fast / Standard MR: policy -> workflow -> test
+Tag / manual release: policy -> workflow -> test -> release
 ```
 
 See `docs/cicd.md` for job details and artifacts. The installed target-project
 pipeline does not run `skill_validate` or `package_open_source`.
 
-## 8. Extract Skills
+## 8. Maintain The Eight Skills
 
-After the first run, update only the first-batch skills:
+Keep the public workflow surface limited to:
 
 - `gj-workflow-bootstrap`
 - `gj-codebase-map`
-- `gj-workflow-triage`
-- `gj-workflow-inbox`
-- `gj-requirement-refine`
+- `gj-workflow-next`
+- `gj-plan-change`
+- `gj-develop-change`
 - `gj-mr-review`
-- `gj-bug-fix`
-- `gj-retro-learnings`
+- `gj-release-readiness`
+- `gj-close-loop`
 
-Treat these as draft skills until a second run proves they work with less manual
-intervention.
+Add detail to references before creating another Skill. A new Skill is justified
+only when it has a distinct trigger, workflow, and output that cannot be a mode
+of one of these eight.

@@ -11,6 +11,11 @@
 - GitLab project 已通过只读 API 校验为 `zengqinglin/gj-workflow-demo`。
 - 本地 API helper 被视为私密文件，不进入提交。
 - 首轮目标是暴露摩擦点，不追求一次性写完全部 skills。
+- 当前工作流使用唯一 `flow::*` 标签和 changed files 判断最低流程。
+- 默认项目按低风险处理，不使用可伪造的 `/owner-ack` 字符串门禁。
+- GitLab CE 的硬门禁依赖成功 Pipeline、保护分支和受限合并权限。
+- 对外 Skill 接口已收敛为 8 个，按 flow 标签控制计划和交付深度，
+  Codex、Claude Code、OpenCode 共用同一份 `SKILL.md` 源码。
 
 ## 人工确认点
 

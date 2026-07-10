@@ -1,3 +1,5 @@
+# GitLab CE review-routing hints only; policy does not treat this file as
+# mandatory approval evidence.
 * @tech-lead
 docs/standards/ @tech-lead @qa-owner
 templates/ @tech-lead @devops-owner
