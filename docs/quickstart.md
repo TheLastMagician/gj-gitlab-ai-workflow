@@ -9,8 +9,7 @@ Code, and OpenCode:
 npx --yes skills@1.5.15 add https://github.com/TheLastMagician/gj-gitlab-ai-workflow --skill '*' -a codex -a claude-code -a opencode --copy -y
 ```
 
-The repository keeps one portable source under `skills/*/SKILL.md`. The
-installer writes project-local discovery entries to `.agents/skills` for Codex
+The installer writes project-local discovery entries to `.agents/skills` for Codex
 and OpenCode and `.claude/skills` for Claude Code. Start a new agent session
 after installation.
 
@@ -69,6 +68,13 @@ explain why no doc update is needed.
 
 ## 3. Configure GitLab
 
+Skill installation and offline planning do not need a token. Live inbox reads,
+membership checks, and confirmed GitLab writes require either an Agent GitLab
+MCP/connector or the environment variables `GITLAB_URL`, `GITLAB_PROJECT_ID`,
+and `GITLAB_TOKEN`. Use `read_api` for read-only access and grant `api` only when
+confirmed writes are needed. See `docs/gitlab-access.md` for token types, secure
+PowerShell setup, CI variables, and verification.
+
 Create the workflow labels from `examples/demo-run/gitlab/labels.md`, then add a
 milestone for the first iteration. Protect the default branch and require a
 passing pipeline before merge.
@@ -76,7 +82,7 @@ passing pipeline before merge.
 For GitLab CE, also limit who may merge to the default branch. Low-risk Fast
 MRs do not require an extra approval count. CODEOWNERS and an optional Approve
 action can guide review, but the workflow does not depend on paid approval
-rules or `/owner-ack` text.
+rules.
 
 Before implementation, confirm exactly one route label on the Issue or work
 item. When creating the MR, select the same `flow::fast`, `flow::standard`, or
@@ -109,19 +115,7 @@ Use a small target project such as `gj-workflow-demo` to run the workflow once:
 The recorded inputs, outputs, failures, and human confirmations are in
 `examples/demo-run/00-run-log.md`.
 
-## 5. Validate This Workflow Project
-
-```powershell
-python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt
-python scripts/validate_role_map.py --role-map templates/ai/role-map.yml --allow-placeholders
-python scripts/validate_skills.py
-python scripts/install_skills.py --dry-run
-python scripts/install_workflow.py --target C:\path\to\your-project --dry-run
-```
-
-These commands are for maintaining this standalone workflow and skills project.
-
-## 6. Validate An Installed Target Project
+## 5. Validate An Installed Target Project
 
 After installation, run the checks used by every project:
 
@@ -138,7 +132,7 @@ python scripts/context_freshness_check.py
 python scripts/release_dry_run.py --output build/release-dry-run.md
 ```
 
-## 7. Run CI/CD In A Target Project
+## 6. Run CI/CD In A Target Project
 
 Configure a GitLab Runner with Docker executor. Fast MRs use the first three
 stages; release runs only for tags or a manual default-branch pipeline:
@@ -148,22 +142,4 @@ Fast / Standard MR: policy -> workflow -> test
 Tag / manual release: policy -> workflow -> test -> release
 ```
 
-See `docs/cicd.md` for job details and artifacts. The installed target-project
-pipeline does not run `skill_validate` or `package_open_source`.
-
-## 8. Maintain The Eight Skills
-
-Keep the public workflow surface limited to:
-
-- `gj-workflow-bootstrap`
-- `gj-codebase-map`
-- `gj-workflow-next`
-- `gj-plan-change`
-- `gj-develop-change`
-- `gj-mr-review`
-- `gj-release-readiness`
-- `gj-close-loop`
-
-Add detail to references before creating another Skill. A new Skill is justified
-only when it has a distinct trigger, workflow, and output that cannot be a mode
-of one of these eight.
+See `docs/cicd.md` for job details and artifacts.

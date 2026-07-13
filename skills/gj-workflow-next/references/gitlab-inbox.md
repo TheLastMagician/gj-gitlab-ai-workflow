@@ -3,6 +3,20 @@
 Use this reference when `gj-workflow-next` needs live GitLab state. Prefer the
 project-approved helper or MCP/API client. Never print tokens.
 
+## Authentication
+
+Installing the Skill does not require a token. For live access, prefer the
+Agent's configured GitLab MCP/connector. Otherwise use a project-approved API
+helper that reads `GITLAB_URL`, `GITLAB_PROJECT_ID`, and `GITLAB_TOKEN` from the
+environment. Do not read credentials from repository files or print them.
+
+Use a current-user Personal Access Token with `read_api` when personal Todos are
+required. Use `api` only for human-confirmed writes such as creating an Issue,
+setting labels or assignees, and posting notes. A Project Access Token represents
+a bot account and therefore cannot stand in for a person's Todo inbox. See
+the public [GitLab access guide](https://github.com/TheLastMagician/gj-gitlab-ai-workflow/blob/main/docs/gitlab-access.md)
+for setup and storage rules.
+
 ## Core sources
 
 - Current user: `GET /user`

@@ -23,9 +23,10 @@
 | 发评论、@成员 | 修改 label 以外的任何资源状态 |
 | 给 issue/MR 加"催办"类 label(可选) | 触发部署或其它 pipeline |
 
-GitLab token 配置:使用项目级 access token,scope 只给 `read_api` +
-`api`(评论需要);绝不使用个人管理员 token。token 存 CI/CD 变量,
-不落盘、不入库(遵循 `docs/standards/08-security-standard.md`)。
+GitLab token 配置:使用项目级 access token;纯读取只给 `read_api`,确实需要评论或
+标签写入时才改用 `api`。绝不使用个人管理员 token。token 存 CI/CD masked/protected
+变量,不落盘、不入库(遵循 `docs/gitlab-access.md` 和
+`docs/standards/08-security-standard.md`)。
 
 ## 检查清单(基础版,纯 API 可实现,无需 LLM)
 
@@ -89,5 +90,6 @@ GitLab token 配置:使用项目级 access token,scope 只给 `read_api` +
 - [ ] 在无任何异常的项目上运行,只产生一条"全绿"评论,无其它写操作。
 - [ ] 构造一个 48h 无评审的 MR,运行后摘要列出它且 reviewer 被 @。
 - [ ] 72h 内重复运行,同一 MR 不被重复催办。
-- [ ] token 仅有 read_api + api scope,尝试 push/merge 操作失败。
+- [ ] 只读实例的 token 仅有 `read_api`;需要评论/标签的实例才使用 `api`,
+      且尝试 push/merge 操作失败。
 - [ ] 单次运行 GitLab API 调用次数有上限(建议 < 200),不做全量分页扫历史。

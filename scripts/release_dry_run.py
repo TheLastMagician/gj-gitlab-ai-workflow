@@ -11,6 +11,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_PACKAGE_PATHS = [
     "README.md",
+    "CONTRIBUTING.md",
+    "docs/gitlab-access.md",
     "docs/workflow.md",
     "docs/quickstart.md",
     "docs/skills.md",

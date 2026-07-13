@@ -1,8 +1,7 @@
 # CI/CD Flow
 
-The installed pipeline is meant for target business projects. It should validate
-the project and the installed workflow assets; it should not package this
-workflow project.
+The installed pipeline validates the target business project and its workflow
+assets.
 
 ## Stages
 
@@ -29,7 +28,7 @@ repeatable target-project validation.
 - High-risk changed files cannot use `flow::fast`; Standard/Hotfix evidence and
   a human merge decision are required.
 - CODEOWNERS and an optional Approve action may guide review, but the workflow
-  does not treat labels or `/owner-ack` text as mandatory approval evidence.
+  uses GitLab permissions and merge records as the source of truth.
 
 If Docker Hub access is restricted but `python:3.12-slim` is already available
 locally, configure the runner with:
@@ -46,10 +45,6 @@ locally, configure the runner with:
 Fast MR: policy -> workflow -> test
 Release: policy -> workflow -> test -> deploy(optional) -> release
 ```
-
-`skill_validate` belongs to this workflow project's own maintenance checks, not
-to every installed target project. `package_open_source` also belongs only to a
-future release process for this workflow project.
 
 ## Environment Deployment Policy
 

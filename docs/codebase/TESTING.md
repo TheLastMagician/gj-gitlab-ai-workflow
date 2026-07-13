@@ -4,7 +4,7 @@
 
 - `python scripts/policy_check.py` checks the unique flow label, MR evidence,
   changed-file risk paths, and committed secrets. High-risk paths cannot use
-  `flow::fast`; no `/owner-ack` string is accepted as approval evidence.
+  `flow::fast`.
 - `python scripts/smoke_check.py` runs demo unit tests.
 - Demo tests use `unittest`.
 - Repository validation enforces the eight-skill catalog and portable
