@@ -9,8 +9,8 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
 
 1. Read the work item, current labels, `.gj/context.yml`, and known
    constraints. Load only `always_load`, modules matched by expected paths, and
-   feature docs linked by the work item. Never scan `docs/iterations/` by
-   default. When present, use `docs/standards/12-context-governance.md` as the
+   feature docs linked by the work item. When present, use
+   `docs/standards/12-context-governance.md` as the
    document lifecycle and content standard.
 2. Resolve exactly one flow label. Recommend a label when missing, but wait for
    human confirmation before treating it as selected.
@@ -30,25 +30,40 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
    Milestone. Treat this as `Target release`, not a released version. Do not
    bump project manifests or create a Tag during feature planning.
 6. Split work only when separate ownership, dependencies, or review boundaries
-   make additional Issues useful.
+   make additional Issues useful. Keep Requirement or Hotfix as the main work
+   item. A Solution, Task, or Test Issue records separately tracked work; it
+   never replaces the repository solution, test plan, or other durable docs.
 7. Cover happy, failure, permission, regression, and release-validation paths
    according to risk. Failed checks become Bug Issues rather than hidden notes.
-8. Decide documentation at this stage:
+8. Decide documentation by impact first, then apply the selected flow depth:
    - create or update a PRD when product behavior, rules, permissions, or
      acceptance criteria change;
    - create or update product design/prototype records only when interaction or
      UI states matter;
-   - create or update a technical solution when an interface, data, permission,
-     architecture, compatibility, rollout, or rollback decision is needed;
+   - create or update a technical solution when architecture, compatibility,
+     rollout, monitoring, or rollback decisions are needed;
+   - update the machine-readable contract and
+     `docs/technical/apis/<domain>.md` when API/event structure or semantics
+     change;
+   - update schema/migrations and `docs/technical/database/<domain>.md` when
+     persistent data structure, meaning, migration, or recovery changes;
+   - create an ADR only for a lasting cross-boundary technical trade-off, then
+     freeze it after confirmation;
    - create or update a test plan when acceptance or regression coverage is not
      trivial.
    Add Source Issue, Target release/Milestone, and direct document links to the
-   applicable feature documents. Update an existing feature document in place
-   instead of creating versioned copies. When confirmed lasting facts exist and
-   the repository is writable,
-   edit the applicable documents in the current change. When facts are
-   unresolved, leave them as drafts and request human confirmation.
-9. End with a documentation decision table. Use only `create`, `update`,
+   applicable feature documents. Use semantic filenames and start new files
+   from `.gj/doc-templates/`; never leave a template-named file in the project
+   fact directories. Update an existing capability or domain document in place
+   instead of creating versioned copies. When lasting facts are unresolved,
+   leave them as `draft`; after the relevant human gate, record the confirmer
+   and use `confirmed`. This status does not claim production deployment.
+   For every API or database decision, name the executable source path (or a
+   concrete `TBD` path with an owner) beside the explanatory Markdown path in
+   the plan and documentation decision. Do not accept "update the schema" as a
+   complete document action without locating both facts.
+9. End with a documentation decision table containing path, action, triggering
+   fact, stage/status, and confirmer/follow-up. Use only `create`, `update`,
    `no-change`, or `follow-up`; a follow-up requires an Issue, owner, and due
    date. Do not create a separate documentation task by default.
 
@@ -66,7 +81,7 @@ Impact and risk:
 Tasks and dependencies:
 Test coverage:
 Documentation impact:
-Documentation decisions (path / action / reason / status or confirmer):
+Documentation decisions (path / action / triggering fact / stage and status / confirmer or follow-up):
 Rollout and rollback:
 Human confirmation needed:
 Ready to implement when:

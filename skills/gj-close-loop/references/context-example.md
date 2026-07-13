@@ -2,8 +2,6 @@
 
 Context outputs from the first run:
 
-- `examples/demo-run/iteration-docs/ai-context-summary.md`
-- `docs/iterations/2026-07-v1.0-order-approval/ai-context-summary.md`
 - `docs/context/current-state.md`
 - `docs/modules/order.md`
 - `.gj/context.yml`

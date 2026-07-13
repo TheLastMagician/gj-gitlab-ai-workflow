@@ -69,8 +69,9 @@ Access Token，但它代表机器人账号，不能代替当前用户的个人 T
   `flow::hotfix` 三个流程标签。
 - `.gj/workflow.yml` 集中保存项目、角色交接和风险规则；`.gj/context.yml`
   保存 AI 上下文白名单；本机凭据单独放在被忽略的 `.gj/gitlab.local.json`。
-- `docs/context`、`docs/modules`、`docs/iterations` 等长期上下文目录。
-- PRD、产品设计、原型记录、技术方案、测试计划、测试报告、发布说明等文档模板。
+- `docs/context`、`docs/modules` 和 ADR 等长期上下文目录。
+- 安装在 `.gj/doc-templates/` 的 PRD、产品设计、技术方案、API、数据库、ADR、
+  模块、测试和发布文档模板；项目事实目录不预置空白模板。
 - 目标业务项目 CI：MR 只由 `policy -> test` 硬阻断；工作流资产和发布清单只提醒。
 - `policy_check.py`、`workflow_assets_check.py`、`validate_role_map.py` 等检查脚本。
 - SemVer/Milestone/Tag/构建/部署版本治理，以及 Tag-only `release_version_check.py`。
@@ -210,7 +211,7 @@ flowchart TD
 | 阶段 | 角色 | 使用 skill | 产物 |
 | --- | --- | --- | --- |
 | 入口和分流 | 任意成员（Member） | `gj-workflow-next` | 待办、flow 建议、阻塞项和下一步；人确认标签 |
-| 变更计划 | 产品经理（PdM）/开发经理（Dev Lead） | `gj-plan-change` | 验收、方案、任务、测试、Target release/Milestone 和回滚计划 |
+| 变更计划 | 产品经理（PdM）/开发经理（Dev Lead） | `gj-plan-change` | 验收和按影响形成的产品、技术、API、数据库、测试文档草案及回滚计划 |
 | 开发和修复 | 开发（Dev） | `gj-develop-change` | 功能、Fast 改动、Bug 或 Hotfix 的实现、测试和文档 |
 | MR 审阅 | 代码审阅（Reviewer） | `gj-mr-review` | 按严重级别排列的问题和合并就绪结论 |
 | 合并 | 合并（Maintainer） | GitLab | 人检查证据并决定、执行合并 |
@@ -291,19 +292,20 @@ flowchart TD
 | 开发 | `gj-develop-change` | 行为、契约或规则变化时，在同一 MR 更新模块/当前事实文档 |
 | MR 审阅 | `gj-mr-review` | 核对代码、测试、文档决策和实际 diff 是否一致 |
 | QA/发布 | `gj-release-readiness` | 正式 QA 写测试报告；有用户/运维影响写发布说明 |
-| 收尾 | `gj-close-loop` | 按需更新 current state、context index；重要里程碑写短摘要 |
+| 收尾 | `gj-close-loop` | 按需更新 current state、长期文档和 context index；复盘留在 GitLab Retro Issue |
 
-规则只有三条：
+规则只有四条：
 
 1. Issue/MR 保存本次讨论和过程；当前事实文档原地更新，过时内容直接删，Git 负责历史。
-2. 测试报告、发布说明和重要迭代摘要按版本新增，完成后冻结。普通 Fast 和多数单 Issue
-   变更不建 `docs/iterations/`，更不要求 00~06 全套文档。
+2. 测试报告和发布说明按版本新增，完成后冻结；过程与讨论只保留在 GitLab，
+   不在仓库中重复保存。
 3. 每个执行 Skill 都输出“文档决策”表，逐项说明 `create`、`update`、`no-change` 或
    `follow-up`。人只确认事实，不需要背文档路径；Reviewer 按表核对。
+4. Requirement/Hotfix 是主工作项；Solution/Task/Test Issue 只按协作需要拆分，不能
+   替代仓库中的长期方案或测试文档。新文档从 `.gj/doc-templates/` 创建并使用语义名。
 
 AI 仍通过 `.gj/context.yml` 渐进加载：先读当前 Issue/MR 和 3 个全局事实文件，再按
-changed paths 读取对应模块和明确链接的功能文档；默认不扫描历史。每模块只允许最新
-1 轮 `ai-context-summary.md` 进入日常上下文。
+changed paths 读取对应模块和明确链接的功能文档；默认不扫描历史。
 
 三种 flow 的文档深度也不同：Fast 默认只写 MR 证据，但业务规则变化不能免模块文档；
 Standard 按实际影响更新 PRD/方案/测试；Hotfix 先止血，发布后补回归证据和当前事实。

@@ -14,6 +14,10 @@
 
 ## 测试结论
 
+## Test Report
+
+- `docs/qa/test-reports/<tag>.md`
+
 ## 配置变更
 
 ## 数据库变更

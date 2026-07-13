@@ -20,14 +20,18 @@ description: Review GitLab merge requests for workflow compliance, code risks, t
 4. Load relevant module context from `.gj/context.yml`.
 5. Check documentation impact:
    - MR description or Skill result includes a documentation decision table
-     with path, action, reason, and status/confirmer;
+     with path, action, triggering fact, stage/status, and confirmer/follow-up;
    - each action is `create`, `update`, `no-change`, or `follow-up`, and every
      follow-up has an Issue, owner, and due date;
    - the table agrees with the actual diff and changed behavior;
-   - PRD/design/prototype/solution/test/release docs are updated when durable
-     facts changed.
-   - `docs/context`, `docs/modules`, ADRs, or `ai-context-summary.md` are updated
-     when long-term AI context changed.
+   - product, interaction, API/event, database, architecture/ADR, module rule,
+     test baseline, release, and runtime-state impacts were considered;
+   - machine contracts/migrations, explanatory docs, implementation, and tests
+     agree, and both executable and explanatory paths are named;
+   - new current-fact docs use semantic filenames and required metadata rather
+     than template names;
+   - GitLab Solution/Task/Test Issues are not treated as substitutes for
+     durable repository docs.
 6. Check version traceability: the Issue, MR, and feature docs use the same
    Target release/Milestone; a normal feature MR does not create a Tag or bump
    project manifests without explicit release scope. For release-preparation

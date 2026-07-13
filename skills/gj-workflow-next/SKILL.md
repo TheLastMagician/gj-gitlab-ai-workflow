@@ -42,7 +42,9 @@ description: Accept a new requirement or inspect a GitLab inbox or active work i
    - missing context update.
    - missing documentation impact answer or required repo docs.
 8. Identify assignment, reviewer, mention, due-date, target-release/Milestone,
-   and documentation gaps.
+   and documentation gaps. Treat Requirement/Hotfix as the main work item;
+   recommend Solution, Task, or Test Issues only for independently owned or
+   tracked work, never as substitutes for repository documentation.
 9. Keep the answer action-oriented and include evidence links or file paths.
    Read-only inspection is the default; only set labels or hand off work after
    the human confirms the action.

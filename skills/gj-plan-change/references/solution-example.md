@@ -1,6 +1,12 @@
 # Demo Run Reference
 
-Solution Issue: #3 `[订单审批流 v1.0] 方案：最小订单状态机`
+Main work item: Requirement Issue #2
+
+Durable solution: `docs/technical/solutions/order-approval.md`
+
+The historical demo also created Solution Issue #3 for a separately tracked
+review. Do not repeat that split unless independent ownership, scheduling, or
+tracking makes it useful.
 
 The accepted demo solution:
 
@@ -9,5 +15,5 @@ The accepted demo solution:
 - Keep API, DB, audit log, and notifications out of scope.
 - Treat self-approval as a permission risk.
 
-The solution plan must explicitly list non-goals so implementation does not
-grow beyond the accepted scope.
+The solution document must explicitly list non-goals so implementation does
+not grow beyond the accepted scope. Review discussion remains on the main Issue.

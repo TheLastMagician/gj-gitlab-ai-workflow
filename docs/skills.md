@@ -76,10 +76,10 @@ comment so GitLab creates the expected Todo and notification.
 ## Documentation Impact
 
 Every delivery Skill reports a documentation decision table with the target
-path, one of `create` / `update` / `no-change` / `follow-up`, the reason, and
-the status or human confirmer. A follow-up is valid only with an Issue, owner,
-and due date. GitLab Issues and MR comments hold discussion; repository docs
-hold durable conclusions.
+path, one of `create` / `update` / `no-change` / `follow-up`, the triggering
+fact, stage/status, and human confirmer or follow-up. A follow-up is valid only
+with an Issue, owner, and due date. GitLab Issues and MR comments hold process;
+repository docs hold durable conclusions.
 
 Users do not need to invoke a separate documentation Skill. After durable facts
 are confirmed, `gj-plan-change`, `gj-develop-change`,
@@ -88,17 +88,28 @@ within the current change when repository writes are available. `gj-mr-review`
 checks that those updates are present. If facts are unresolved or writes are
 unavailable, the Skill returns an exact draft and a human confirmation item.
 Current-fact documents are updated in place; versioned test/release evidence is
-created per version and then frozen. Fast and most single-Issue changes do not
-need an iteration directory.
+created per Tag and then frozen. Process history remains in GitLab and Git.
 
 | Durable change | Document target |
 | --- | --- |
-| Product behavior or acceptance criteria | `docs/product/requirements/<feature>.md` |
-| UI, user flow, screen state, copy, prototype | `docs/product/designs/<feature>.md`, `docs/product/prototypes/<feature>.md` |
-| Architecture, API, data, permission, rollout, rollback | `docs/technical/solutions/<feature>.md` |
-| Acceptance, regression, permission, release validation | `docs/qa/test-plans/<feature>.md`, `docs/qa/test-reports/<feature>.md` |
+| Product behavior or acceptance criteria | `docs/product/requirements/<capability>.md` |
+| UI, user flow, screen state, copy, prototype | `docs/product/designs/<capability>.md`, `docs/product/prototypes/<capability>.md` |
+| Architecture, permission, rollout, rollback | `docs/technical/solutions/<capability>.md`, ADR |
+| API/event contract | machine schema + `docs/technical/apis/<domain>.md` |
+| Database structure or meaning | schema/migration + `docs/technical/database/<domain>.md` |
+| Acceptance, regression, permission baseline | `docs/qa/test-plans/<capability>.md` |
+| Executed release validation | `docs/qa/test-reports/<tag>.md` |
 | User-visible release scope or rollback | `docs/releases/<tag>.md` |
-| Long-term AI context | `docs/context`, `docs/modules`, `.gj/context.yml`, `docs/iterations/*/ai-context-summary.md` |
+| Long-term AI context | `docs/context`, `docs/modules`, ADRs, `.gj/context.yml` |
+
+Requirement or Hotfix is the main work item. Solution, Task, and Test Issues are
+created only for separately owned or tracked work and never replace repository
+documents. New document templates are installed under `.gj/doc-templates/`;
+project fact directories contain only semantic files such as
+`order-approval.md`, never generic template filenames.
+API and database decisions name both the executable contract/schema/migration
+path and its explanatory Markdown path so the two facts can be reviewed
+together.
 
 ## Version Responsibilities
 

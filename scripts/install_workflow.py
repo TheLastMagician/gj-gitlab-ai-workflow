@@ -20,14 +20,22 @@ COPY_PATHS = [
     ("templates/docs/context", "docs/context"),
     ("templates/docs/standards", "docs/standards"),
     ("templates/scripts", "scripts"),
-    ("templates/docs/product", "docs/product"),
-    ("templates/docs/technical", "docs/technical"),
-    ("templates/docs/qa", "docs/qa"),
-    ("templates/docs/releases", "docs/releases"),
 ]
 
 COPY_FILES = [("CODEOWNERS", "CODEOWNERS")]
-ENSURE_DIRS = ["docs/modules"]
+ENSURE_DIRS = [
+    "docs/product/requirements",
+    "docs/product/designs",
+    "docs/product/prototypes",
+    "docs/technical/solutions",
+    "docs/technical/apis",
+    "docs/technical/database",
+    "docs/technical/decisions",
+    "docs/modules",
+    "docs/qa/test-plans",
+    "docs/qa/test-reports",
+    "docs/releases",
+]
 GITIGNORE_ENTRIES = [".gj/gitlab.local.json", ".gj-workflow-backup/"]
 
 

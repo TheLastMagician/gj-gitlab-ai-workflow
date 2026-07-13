@@ -1,142 +1,111 @@
-# 可持续文档与 AI 上下文治理
+# 可持续项目文档与 AI 上下文治理
 
-## 先说结论
+## 核心模型
 
-文档不是在迭代结束时一次性补齐，也不是每个需求复制一套模板。正确做法是：
+GJ 的文档决策使用同一个公式：**变更影响决定文档类型，Flow 决定最低严谨程度，流程
+阶段决定写入时机和确认人**。不是每个需求复制一整套模板，也不是发布后集中补文档。
 
-1. GitLab Issue/MR 记录本次工作的过程、讨论和证据。
-2. 需求、设计、方案和模块文档原地更新，始终描述“当前为真”。
-3. 测试报告、发布说明和迭代摘要按版本新增，关闭后冻结。
-4. 每个 Skill 在自己的阶段判断需要创建、更新或保持不变的文档，并在输出中列明。
-5. AI 只加载当前工作和命中模块的文档，不扫描全部历史。
+GitLab 与仓库各自只有一种职责：
 
-本规范定义文档如何演进；Target release、Git Tag、构建身份和部署版本的关系见
-[`versioning.md`](versioning.md)。
-
-## 四类信息放在哪里
-
-| 类型 | 放置位置 | 如何迭代 | 何时读取 |
-| --- | --- | --- | --- |
-| 当前工作过程 | GitLab Issue、MR、讨论、Pipeline | 在工作进行中持续追加，关闭后保留 | 当前任务首先读取 |
-| 当前业务和技术事实 | `docs/product/`、`docs/technical/`、`docs/modules/`、`docs/context/` | 原文件覆盖更新；过时内容直接删除，Git 历史负责追溯 | 按当前工作和模块读取 |
-| 交付证据 | `docs/qa/test-reports/`、`docs/releases/`、`docs/iterations/` | 按版本或里程碑新建，完成后冻结 | 发布、审计或明确追溯时读取 |
-| 机器路由 | `.gj/context.yml` | 文档路径或模块边界变化时更新 | Agent 每次先读取 |
-
-`docs/iterations/` 不是开发中的第二套 PRD/方案库。它只保存重要里程碑的短摘要或
-确有保留价值的交付证据；普通 Fast 和多数单 Issue 变更不建迭代目录。
-
-## 一个新需求的文档流转
-
-| 阶段 | 主要 Skill | 本阶段必须明确 | 创建或更新的文档 | 完成标志 |
-| --- | --- | --- | --- | --- |
-| 1. 入口分流 | `gj-workflow-next` | 目标、范围、负责人、唯一 flow、目标版本 | Standard/Hotfix 创建 Issue；可发布工作关联 GitLab Milestone | 人确认 flow、Target release 和下一步 |
-| 2. 需求确认 | `gj-plan-change` | 目标、非目标、用户场景、规则、可测试验收和反例 | 产品行为变化时创建/更新 PRD；有交互时更新设计/原型记录 | PdM 确认需求事实 |
-| 3. 方案与测试设计 | `gj-plan-change` | 改动边界、接口/数据/权限影响、风险、回滚、测试覆盖 | 有技术决策时更新技术方案；测试不平凡时更新测试计划 | Dev Lead 确认方案可实施 |
-| 4. 开发 | `gj-develop-change` | 实现、自动化测试、自测和实际 changed paths | 行为/契约/业务规则变化时，在同一 MR 更新模块及相关当前事实文档 | 代码、测试、文档一起进入 MR |
-| 5. MR 审阅 | `gj-mr-review` | 代码是否符合已确认事实，证据是否足够 | 通常不新建文档；发现差异就要求在原 MR 修正对应文档 | Reviewer 给出可执行结论 |
-| 6. QA 与发布准备 | `gj-release-readiness` | 构建、环境、结果、缺陷、发布、监控和回滚 | 执行正式 QA 时写测试报告；有用户/运维影响时写发布说明 | 人拿到可发布或不可发布证据 |
-| 7. 收尾 | `gj-close-loop` | 最终事实、遗留问题、经验和下一步 | 按需更新 current state、模块文档和 context index；重要里程碑写短摘要 | 当前事实已回写，历史证据已冻结 |
-
-这些动作发生在对应阶段的同一个分支/MR 中。不要默认创建“补文档”Issue；只有
-Hotfix 为了先止血或当前结论尚未确认时，才允许明确记录负责人和期限后跟进。
-
-## 三种 flow 的最低文档要求
-
-| Flow | 计划阶段 | 开发/MR | 发布和收尾 |
-| --- | --- | --- | --- |
-| `flow::fast` | 不强制 PRD、方案或迭代目录；在 MR 写清范围、非目标、自测和文档影响 | 只要行为或规则变了，仍须更新对应当前事实文档 | 有用户/运维影响才写发布说明；通常不写迭代摘要 |
-| `flow::standard` | Issue 必须；产品行为变化更新 PRD；存在技术决策更新方案；测试不平凡更新测试计划 | 代码、测试、模块/契约文档在同一 MR 更新 | 正式 QA 写报告；有发布影响写发布说明；重要里程碑写摘要 |
-| `flow::hotfix` | Hotfix Issue 必须，先写影响、最小修复、验证和回滚；不为凑模板拖延止血 | 能同步修的文档同 MR 更新；不能同步的必须记录跟进负责人和期限 | 发布后补回归证据、当前事实和简短复盘；是否写摘要按影响决定 |
-
-文档是否需要，不由 flow 单独决定，而由“是否产生持久事实”决定。比如 typo 可以没有
-仓库文档；一个两行代码的金额规则修改即使走 Fast，也必须更新对应模块规则。
-
-## 什么时候创建，什么时候原地更新
-
-按以下顺序判断：
-
-1. 本次只有讨论、临时排查或实现细节，没有改变后续人员需要依赖的事实：不建文档。
-2. 已有同一功能、模块或决策边界的文档：原地更新，不创建 `v2`、`final`、`new` 副本。
-3. 出现新的稳定功能、模块或独立评审边界：按语义名称创建一个文件。
-4. 内容是某次构建、测试、发布或里程碑证据：按版本或里程碑新建，完成后冻结。
-5. 文档路径、模块边界或默认加载项变化：同步更新 `.gj/context.yml`。
-
-持久事实包括业务规则、权限、状态流、接口契约、数据含义、关键技术决策、测试基线、
-发布/回滚方式和当前运行状态。聊天推理、临时日志、未证实猜测和逐行实现过程不是持久事实。
-
-## 文件和内容规范
-
-### 命名与状态
-
-- 使用稳定语义名和 kebab-case，例如 `order-approval.md`，不要使用
-  `PRD-v2-final-new.md`。
-- 当前事实文档只使用 `draft` 和 `confirmed`：人确认前是 `draft`，确认后改为
-  `confirmed`。事实失效时直接修改或删除，不保留“已废弃”段落。
-- 证据文档使用版本或里程碑命名，例如 `v1.2.0.md` 或
-  `2026-07-order-approval/ai-context-summary.md`，完成后不再改写。
-- 每份功能文档至少写 Owner、Status、Source Issue、Target release、Last updated，
-  并链接直接上游和下游。
-
-### 每类文档的最低内容
-
-| 文档 | 最低内容 |
+| 信息 | 唯一事实源 |
 | --- | --- |
-| PRD | 背景、目标、非目标、用户场景、业务规则、验收标准、反例、依赖、待确认问题 |
-| 产品设计/原型记录 | 用户流、页面/状态、权限差异、异常/空态、关键文案、原型链接 |
-| 技术方案 | 影响范围、方案、备选取舍、接口/数据/权限变化、风险、测试、发布和回滚 |
-| 测试计划 | 需求/风险到用例的映射、成功/失败/权限/回归场景、环境、数据和阻断条件 |
-| 模块文档 | 当前职责、业务规则、接口/数据契约、失败行为、关键测试入口和相关文档链接 |
-| 测试报告 | commit/build、环境、执行结果、证据、缺陷、剩余风险和 QA 结论 |
-| 发布说明 | 包含项、用户/运维影响、来源 SHA、验证、发布步骤、监控和回滚 |
-| current state | 当前版本、已确认能力、已知限制和近期工作重点；不写变更流水账 |
-| AI 上下文摘要 | 本轮交付、最终决策、验证、剩余风险、长效文档链接；保持短小 |
+| 本次变更、讨论、状态、分工、审批和过程证据 | GitLab Issue、MR、评论、Pipeline |
+| 当前产品、交互、技术、API、数据和模块事实 | `docs/product/`、`docs/technical/`、`docs/modules/` |
+| 可复用测试基线 | `docs/qa/test-plans/` |
+| 按版本冻结的交付证据 | `docs/qa/test-reports/<tag>.md`、`docs/releases/<tag>.md` |
+| 仓库与环境当前状态 | `docs/context/current-state.md` |
+| AI 文档路由 | `.gj/context.yml` |
 
-验收标准必须能被测试，并至少写一个应该拒绝、报错或保持不变的反例。文档中不写
-Token、密钥、生产数据和无脱敏日志。
+Requirement 或 Hotfix Issue 是一次变更的主工作项。Solution、Task、Test Issue 只在独立
+负责人、排期、依赖或单独跟踪有价值时创建；它们不能替代仓库里的方案和测试文档。
 
-## 每个 Skill 必须输出文档决策
+## 一个需求的文档流转
 
-对应 Skill 完成时，在回复、Issue 评论或 MR 描述中输出以下表格；它不是新文件：
+| 阶段 | Skill | 仓库文档动作 | 完成标志 |
+| --- | --- | --- | --- |
+| 入口 | `gj-workflow-next` | 只列预期文档影响 | 人确认 flow、Target release 和主工作项 |
+| 需求确认 | `gj-plan-change` | 产品变化更新 PRD；交互变化更新设计/原型 | PdM 确认需求事实 |
+| 方案/测试设计 | `gj-plan-change` | 按影响更新方案、API、数据库、ADR 和测试计划 | Dev Lead/QA 确认可实施、可验证 |
+| 开发 | `gj-develop-change` | 代码、测试和受影响长期文档在同一 MR 更新 | 分支文档与分支代码一致 |
+| MR 审阅 | `gj-mr-review` | 通常不新建；发现差异在原 MR 修正 | Reviewer 核对决策表和实际 diff |
+| QA/发布 | `gj-release-readiness` | 按 Tag 生成测试报告和发布说明 | 发布证据足以让人决策 |
+| 收尾 | `gj-close-loop` | 回写实际 Tag/SHA/环境和当前事实，冻结证据 | 未解决项都有 Issue、Owner 和期限 |
+
+`confirmed` 只表示相应责任人确认了规范，不等于已经部署。生产事实必须由 Git Tag、
+commit SHA、Pipeline、Environment 和 `current-state.md` 共同证明。
+
+## Flow 深度
+
+| Flow | 最低要求 |
+| --- | --- |
+| Fast | 不强制计划文档；持久事实变化仍更新对应长期文档 |
+| Standard | Requirement Issue 必须；按实际影响更新需求、设计、技术、API、数据库和测试文档 |
+| Hotfix | 先记录影响、最小修复、验证和回滚；不能同步完成的文档必须跟踪并在收尾补齐 |
+
+高风险路径不能用 Fast。文档类型由实际影响决定，不能用“改动很小”豁免业务规则、API、
+数据库、权限或数据含义的更新。
+
+## 路径和模板
+
+真实项目文档使用稳定语义名：
+
+```text
+docs/product/requirements/<capability>.md
+docs/product/designs/<capability>.md
+docs/product/prototypes/<capability>.md
+docs/technical/solutions/<capability>.md
+docs/technical/apis/<domain>.md
+docs/technical/database/<domain>.md
+docs/technical/decisions/ADR-<number>-<decision>.md
+docs/modules/<module>.md
+docs/qa/test-plans/<capability>.md
+docs/qa/test-reports/<tag>.md
+docs/releases/<tag>.md
+```
+
+安装后模板位于 `.gj/doc-templates/`，不属于项目事实。禁止把 `PRD.md`、
+`solution-design.md`、`test-report.md` 等通用模板名留在事实目录，也不要创建
+`v2/final/new` 副本。
+
+## 通用文档契约
+
+当前产品、技术、模块和测试计划文档至少包含：
+
+```markdown
+- Owner:
+- Status: draft | confirmed
+- Source Issue:
+- Target release:
+- Effective from:
+- Implemented by:
+- Related documents:
+- Last verified:
+```
+
+正文描述当前完整事实，不写“本次新增了什么”的变更流水账。API 结构优先以 OpenAPI、
+AsyncAPI、protobuf 等机器契约为事实源；数据库结构以 schema/model/migration 为执行事实
+源，Markdown 解释业务语义、权限、不变量、兼容、迁移和恢复。计划、实现摘要和 MR
+文档决策必须同时写出可执行路径与 Markdown 路径；未知路径要写 `TBD + Owner`。
+
+测试报告状态使用 `draft/passed/failed/blocked`，发布说明使用
+`draft/ready/released/rolled-back`。版本证据关闭后冻结；当前事实过时时直接修改或删除，
+历史由 Git 和 GitLab 追溯。
+
+## Skill 文档决策
+
+每个执行 Skill 输出：
 
 ```markdown
 ## 文档决策
 
-| 文档 | 动作 | 原因 | 状态/确认人 |
-| --- | --- | --- | --- |
-| docs/modules/order.md | update | 金额审批规则变化 | confirmed / @owner |
-| docs/releases/v1.2.0.md | no-change | 当前阶段尚未进入发布 | - |
+| 文档 | 动作 | 触发事实 | 阶段/状态 | 确认人或跟进 |
+| --- | --- | --- | --- | --- |
+| docs/modules/order.md | update | 审批规则变化 | develop / confirmed | @owner |
 ```
 
-`动作` 只能是 `create`、`update`、`no-change` 或 `follow-up`。使用 `follow-up` 时必须
-给出 GitLab Issue、负责人和期限。这样人不需要记住所有路径，Reviewer 也能直接核对
-“为什么改/为什么没改”。
+动作只能是 `create/update/no-change/follow-up`。`follow-up` 必须包含 GitLab Issue、
+负责人和期限。Reviewer 对照实际行为、diff、文档元数据和人的确认记录。
 
-## AI 渐进读取规则
-
-1. 先读当前 Issue/MR，明确目标、flow 和预计 changed paths。
-2. 读 `.gj/context.yml`，只加载 `always_load`。
-3. 用路径匹配相关模块，只加载该模块文档、有效决策和最新一轮摘要。
-4. 仅在工作项或模块文档明确链接时读取 PRD、设计、方案、测试或发布文档。
-5. 不遍历 `docs/iterations/`；只有明确追溯某项决策时读取指定历史文件。
-
-默认预算是：常驻最多 3 个文件/24000 字符；单模块最多 5 个文件/40000 字符；每模块
-最多 1 个近期迭代摘要。超过预算先缩小模块和任务范围，不扩大常驻白名单。
-
-## 例子：同一个需求如何跨迭代
-
-第一次开发订单审批时，创建 `order-approval.md` PRD、技术方案、测试计划和
-`docs/modules/order.md`。下一轮把主管审批阈值从 5000 调到 8000 时，直接修改这些
-当前事实文件，不复制一套 v2；本轮测试报告和发布说明则按新版本新建。收尾后，
-`.gj/context.yml` 只指向当前模块文档和最新摘要，旧过程仍可从 Git、Issue 和冻结证据追溯。
-
-## 按需审计
-
-`context_freshness_check.py` 默认只告警常驻预算、无效路径、历史误加载和摘要修剪问题，
-不进入默认 CI，也不阻断 MR。需要专项治理时运行：
-
-```powershell
-python scripts/context_freshness_check.py --strict
-```
-
-脚本只能检查结构，不能判断事实是否正确。需求、方案、Review、发布和收尾的责任人仍需
-确认对应阶段的文档决策。
+安装到业务项目后的完整内容契约、各类文档必填正文、责任人和结构审计规则位于
+`docs/standards/12-context-governance.md`。`context_freshness_check.py` 默认只告警，
+专项治理时使用 `--strict`；内容正确性仍由对应 Owner 确认。

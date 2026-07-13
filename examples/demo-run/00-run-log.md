@@ -21,7 +21,7 @@ Merge request: [!1 feat(workflow): 初始化 GitLab AI 工作流骨架](https://
 | 7 | QA | Acceptance criteria | QA failure and Bug Issue #6 | Failure must not be hidden in test report | QA upgrades failure to Bug Issue |
 | 8 | Developer | Bug Issue #6 | `_ensure_not_self_approval` and regression test | Need same rule in approve and reject | Reviewer confirms both paths |
 | 9 | DevOps | Release Issue #7 | Release and rollback checklist | Protected branch settings require GitLab UI/admin confirmation | DevOps confirms before merge |
-| 10 | PM | All Issues and MR notes | Retro Issue #8 and AI context summary | Skill drafts should not be written before examples exist | PM approves first-batch draft extraction only |
+| 10 | PM | All Issues and MR notes | Retro Issue #8 and durable context updates | Skill drafts should not be written before examples exist | PM approves first-batch draft extraction only |
 
 ## Exposed Friction
 
@@ -78,4 +78,4 @@ Validation result:
 - Convert rough requirements into missing questions and acceptance criteria.
 - Review MR descriptions against workflow policy.
 - Convert QA failures into Bug Issues with root cause and regression scope.
-- Close every iteration with `ai-context-summary.md`.
+- Close completed work by updating durable current-fact documents when needed.

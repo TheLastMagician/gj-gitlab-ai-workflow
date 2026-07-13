@@ -9,7 +9,7 @@ description: Implement GitLab features, small changes, bugs, and hotfixes using 
 
 1. Read the active Issue or MR, confirmed flow label, accepted plan when
    required, `.gj/context.yml`, `.gj/workflow.yml`, and only the relevant
-   module docs, standards, ADRs, and recent summary. When present, use
+   module docs, standards, and ADRs. When present, use
    `docs/standards/12-context-governance.md` for document lifecycle decisions.
 2. Confirm readiness:
    - Fast needs a bounded change, self-test, and documentation-impact answer.
@@ -26,19 +26,23 @@ description: Implement GitLab features, small changes, bugs, and hotfixes using 
 4. Inspect the codebase before editing and stay within the confirmed scope.
 5. Add or update tests for acceptance criteria, failure paths, permissions, and
    the reported regression as applicable.
-6. Re-evaluate the plan against the actual changed paths. Update module,
-   requirement, design, solution, interface, or other current-fact docs in the
-   same MR when behavior, contracts, permissions, data meaning, operations, or
-   a lasting rule changes. Update existing semantic files in place. Otherwise
-   state why no documentation update is needed.
+6. Re-evaluate the plan against actual changed paths and classify durable
+   impact: product behavior, interaction, API/event contract, database meaning,
+   architecture/ADR, module rule, test baseline, or operations. Update every
+   affected current-fact document in the same MR. Keep machine-readable API
+   schemas and database migrations aligned with their explanatory docs. List
+   both executable and explanatory paths in the implementation result. Use
+   semantic filenames and `.gj/doc-templates/` for new boundaries; update
+   existing boundaries in place. Otherwise state why each plausible document
+   type is `no-change`.
 7. Keep the Issue, MR, and feature documents linked to the confirmed Target
    release/Milestone. Ordinary feature, bug, and Fast MRs do not bump the
    repository version or create Tags; version fields in project manifests are
    changed only by explicit release-preparation work.
 8. Run focused tests first, then the repository's broader required checks.
 9. Output a documentation decision table using `create`, `update`, `no-change`,
-   or `follow-up`, with path, reason, and status/confirmer. A follow-up is only
-   valid with an Issue, owner, and due date.
+   or `follow-up`, with path, triggering fact, stage/status, and confirmer or
+   follow-up. A follow-up is only valid with an Issue, owner, and due date.
 10. Prepare a GitLab-ready implementation summary. Never approve, merge, or
    deploy from this skill.
 
@@ -55,7 +59,7 @@ Root cause (bug/hotfix):
 Files changed:
 Tests and results:
 Documentation impact:
-Documentation decisions (path / action / reason / status or confirmer):
+Documentation decisions (path / action / triggering fact / stage and status / confirmer or follow-up):
 Risks and rollback:
 Follow-up Issues:
 Ready for MR when:

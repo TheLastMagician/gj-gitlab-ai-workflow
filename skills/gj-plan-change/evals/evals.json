@@ -1,0 +1,41 @@
+{
+  "skill_name": "gj-plan-change",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "一个已有 Python 服务只重命名内部局部变量并补一条单元测试，不改变行为、接口、数据、权限或运维方式。按 flow::fast 给出变更计划和文档决策。",
+      "expected_output": "保持 Fast，不机械创建 PRD/方案/Issue；对持久文档给出有依据的 no-change，并保留自测和 MR 要求。",
+      "files": [],
+      "expectations": [
+        "The plan keeps flow::fast and does not recommend extra Solution, Task, or Test Issues.",
+        "The documentation decision uses semantic paths or document categories and marks durable documents no-change with a concrete reason.",
+        "The documentation decision includes triggering fact, stage/status, and confirmer or follow-up columns.",
+        "The plan includes a focused self-test and does not create a Tag or bump a version."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "为订单服务增加批量审批 API，同时新增 approval_batch 表并迁移历史数据。需求已确认走 flow::standard，单团队负责，不需要独立排期。请给出计划、长期文档路径和 GitLab 工作项拆分建议。",
+      "expected_output": "Requirement 为主 Issue，不默认拆 Solution/Task/Test Issue；创建或更新语义化 PRD、方案、API、数据库和测试计划，并说明机器契约与 migration 的事实源。",
+      "files": [],
+      "expectations": [
+        "Requirement remains the main Issue and no Solution, Task, or Test Issue is created by default for the single-team change.",
+        "The plan includes semantic PRD, technical solution, API contract, database design, module, and test-plan paths as create or update decisions.",
+        "The plan identifies the machine-readable API schema and schema/migration code as executable facts paired with explanatory Markdown.",
+        "The documentation decision includes triggering fact, stage/status, and confirmer or follow-up columns."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "生产订单审批权限被绕过，需要 flow::hotfix 立即止血。当前只能先修权限校验并发布，API 文档和回归计划无法在紧急 MR 同步完成。请输出计划和文档决策。",
+      "expected_output": "允许先止血但不把文档欠账写成普通备注；API/测试文档 follow-up 必须包含 Issue、负责人、期限，并要求发布后回归和收尾。",
+      "files": [],
+      "expectations": [
+        "The hotfix plan prioritizes impact containment, minimum safe fix, validation, rollback, and human release confirmation.",
+        "Deferred API and test documentation decisions use follow-up rather than no-change.",
+        "Every follow-up includes a GitLab Issue, owner, and due date.",
+        "The plan requires post-release regression evidence and durable-fact repair."
+      ]
+    }
+  ]
+}

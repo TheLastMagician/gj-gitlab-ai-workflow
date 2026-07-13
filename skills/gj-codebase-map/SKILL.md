@@ -27,6 +27,9 @@ description: Map an existing repository into AI-readable project context. Use wh
    - `docs/context/glossary.md`
    - `docs/modules/*.md`
    - `.gj/context.yml`
+   Create module files from `.gj/doc-templates/module.md`, use semantic module
+   names, include the common metadata contract, and keep observed facts
+   separate from inferences.
 5. Mark every inference that needs human confirmation.
 6. Scan generated output for secrets before staging or sharing.
 

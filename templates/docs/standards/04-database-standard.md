@@ -1,5 +1,24 @@
-# Database Standard
+# 数据库设计规范
 
-- Describe schema and migration impact.
-- Provide rollback steps.
-- Require DBA or tech lead ack for production-impacting migration paths.
+## 事实源与文档位置
+
+- schema、ORM model 和 migration 代码是数据库结构的执行事实源。
+- `docs/technical/database/<domain>.md` 解释实体关系、字段语义、不变量、查询模式、
+  数据保留、迁移和回滚，不复制完整 DDL。
+- 新数据领域从 `.gj/doc-templates/database-design.md` 创建；已有领域原地更新。
+
+## 触发条件
+
+新增或改变表、字段、类型、约束、索引、数据含义、保留策略、回填、兼容窗口或恢复策略
+时，必须更新数据库设计文档。纯查询实现优化且不改变长期约束时可以写 `no-change`。
+
+## 最低内容
+
+- schema/model/migration 的权威路径和 Owner。
+- 实体关系、字段业务语义、唯一性和状态不变量。
+- 索引、主要查询模式、容量或锁风险。
+- 敏感等级、数据保留、审计和清理要求。
+- 向前迁移、回填、双读写/兼容窗口、验证和回滚步骤。
+
+生产影响的 migration 必须由 Data Owner 或 Dev Lead 确认；不可逆迁移必须说明恢复方案
+和数据损失边界。Reviewer 对照 migration、测试、发布和回滚文档。

@@ -16,9 +16,10 @@
 
 ## 发布文档
 
-- 执行正式 QA 时创建或更新 `docs/qa/test-reports/<tag>.md`。
+- 执行正式 QA 时从 `.gj/doc-templates/test-report.md` 创建或更新
+  `docs/qa/test-reports/<tag>.md`。
 - 有用户可见、运维、配置、数据库、权限、灰度或回滚影响时，创建或更新
-  `docs/releases/<tag>.md`。
+  `docs/releases/<tag>.md`，新文件使用 `.gj/doc-templates/release-note.md`。
 - 测试报告记录实际 build/commit、环境、结果和证据；发布说明记录计划和最终结果。
 - 一次发布完成后冻结该版本证据；后续发布新建版本文件，不覆盖旧证据。
 
@@ -29,9 +30,7 @@
 
 - [ ] 有跨项目当前事实变化时，已覆盖更新 `docs/context/current-state.md`。
 - [ ] 有业务规则、接口或模块行为变化时，相关 `docs/modules/*.md` 已在变更 MR 更新。
-- [ ] 有重要里程碑时，已写短小的 `ai-context-summary.md`；普通 Fast/单 Issue 可不写。
 - [ ] 文档路径或模块边界变化时，`.gj/context.yml` 已更新。
-- [ ] `recent_iteration_summaries` 只保留每模块最新一轮入口。
 - [ ] 过时的当前事实已直接删除，没有继续保留“已废弃”段落。
 - [ ] 未解决问题已进入 GitLab Issue，含负责人和期限。
 

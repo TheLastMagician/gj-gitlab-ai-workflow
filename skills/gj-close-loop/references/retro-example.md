@@ -4,7 +4,6 @@ Retro inputs:
 
 - Run log: `examples/demo-run/00-run-log.md`
 - Role notes: `examples/demo-run/roles/`
-- Iteration docs: `examples/demo-run/iteration-docs/`
 
 Key learnings:
 
@@ -18,5 +17,6 @@ Key learnings:
 
 Long-term context output:
 
-- `examples/demo-run/iteration-docs/ai-context-summary.md`
-- `docs/iterations/2026-07-v1.0-order-approval/ai-context-summary.md`
+- `docs/context/current-state.md`
+- `docs/modules/order.md`
+- `.gj/context.yml`

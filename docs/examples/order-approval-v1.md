@@ -23,4 +23,3 @@
 - 角色记录：`examples/demo-run/roles/`
 - GitLab 对象记录：`examples/demo-run/gitlab/`
 - MR 记录：`examples/demo-run/mr/`
-- 迭代沉淀：`examples/demo-run/iteration-docs/`

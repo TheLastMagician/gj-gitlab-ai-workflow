@@ -10,8 +10,7 @@
 ## Output
 
 - Retro Issue #8.
-- `examples/demo-run/iteration-docs/06-retro.md`.
-- `examples/demo-run/iteration-docs/ai-context-summary.md`.
+- Durable documentation decisions for `docs/context` and `docs/modules`.
 
 ## Process Learnings
 

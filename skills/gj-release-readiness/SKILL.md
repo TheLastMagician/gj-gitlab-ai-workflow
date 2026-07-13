@@ -26,11 +26,13 @@ description: Assess and prepare GitLab dev, test, staging, and production releas
    Milestone matches. This is the point where the version is locked.
 4. Verify pipeline status, unresolved discussions, test evidence, config/data/
    permission changes, environment isolation or lock, and rollback target.
-5. Create or update `docs/qa/test-reports/<tag>.md` with Version, planned Tag,
+5. Create or update `docs/qa/test-reports/<tag>.md` from
+   `.gj/doc-templates/test-report.md` with Version, planned Tag,
    exact commit/build, Pipeline, environment, included Issues/MRs, results,
    evidence, defects, and QA decision.
-6. Create or update the configured `docs/releases/<tag>.md` and link the test
-   report. Record Version, Milestone, planned Tag, branch, SHA,
+6. Create or update the configured `docs/releases/<tag>.md` from
+   `.gj/doc-templates/release-note.md` and link the test report. Record Version,
+   Milestone, planned Tag, branch, SHA,
    pipeline, target, owner, time window, rollout, monitoring, validation, and
    rollback. Freeze version evidence after the release completes.
 7. Update an existing project manifest version only when the technology stack
@@ -38,7 +40,8 @@ description: Assess and prepare GitLab dev, test, staging, and production releas
    `python scripts/release_version_check.py --tag <tag>` before asking a human
    to create the Tag.
 8. Output a documentation decision table using `create`, `update`, `no-change`,
-   or `follow-up`, with path, reason, and status/confirmer.
+   or `follow-up`, with path, triggering fact, stage/status, and confirmer or
+   follow-up.
 9. Stop at the human gate. Do not approve, merge, tag, or deploy.
 
 ## Output
@@ -54,7 +57,7 @@ Included changes:
 Config / data / permission impact:
 Environment isolation or lock:
 Release note and documentation impact:
-Documentation decisions (path / action / reason / status or confirmer):
+Documentation decisions (path / action / triggering fact / stage and status / confirmer or follow-up):
 Rollout and monitoring:
 Rollback target and steps:
 Post-release validation:

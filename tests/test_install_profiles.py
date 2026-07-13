@@ -40,6 +40,12 @@ class InstallerTests(unittest.TestCase):
 
             self.assertTrue((target / ".gj" / "workflow.yml").exists())
             self.assertTrue((target / ".gj" / "context.yml").exists())
+            self.assertFalse((target / "docs" / "iterations").exists())
+            context_config = (target / ".gj" / "context.yml").read_text(
+                encoding="utf-8"
+            )
+            self.assertNotIn("recent_" + "iteration_summaries", context_config)
+            self.assertNotIn("iteration_" + "policy", context_config)
             self.assertTrue((target / ".gitlab" / "gj-workflow-ci.yml").exists())
             self.assertIn(
                 ".gitlab/gj-workflow-ci.yml",
@@ -57,14 +63,20 @@ class InstallerTests(unittest.TestCase):
                 ".gj/gitlab.local.json",
                 (target / ".gitignore").read_text(encoding="utf-8"),
             )
-            self.assertTrue((target / "docs" / "product" / "requirements" / "PRD.md").exists())
+            self.assertTrue(
+                (target / ".gj" / "doc-templates" / "product-requirement.md").exists()
+            )
+            self.assertFalse(
+                (target / "docs" / "product" / "requirements" / "PRD.md").exists()
+            )
             governance = (
                 target / "docs" / "standards" / "12-context-governance.md"
             ).read_text(encoding="utf-8")
-            self.assertIn("一个新需求各阶段写什么", governance)
+            self.assertIn("阶段、产物和完成门", governance)
+            self.assertIn("变更影响决定文档类型", governance)
             self.assertIn("Skill 的文档决策输出", governance)
             prd = (
-                target / "docs" / "product" / "requirements" / "PRD.md"
+                target / ".gj" / "doc-templates" / "product-requirement.md"
             ).read_text(encoding="utf-8")
             self.assertIn("## Rejection And Counterexamples", prd)
             workflow = (target / ".gj" / "workflow.yml").read_text(encoding="utf-8")
@@ -170,6 +182,12 @@ class InstallerTests(unittest.TestCase):
                 {"gj-develop-change", "gj-mr-review", "gj-plan-change", "gj-workflow-next"}
                 <= installed
             )
+            installed_text = "\n".join(
+                path.read_text(encoding="utf-8")
+                for path in destination.rglob("*.md")
+            )
+            self.assertNotIn("docs/" + "iterations", installed_text)
+            self.assertNotIn("ai-context-" + "summary", installed_text)
 
     def test_optional_templates_are_not_core_gates(self) -> None:
         import importlib.util
@@ -180,8 +198,12 @@ class InstallerTests(unittest.TestCase):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
-        self.assertIn("docs/product/requirements/PRD.md", module.OPTIONAL_ASSETS)
-        self.assertNotIn("docs/product/requirements/PRD.md", module.CORE_REQUIRED)
+        self.assertIn(
+            ".gj/doc-templates/product-requirement.md", module.OPTIONAL_ASSETS
+        )
+        self.assertNotIn(
+            ".gj/doc-templates/product-requirement.md", module.CORE_REQUIRED
+        )
 
     def test_skill_installer_supports_three_agents_from_one_source(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

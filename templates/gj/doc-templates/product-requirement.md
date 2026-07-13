@@ -1,29 +1,21 @@
-# Product Requirement Document
+# Product Requirement: <Capability>
 
 ## Metadata
 
-- Feature:
 - Owner:
+- Status: draft
 - Source Issue:
 - Target release:
-- GitLab Milestone:
-- Status: draft
-- Related design/prototype:
-- Related solution:
-- Related test plan:
-- Last updated:
+- Effective from: pending
+- Implemented by:
+- Related documents:
+- Last verified:
 
 ## Background
 
-Describe the business problem, user pain, or opportunity.
-
 ## Goals
 
--
-
 ## Non-goals
-
--
 
 ## Users And Scenarios
 
@@ -31,9 +23,9 @@ Describe the business problem, user pain, or opportunity.
 | --- | --- | --- |
 | | | |
 
-## Requirements
+## Requirements And Rules
 
-| ID | Requirement | Priority | Notes |
+| ID | Requirement or rule | Priority | Notes |
 | --- | --- | --- | --- |
 | R1 | | P2 | |
 
@@ -47,19 +39,7 @@ Describe the business problem, user pain, or opportunity.
 | --- | --- | --- |
 | E1 | | |
 
-## Rules And Constraints
-
-- Permissions:
-- Data:
-- Amount/status/workflow rules:
-- Compatibility:
-- Compliance/security:
-
 ## Dependencies
-
-- Product/design:
-- Technical:
-- Operations:
 
 ## Open Questions
 
@@ -67,7 +47,7 @@ Describe the business problem, user pain, or opportunity.
 | --- | --- | --- | --- |
 | | | | |
 
-## Human Confirmation
+## Confirmation
 
 - Product owner:
 - Date:

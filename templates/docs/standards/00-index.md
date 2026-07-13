@@ -13,3 +13,6 @@
 - `11-notification-standard.md`
 - `12-context-governance.md`
 - `13-versioning-standard.md`
+
+文档类型、模板位置、阶段产物、Flow 深度、状态和责任人统一以
+`12-context-governance.md` 为准；其他标准只补充各领域规则，不重复定义文档生命周期。

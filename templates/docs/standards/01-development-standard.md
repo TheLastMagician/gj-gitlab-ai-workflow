@@ -9,7 +9,7 @@
 - Record AI assistance in the MR description.
 - When a change touches a business rule, update the matching
   `docs/modules/*.md` in the same MR. This applies to SmallChange MRs too:
-  skipping the iteration folder is allowed, skipping the module doc is not.
+  Fast may skip planning documents, but it may not skip changed durable facts.
 
 ## 执行点
 

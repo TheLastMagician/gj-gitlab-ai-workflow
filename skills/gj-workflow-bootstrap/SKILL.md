@@ -29,6 +29,8 @@ description: Install and verify the GitLab AI workflow skeleton in a repository.
    Confirm `.gj/workflow.yml` versioning policy, the Tag pattern, release-note
    path, and `docs/standards/13-versioning-standard.md` without adding a generic
    VERSION file.
+   Confirm `.gj/doc-templates/` was installed as workflow scaffolding and that
+   no generic template files were placed in the project's fact directories.
 4. Create GitLab labels, milestone, and starter Issues idempotently through the
    configured helper or an approved GitLab connector.
 5. Assign human-owned starter Issues/MRs from `.gj/workflow.yml` when requested
@@ -55,7 +57,7 @@ Validation:
 
 Human confirmation needed:
 
-Documentation templates installed:
+Documentation templates installed under .gj/doc-templates:
 
 Friction found:
 ```

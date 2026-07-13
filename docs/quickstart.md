@@ -53,12 +53,12 @@ Minimum setup after installation:
 - `.gitlab/gj-workflow-ci.yml` included by `.gitlab-ci.yml`
 - `GJ_TEST_COMMAND` configured for the real project test command
 
-Update `.gj/workflow.yml`, `.gj/context.yml`, `CODEOWNERS`, and the
-provided documentation templates when those capabilities are actually used.
+Update `.gj/workflow.yml`, `.gj/context.yml`, and `CODEOWNERS`. New durable
+documents start from `.gj/doc-templates/` and are written to their semantic
+project paths only when the corresponding capability or domain exists.
 
 Keep AI context selective: `always_load` is limited to three small current-fact
-files, module docs load only when paths match, and each module keeps only its
-latest iteration summary. Do not add `docs/iterations/` to permanent context.
+files, and module docs load only when paths match.
 See `docs/documentation-governance.md` for the split and loading model.
 
 Decide early whether MR branches deploy only to isolated dev/review
@@ -67,8 +67,8 @@ let every MR branch automatically overwrite a single shared test environment.
 
 Keep GitLab Issues/MRs as the discussion trail and repository docs as the
 durable source. For each requirement or MR, require a documentation impact
-answer: update PRD/design/prototype/solution/test/release/context docs, or
-explain why no doc update is needed.
+answer: update product/design/solution/API/database/ADR/module/test/release/
+context docs, or explain why each affected category needs no update.
 
 ## 3. Configure GitLab
 
