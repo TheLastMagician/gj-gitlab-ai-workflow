@@ -15,11 +15,11 @@ Describe the business problem, user pain, or opportunity.
 
 ## Goals
 
-- 
+-
 
 ## Non-goals
 
-- 
+-
 
 ## Users And Scenarios
 
@@ -35,7 +35,7 @@ Describe the business problem, user pain, or opportunity.
 
 ## Acceptance Criteria
 
-- [ ] 
+- [ ]
 
 ## Rules And Constraints
 

@@ -11,7 +11,7 @@
 
 ## Design Goals
 
-- 
+-
 
 ## User Flow
 
@@ -46,7 +46,7 @@ Entry
 
 ## Edge Cases
 
-- 
+-
 
 ## Accessibility And Responsiveness
 

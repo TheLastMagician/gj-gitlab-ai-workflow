@@ -2,7 +2,7 @@
 
 ## Security
 
-- Local API helper files can contain GitLab tokens and must stay ignored.
+- `.ai/gitlab.local.json` contains the local GitLab token and must stay ignored.
 - `policy_check.py` scans tracked files, not arbitrary untracked local files.
 - Orchestrator skeleton is not production-ready and has no webhook auth.
 

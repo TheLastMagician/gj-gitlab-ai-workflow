@@ -2,14 +2,12 @@
 
 ## 什么时候需要认证
 
-安装和加载 GJ Skills 不需要 GitLab Token。只有读取或写入真实 GitLab 状态时需要
-认证，例如 Todo、Issue、MR、讨论、Pipeline、成员校验、标签、处理人和评论。
+安装和加载 GJ Skills 不需要 GitLab Token。读取或写入真实 GitLab 状态时才需要认证，
+例如 Todo、Issue、MR、讨论、Pipeline、成员校验、标签、处理人和评论。
 
-Skill 本身不保存凭据，也不绑定某一种 Agent。连接方式按优先级选择：
-
-1. 使用 Codex、Claude Code 或 OpenCode 已配置的 GitLab MCP/连接器。
-2. 使用团队批准的 GitLab CLI 或 API helper，并从环境变量读取凭据。
-3. 没有 GitLab 连接时，Skill 只输出 Issue、MR 或评论草稿，由人手工提交。
+工作流默认安装 `scripts/gitlab_api.py`。Codex、Claude Code 和 OpenCode 都通过这个
+脚本使用相同的项目配置、端点白名单和写入保护。已有 GitLab MCP/连接器可以作为可选
+替代；没有任何连接能力时，Skill 只输出草稿，由人手工提交。
 
 ## Token 类型和最小权限
 
@@ -25,56 +23,88 @@ GitLab 的 `api` 是宽权限 scope。只读流程不要为了方便直接授予
 
 ## 创建 Token
 
-Personal Access Token 通常在 GitLab 用户设置的 Access Tokens 页面创建。需要填写
-名称、到期时间并选择 scope。Project Access Token 通常在目标项目 Settings 的
-Access Tokens 页面创建，同时选择最低可用角色。不同 GitLab CE 版本的菜单名称可能
-略有不同；如果项目页面没有 Project Access Token，就使用专用的低权限机器人用户。
+Personal Access Token 通常在 GitLab 用户设置的 Access Tokens 页面创建。填写名称、
+到期时间并选择 scope。Project Access Token 通常在项目 Settings 的 Access Tokens
+页面创建，同时选择最低可用角色。不同 GitLab CE 版本的菜单名称可能略有不同；如果
+项目没有 Project Access Token，就使用专用的低权限机器人用户。
 
-Token 只在创建时显示一次。立即存入密码管理器或组织密钥管理系统，不要粘贴到聊天、
+Token 只在创建时显示一次。存入密码管理器或组织密钥管理系统，不要粘贴到聊天、
 Issue、MR、源码或文档。
 
-## 本地 PowerShell 会话
+## 项目本地配置
 
-当前仓库约定以下环境变量：
+在业务项目根目录运行：
 
 ```powershell
-$env:GITLAB_URL = "https://gitlab.example.com"
-$env:GITLAB_PROJECT_ID = "group/project"
-$secureToken = Read-Host "GitLab Access Token" -AsSecureString
-$env:GITLAB_TOKEN = [System.Net.NetworkCredential]::new("", $secureToken).Password
+python scripts/gitlab_api.py configure --url https://gitlab.example.com --project-id group/project
 ```
 
-这些变量只对当前 PowerShell 进程及其子进程有效。应从同一个终端启动 Agent，确保
-Agent 或 API helper 能继承变量。不要使用会把 Token 明文写入 shell 历史的赋值命令。
+命令通过隐藏输入读取 Token，并写入 `.ai/gitlab.local.json`：
 
-如果使用 GitLab MCP/连接器，它可能使用自己的凭据存储，不一定读取
-`GITLAB_TOKEN`；以该连接器的认证文档为准。
+- 配置一次后，项目中的 Codex、Claude Code 和 OpenCode 可以共同使用。
+- `scripts/install_workflow.py` 和 `configure` 都会把该文件加入 `.gitignore`。
+- 文件权限会尽量限制为当前用户读写。
+- 配置文件仍含明文 Token，只适合受控开发机；不要打开给 Agent、提交、复制或同步。
+- 更换 URL、项目或 Token 时重新执行并增加 `--force`。
 
-## 验证配置
+项目 ID 可以使用数字 ID，也可以使用 `group/project` 路径。环境变量
+`GITLAB_URL`、`GITLAB_PROJECT_ID`、`GITLAB_TOKEN` 会覆盖本地文件，主要供 CI、
+容器或临时运行使用，本地日常操作不需要反复配置环境变量。
 
-安装工作流资产并填写 `.ai/role-map.yml` 后，可以验证 Token、项目和成员映射：
+## 验证连接
 
 ```powershell
+python scripts/gitlab_api.py doctor
 python scripts/validate_role_map.py --strict-gitlab
 ```
 
-脚本读取 `GITLAB_URL`、`GITLAB_PROJECT_ID` 和 `GITLAB_TOKEN`，不会输出 Token。
-在任何写操作前，还必须确认 GitLab API 返回的项目 path 与 `git remote get-url origin`
-指向同一项目。
+`doctor` 验证 Token、当前用户和项目，并比较 GitLab API 返回的项目地址与
+`git remote get-url origin`。输出不会包含 Token。远端不一致时，所有 helper 写操作
+都会失败。
+
+常用只读命令：
+
+```powershell
+python scripts/gitlab_api.py request --path "user"
+python scripts/gitlab_api.py request --path "todos"
+python scripts/gitlab_api.py request --path "projects/:project/issues?state=opened"
+python scripts/gitlab_api.py request --path "projects/:project/merge_requests?state=opened"
+python scripts/gitlab_api.py request --path "projects/:project/pipelines?status=failed"
+```
+
+`:project` 会替换成配置中的项目 ID，并进行 URL 编码。
+
+## 受控写操作
+
+写操作必须同时满足：
+
+1. 人在当前任务中明确确认具体写入内容。
+2. 命令包含 `--confirm-write`。
+3. API path 使用 `:project` 或 `{project}`，不能手写另一个项目 ID。
+4. 配置项目与 `git remote origin` 一致。
+5. 端点属于 Issue、MR、评论、标签或 Milestone 白名单。
+
+示例：
+
+```powershell
+python scripts/gitlab_api.py request --method POST --path "projects/:project/issues/16/notes" --body-json '{"body":"Workflow API verification passed."}' --confirm-write
+```
+
+helper 拒绝 Access Token、CI/CD Variables、Runner、Webhook 等敏感管理端点，也不提供
+approve、merge、repository file 或 deploy 操作。
 
 ## CI/CD 变量
 
-在 GitLab 项目 Settings -> CI/CD -> Variables 中配置需要的变量：
+在 GitLab 项目 Settings -> CI/CD -> Variables 中配置：
 
 - `GITLAB_URL`
 - `GITLAB_PROJECT_ID`
 - `GITLAB_TOKEN`
 
-Token 变量应启用 masked；只允许受保护分支或 Tag 使用时同时启用 protected。不要把
-Token 直接写入 `.gitlab-ci.yml`。Fork 或不可信 MR Pipeline 默认不应获得写权限 Token。
+Token 变量启用 masked；只允许受保护分支或 Tag 使用时同时启用 protected。不要把
+Token 写入 `.gitlab-ci.yml`。Fork 或不可信 MR Pipeline 默认不应获得写权限 Token。
 
 ## 写操作边界
 
 即使配置了 `api` scope，AI 也不能自主 approve、merge、deploy 或扩大任务范围。
-创建 Issue、修改标签和处理人、发表评论等写操作需要人在当前任务中明确确认。Token
-只提供技术权限，不代表人的业务授权。
+Token 只提供技术权限，不代表人的业务授权。

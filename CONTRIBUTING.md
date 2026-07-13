@@ -8,7 +8,7 @@
 - 用户入口文档只写安装、配置、使用和排错；维护细节留在本文。
 - `skills/` 是公开 Skill 源码，`templates/` 是安装到业务项目的工作流资产。
 - 修改脚本或规则时同步检查对应模板，避免源码与安装结果不一致。
-- 不提交 Token、本地 API helper、私有 GitLab 地址、生产日志或客户数据。
+- 不提交 Token、`.ai/gitlab.local.json`、私有 GitLab 地址、生产日志或客户数据。
 - 工作流策略、`.ai/`、CI、模板和标准文档属于高风险路径，使用
   `flow::standard` 或 `flow::hotfix`。
 

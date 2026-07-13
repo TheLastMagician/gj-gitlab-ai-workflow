@@ -13,8 +13,9 @@ description: Accept a new requirement or inspect a GitLab inbox or active work i
    after a human confirms the requirement and flow; without GitLab write access,
    return a complete Issue draft instead.
 2. Identify the actor and project. When the request is about personal work,
-   fetch GitLab Todos, assigned Issues/MRs, review requests, mentions,
-   discussions, and related failed or pending pipelines.
+   use `scripts/gitlab_api.py` when present to fetch GitLab Todos, assigned
+   Issues/MRs, review requests, mentions, discussions, and related failed or
+   pending pipelines. A configured GitLab connector is an optional alternative.
 3. Inspect repository status, the selected work item, current labels, changed or
    expected paths, pipeline state, and workflow docs.
 4. Resolve the flow:

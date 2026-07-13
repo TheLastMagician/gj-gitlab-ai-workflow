@@ -68,12 +68,18 @@ explain why no doc update is needed.
 
 ## 3. Configure GitLab
 
-Skill installation and offline planning do not need a token. Live inbox reads,
-membership checks, and confirmed GitLab writes require either an Agent GitLab
-MCP/connector or the environment variables `GITLAB_URL`, `GITLAB_PROJECT_ID`,
-and `GITLAB_TOKEN`. Use `read_api` for read-only access and grant `api` only when
-confirmed writes are needed. See `docs/gitlab-access.md` for token types, secure
-PowerShell setup, CI variables, and verification.
+Skill installation and offline planning do not need a token. For live GitLab
+access, configure the installed cross-Agent helper once from the target project:
+
+```powershell
+python scripts/gitlab_api.py configure --url https://gitlab.example.com --project-id group/project
+python scripts/gitlab_api.py doctor
+```
+
+The hidden prompt writes the token to ignored `.ai/gitlab.local.json`. Use
+`read_api` for read-only access and grant `api` only when confirmed writes are
+needed. CI may override the local file with `GITLAB_URL`, `GITLAB_PROJECT_ID`,
+and `GITLAB_TOKEN`. See `docs/gitlab-access.md` for commands and security rules.
 
 Create the workflow labels from `examples/demo-run/gitlab/labels.md`, then add a
 milestone for the first iteration. Protect the default branch and require a
@@ -101,8 +107,11 @@ Validate role ownership after editing `.ai/role-map.yml`:
 python scripts/validate_role_map.py
 ```
 
-For live GitLab membership checks, provide a token through `GITLAB_TOKEN` and
-pass `--gitlab-url` plus `--project-id`.
+For live GitLab membership checks, reuse the local config:
+
+```powershell
+python scripts/validate_role_map.py --strict-gitlab
+```
 
 ## 4. Run The Demo Flow
 

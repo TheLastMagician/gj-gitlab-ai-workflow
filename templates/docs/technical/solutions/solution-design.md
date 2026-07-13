@@ -26,7 +26,7 @@ Describe the recommended technical approach.
 
 ## Proposed Design
 
-- 
+-
 
 ## Alternatives Considered
 
@@ -43,7 +43,7 @@ Describe the recommended technical approach.
 
 ## Permission And Security
 
-- 
+-
 
 ## Test Strategy
 

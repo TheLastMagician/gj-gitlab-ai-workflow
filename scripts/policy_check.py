@@ -69,7 +69,8 @@ SECRET_PATTERNS = [
 ]
 
 SKIP_DIRS = {".git", "__pycache__", ".pytest_cache"}
-SKIP_FILES = {"gitlab-api.ps1"}
+SKIP_FILES: set[str] = set()
+FORBIDDEN_SECRET_PATHS = {".ai/gitlab.local.json"}
 
 
 def run_git(args: list[str]) -> list[str]:
@@ -292,6 +293,14 @@ def check_risk_flow(
 def check_secrets(paths: Iterable[Path]) -> list[str]:
     findings = []
     for path in paths:
+        normalized = path.as_posix()
+        while normalized.startswith("./"):
+            normalized = normalized[2:]
+        if normalized in FORBIDDEN_SECRET_PATHS or normalized.endswith(
+            "/.ai/gitlab.local.json"
+        ):
+            findings.append(f"本地凭据文件不能提交：{path}")
+            continue
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:

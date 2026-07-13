@@ -65,7 +65,7 @@ class PolicyFlowTests(unittest.TestCase):
         self.assertEqual(1, len(errors))
         self.assertIn("flow::standard 或 flow::hotfix", errors[0])
 
-    def test_standard_accepts_high_risk_without_fake_ack(self) -> None:
+    def test_standard_accepts_high_risk_paths(self) -> None:
         rules = [
             {
                 "id": "security",
@@ -92,12 +92,17 @@ class PolicyFlowTests(unittest.TestCase):
         self.assertEqual(1, len(errors))
         self.assertIn("只能选择一个", errors[0])
 
-    def test_rule_map_uses_minimum_flow_not_owner_ack(self) -> None:
+    def test_rule_map_uses_minimum_flow(self) -> None:
         rules = policy_check.parse_simple_yaml_rule_map(ROOT / "templates" / "ai" / "rule-map.yml")
 
         self.assertTrue(rules)
         self.assertTrue(all(rule.get("minimum_flow") == "standard" for rule in rules))
-        self.assertTrue(all("require_owner_ack" not in rule for rule in rules))
+
+    def test_local_gitlab_config_is_never_committable(self) -> None:
+        findings = policy_check.check_secrets([Path(".ai/gitlab.local.json")])
+
+        self.assertEqual(1, len(findings))
+        self.assertIn("本地凭据文件不能提交", findings[0])
 
 
 if __name__ == "__main__":

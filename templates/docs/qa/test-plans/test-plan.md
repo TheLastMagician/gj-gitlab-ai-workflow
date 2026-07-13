@@ -23,15 +23,15 @@
 
 ## Regression Scope
 
-- 
+-
 
 ## Permission And Security Checks
 
-- 
+-
 
 ## Test Data
 
-- 
+-
 
 ## Environments
 

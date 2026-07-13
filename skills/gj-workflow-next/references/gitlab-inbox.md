@@ -1,14 +1,20 @@
 # GitLab Inbox API Reference
 
 Use this reference when `gj-workflow-next` needs live GitLab state. Prefer the
-project-approved helper or MCP/API client. Never print tokens.
+installed `scripts/gitlab_api.py` helper so Codex, Claude Code, and OpenCode use
+the same guarded API behavior. Never print tokens.
 
 ## Authentication
 
-Installing the Skill does not require a token. For live access, prefer the
-Agent's configured GitLab MCP/connector. Otherwise use a project-approved API
-helper that reads `GITLAB_URL`, `GITLAB_PROJECT_ID`, and `GITLAB_TOKEN` from the
-environment. Do not read credentials from repository files or print them.
+Installing the Skill does not require a token. For live access, configure once:
+
+```powershell
+python scripts/gitlab_api.py configure --url https://gitlab.example.com --project-id group/project
+python scripts/gitlab_api.py doctor
+```
+
+The helper reads ignored `.ai/gitlab.local.json`; CI environment variables may
+override it. Do not open, print, stage, or send the local config to an Agent.
 
 Use a current-user Personal Access Token with `read_api` when personal Todos are
 required. Use `api` only for human-confirmed writes such as creating an Issue,
@@ -23,21 +29,21 @@ for setup and storage rules.
 - User lookup: `GET /users?username=<username>`
 - Todos: `GET /todos`
 - Project Issues assigned to a user:
-  `GET /projects/:id/issues?state=opened&assignee_username=<username>`
+  `GET /projects/:project/issues?state=opened&assignee_username=<username>`
 - Project MRs assigned to a user:
-  `GET /projects/:id/merge_requests?state=opened&assignee_username=<username>`
+  `GET /projects/:project/merge_requests?state=opened&assignee_username=<username>`
 - Project MRs requiring review from a user:
-  `GET /projects/:id/merge_requests?state=opened&reviewer_username=<username>`
+  `GET /projects/:project/merge_requests?state=opened&reviewer_username=<username>`
 - MR discussions:
-  `GET /projects/:id/merge_requests/:iid/discussions`
+  `GET /projects/:project/merge_requests/:iid/discussions`
 - MR pipelines:
-  `GET /projects/:id/merge_requests/:iid/pipelines`
+  `GET /projects/:project/merge_requests/:iid/pipelines`
 - Project failed pipelines:
-  `GET /projects/:id/pipelines?status=failed`
+  `GET /projects/:project/pipelines?status=failed`
 - Notes for an Issue:
-  `GET /projects/:id/issues/:iid/notes`
+  `GET /projects/:project/issues/:iid/notes`
 - Notes for an MR:
-  `GET /projects/:id/merge_requests/:iid/notes`
+  `GET /projects/:project/merge_requests/:iid/notes`
 
 ## Optional write actions
 
@@ -46,33 +52,29 @@ handoff comment. These actions create accountability and notification events;
 they do not approve or complete work.
 
 - Assign Issue:
-  `PUT /projects/:id/issues/:iid` with `assignee_ids`
+  `PUT /projects/:project/issues/:iid` with `assignee_ids`
 - Assign MR:
-  `PUT /projects/:id/merge_requests/:iid` with `assignee_ids`
+  `PUT /projects/:project/merge_requests/:iid` with `assignee_ids`
 - Set MR reviewer:
-  `PUT /projects/:id/merge_requests/:iid` with `reviewer_ids`
+  `PUT /projects/:project/merge_requests/:iid` with `reviewer_ids`
 - Add Issue note:
-  `POST /projects/:id/issues/:iid/notes`
+  `POST /projects/:project/issues/:iid/notes`
 - Add MR note:
-  `POST /projects/:id/merge_requests/:iid/notes`
-- Mark todo done only after the human confirms the underlying work was handled:
-  `POST /todos/:id/mark_as_done`
+  `POST /projects/:project/merge_requests/:iid/notes`
 
-## Local PowerShell helper pattern
-
-Some projects keep a local ignored helper such as `gitlab-api.ps1`.
+## Helper commands
 
 ```powershell
-.\gitlab-api.ps1 -Method GET -ApiPath "todos"
-.\gitlab-api.ps1 -Method GET -ApiPath "projects/:project/issues?state=opened&assignee_username=zengqinglin"
-.\gitlab-api.ps1 -Method GET -ApiPath "projects/:project/merge_requests?state=opened&reviewer_username=zengqinglin"
-.\gitlab-api.ps1 -Method PUT -ApiPath "projects/:project/issues/12" -Body @{
-  assignee_ids = @(55)
-}
-.\gitlab-api.ps1 -Method POST -ApiPath "projects/:project/issues/12/notes" -Body @{
-  body = "@zengqinglin please handle the QA verification step."
-}
+python scripts/gitlab_api.py request --path "todos"
+python scripts/gitlab_api.py request --path "projects/:project/issues?state=opened&assignee_username=zengqinglin"
+python scripts/gitlab_api.py request --path "projects/:project/merge_requests?state=opened&reviewer_username=zengqinglin"
+python scripts/gitlab_api.py request --method PUT --path "projects/:project/issues/12" --body-json '{"assignee_ids":[55]}' --confirm-write
+python scripts/gitlab_api.py request --method POST --path "projects/:project/issues/12/notes" --body-json '{"body":"@zengqinglin please handle QA verification."}' --confirm-write
 ```
+
+Writes fail unless `--confirm-write` is present, the path uses `:project`, and
+the configured GitLab project matches `git remote origin`. The helper rejects
+credential, runner, webhook, and CI-variable endpoints.
 
 ## Notification model
 

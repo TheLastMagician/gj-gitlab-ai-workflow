@@ -1,5 +1,5 @@
 # Local credentials and API helpers
-gitlab-api.ps1
+.ai/gitlab.local.json
 .env
 .env.*
 *.pem

@@ -8,8 +8,11 @@ description: Install and verify the GitLab AI workflow skeleton in a repository.
 ## Workflow
 
 1. Run preflight before any GitLab write:
-   - Compare `git remote -v` with the GitLab API project path.
-   - Confirm local API helpers or token files are ignored and not staged.
+   - When `.ai/gitlab.local.json` is missing, run
+     `python scripts/gitlab_api.py configure --url <url> --project-id <id>`.
+   - Run `python scripts/gitlab_api.py doctor` to compare `git remote origin`
+     with the GitLab API project path without printing the token.
+   - Confirm `.ai/gitlab.local.json` is ignored and not staged.
    - Confirm GitLab runner availability and prefer Docker executor for the
      example pipeline.
    - Record missing GitLab permissions as human confirmation points.
@@ -18,7 +21,8 @@ description: Install and verify the GitLab AI workflow skeleton in a repository.
    not installation editions.
 3. Ask the maintainer to replace placeholder roles in `.ai/role-map.yml` when
    role routing is needed and review `docs/standards/06-release-standard.md`.
-4. Create GitLab labels, milestone, and starter Issues idempotently.
+4. Create GitLab labels, milestone, and starter Issues idempotently through the
+   configured helper or an approved GitLab connector.
 5. Assign human-owned starter Issues/MRs from `.ai/role-map.yml` when requested
    and add `@username` handoff comments when notification is expected.
 6. Run local validation.

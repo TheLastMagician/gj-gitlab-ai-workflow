@@ -36,7 +36,12 @@ class InstallerTests(unittest.TestCase):
             self.install_workflow(target)
 
             self.assertTrue((target / ".ai" / "role-map.yml").exists())
+            self.assertTrue((target / "scripts" / "gitlab_api.py").exists())
             self.assertTrue((target / "scripts" / "release_dry_run.py").exists())
+            self.assertIn(
+                ".ai/gitlab.local.json",
+                (target / ".gitignore").read_text(encoding="utf-8"),
+            )
             self.assertTrue((target / "docs" / "product" / "requirements" / "PRD.md").exists())
             subprocess.run(
                 [sys.executable, "scripts/workflow_assets_check.py"],

@@ -17,7 +17,7 @@
 
 ## Scope Covered
 
-- 
+-
 
 ## Key Screens Or Flows
 
@@ -27,7 +27,7 @@
 
 ## Known Gaps
 
-- 
+-
 
 ## Review Notes
 

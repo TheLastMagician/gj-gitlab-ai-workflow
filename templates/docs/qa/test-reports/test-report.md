@@ -32,7 +32,7 @@
 
 ## Release Impact
 
-- 
+-
 
 ## QA Decision
 

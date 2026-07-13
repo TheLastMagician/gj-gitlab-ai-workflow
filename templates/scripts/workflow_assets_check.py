@@ -24,6 +24,7 @@ REQUIRED = [
     "docs/standards/11-notification-standard.md",
     "scripts/context_freshness_check.py",
     "scripts/validate_role_map.py",
+    "scripts/gitlab_api.py",
     "scripts/release_dry_run.py",
     "docs/product/requirements/PRD.md",
     "docs/product/designs/product-design.md",

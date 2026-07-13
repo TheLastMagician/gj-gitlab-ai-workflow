@@ -11,7 +11,7 @@
 
 ## Scope
 
-- 
+-
 
 ## Included Issues And MRs
 
@@ -21,7 +21,7 @@
 
 ## User-visible Changes
 
-- 
+-
 
 ## Operations Changes
 
@@ -38,11 +38,11 @@
 
 ## Rollout Plan
 
-- 
+-
 
 ## Rollback Plan
 
-- 
+-
 
 ## Human Confirmations
 

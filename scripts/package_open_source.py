@@ -11,10 +11,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EXCLUDE_DIRS = {".git", "__pycache__", ".pytest_cache", ".idea", ".vscode", "dist", "build"}
 EXCLUDE_FILES = {"gitlab-api.ps1"}
+EXCLUDE_PATHS = {Path(".ai/gitlab.local.json")}
 
 
 def should_include(path: Path) -> bool:
     rel = path.relative_to(ROOT)
+    if rel in EXCLUDE_PATHS:
+        return False
     if any(part in EXCLUDE_DIRS for part in rel.parts):
         return False
     if path.name in EXCLUDE_FILES:

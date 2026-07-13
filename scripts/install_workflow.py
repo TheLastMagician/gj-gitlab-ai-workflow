@@ -30,6 +30,7 @@ COPY_FILES = [
 ]
 
 ENSURE_DIRS = ["docs/modules"]
+GITIGNORE_ENTRIES = [".ai/gitlab.local.json"]
 
 
 def backup_path(dest: Path, backup_root: Path, target_root: Path, dry_run: bool) -> None:
@@ -92,6 +93,22 @@ def copy_path(
         shutil.copy2(src, dest)
 
 
+def ensure_gitignore_entries(target: Path, dry_run: bool) -> None:
+    path = target / ".gitignore"
+    existing = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
+    normalized = {line.strip() for line in existing}
+    missing = [entry for entry in GITIGNORE_ENTRIES if entry not in normalized]
+    for entry in missing:
+        print(f"add gitignore entry {entry} -> {path}")
+    if dry_run or not missing:
+        return
+    prefix = "\n" if existing else ""
+    with path.open("a", encoding="utf-8", newline="\n") as handle:
+        handle.write(f"{prefix}# Local GitLab credentials\n")
+        for entry in missing:
+            handle.write(f"{entry}\n")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--target", type=Path, required=True)
@@ -140,6 +157,8 @@ def main() -> int:
         print(f"ensure directory {destination}")
         if not args.dry_run:
             destination.mkdir(parents=True, exist_ok=True)
+
+    ensure_gitignore_entries(target, args.dry_run)
 
     print("workflow install complete")
     if args.force and not args.backup:

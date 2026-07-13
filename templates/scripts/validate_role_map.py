@@ -12,6 +12,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+from gitlab_api import load_config
+
 
 PLACEHOLDER_RE = re.compile(r"^@[a-z0-9_-]*(owner|lead|developer|reviewer)[a-z0-9_-]*$", re.IGNORECASE)
 
@@ -100,6 +102,11 @@ def main() -> int:
     parser.add_argument("--gitlab-url", default=os.environ.get("GITLAB_URL", ""))
     parser.add_argument("--project-id", default=os.environ.get("GITLAB_PROJECT_ID", ""))
     parser.add_argument("--token-env", default="GITLAB_TOKEN")
+    parser.add_argument(
+        "--gitlab-config",
+        type=Path,
+        default=Path(".ai/gitlab.local.json"),
+    )
     parser.add_argument("--strict-gitlab", action="store_true")
     parser.add_argument("--allow-placeholders", action="store_true")
     args = parser.parse_args()
@@ -121,6 +128,15 @@ def main() -> int:
                 errors.append(f"role still uses placeholder user: {role}={user}")
 
     token = os.environ.get(args.token_env, "")
+    if args.gitlab_config.exists():
+        try:
+            local_config = load_config(args.gitlab_config)
+        except (RuntimeError, OSError, ValueError, json.JSONDecodeError) as exc:
+            errors.append(f"invalid GitLab config {args.gitlab_config}: {exc}")
+        else:
+            args.gitlab_url = args.gitlab_url or local_config.url
+            args.project_id = args.project_id or local_config.project_id
+            token = token or local_config.token
     has_gitlab_config = bool(args.gitlab_url and args.project_id and token)
     if args.strict_gitlab and not has_gitlab_config:
         errors.append(
