@@ -6,7 +6,7 @@ Context outputs from the first run:
 - `docs/iterations/2026-07-v1.0-order-approval/ai-context-summary.md`
 - `docs/context/current-state.md`
 - `docs/modules/order.md`
-- `.ai/context-index.yml`
+- `.gj/context.yml`
 
 Durable facts extracted:
 

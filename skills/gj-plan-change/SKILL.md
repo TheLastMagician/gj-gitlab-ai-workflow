@@ -7,7 +7,10 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
 
 ## Workflow
 
-1. Read the work item, current labels, linked context, and known constraints.
+1. Read the work item, current labels, `.gj/context.yml`, and known
+   constraints. Load only `always_load`, modules matched by expected paths, and
+   feature docs linked by the work item. Never scan `docs/iterations/` by
+   default.
 2. Resolve exactly one flow label. Recommend a label when missing, but wait for
    human confirmation before treating it as selected.
 3. Scale the plan to the selected flow:
@@ -18,14 +21,17 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
      rollout, rollback, and independently reviewable tasks.
    - `flow::hotfix`: capture severity, impact, mitigation, smallest safe fix,
      minimum review, release validation, rollback, and mandatory follow-up.
-4. Match changed or expected paths against `.ai/rule-map.yml`. Upgrade Fast to
+4. Match changed or expected paths against `.gj/workflow.yml`. Upgrade Fast to
    Standard or Hotfix when the minimum flow requires it.
 5. Split work only when separate ownership, dependencies, or review boundaries
    make additional Issues useful.
 6. Cover happy, failure, permission, regression, and release-validation paths
    according to risk. Failed checks become Bug Issues rather than hidden notes.
-7. Record documentation impact. Update durable requirement, design, solution,
-   test, module, or release docs only when the change creates lasting facts.
+7. Record documentation impact. When confirmed lasting facts exist and the
+   repository is writable, directly update the applicable requirement, design,
+   solution, test, module, or release docs as part of the current change. Do not
+   create a separate documentation task by default. When facts are unresolved
+   or write access is unavailable, return an exact draft and confirmation item.
 
 ## Output
 

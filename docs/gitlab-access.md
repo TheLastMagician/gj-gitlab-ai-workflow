@@ -39,7 +39,7 @@ Issue、MR、源码或文档。
 python scripts/gitlab_api.py configure --url https://gitlab.example.com --project-id group/project
 ```
 
-命令通过隐藏输入读取 Token，并写入 `.ai/gitlab.local.json`：
+命令通过隐藏输入读取 Token，并写入 `.gj/gitlab.local.json`：
 
 - 配置一次后，项目中的 Codex、Claude Code 和 OpenCode 可以共同使用。
 - `scripts/install_workflow.py` 和 `configure` 都会把该文件加入 `.gitignore`。

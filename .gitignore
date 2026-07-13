@@ -1,5 +1,6 @@
 # Local credentials and API helpers
-.ai/gitlab.local.json
+.gj/gitlab.local.json
+.gj-workflow-backup/
 .env
 .env.*
 *.pem

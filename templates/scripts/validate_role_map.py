@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate .ai/role-map.yml placeholders and optional GitLab membership."""
+"""Validate .gj/workflow.yml placeholders and optional GitLab membership."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ from gitlab_api import load_config
 PLACEHOLDER_RE = re.compile(r"^@[a-z0-9_-]*(owner|lead|developer|reviewer)[a-z0-9_-]*$", re.IGNORECASE)
 
 
-def parse_role_map(path: Path) -> dict[str, list[str]]:
+def parse_workflow_roles(path: Path) -> dict[str, list[str]]:
     if not path.exists():
         raise FileNotFoundError(path)
 
@@ -98,24 +98,26 @@ def validate_gitlab_user(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--role-map", type=Path, default=Path(".ai/role-map.yml"))
+    parser.add_argument(
+        "--workflow-config", type=Path, default=Path(".gj/workflow.yml")
+    )
     parser.add_argument("--gitlab-url", default=os.environ.get("GITLAB_URL", ""))
     parser.add_argument("--project-id", default=os.environ.get("GITLAB_PROJECT_ID", ""))
     parser.add_argument("--token-env", default="GITLAB_TOKEN")
     parser.add_argument(
         "--gitlab-config",
         type=Path,
-        default=Path(".ai/gitlab.local.json"),
+        default=Path(".gj/gitlab.local.json"),
     )
     parser.add_argument("--strict-gitlab", action="store_true")
     parser.add_argument("--allow-placeholders", action="store_true")
     args = parser.parse_args()
 
-    roles = parse_role_map(args.role_map)
+    roles = parse_workflow_roles(args.workflow_config)
     errors: list[str] = []
 
     if not roles:
-        errors.append(f"no roles found in {args.role_map}")
+        errors.append(f"no roles found in {args.workflow_config}")
 
     for role, users in sorted(roles.items()):
         if not users:

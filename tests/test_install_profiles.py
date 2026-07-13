@@ -17,15 +17,18 @@ class InstallerTests(unittest.TestCase):
         subprocess.run(["git", "init", "--quiet", str(target)], check=True)
         return target
 
-    def install_workflow(self, target: Path) -> None:
-        subprocess.run(
+    def install_workflow(
+        self, target: Path, *extra: str, check: bool = True
+    ) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
             [
                 sys.executable,
                 str(ROOT / "scripts" / "install_workflow.py"),
                 "--target",
                 str(target),
+                *extra,
             ],
-            check=True,
+            check=check,
             capture_output=True,
             text=True,
         )
@@ -35,16 +38,99 @@ class InstallerTests(unittest.TestCase):
             target = self.make_repo(Path(temp), "project")
             self.install_workflow(target)
 
-            self.assertTrue((target / ".ai" / "role-map.yml").exists())
+            self.assertTrue((target / ".gj" / "workflow.yml").exists())
+            self.assertTrue((target / ".gj" / "context.yml").exists())
+            self.assertTrue((target / ".gitlab" / "gj-workflow-ci.yml").exists())
+            self.assertIn(
+                ".gitlab/gj-workflow-ci.yml",
+                (target / ".gitlab-ci.yml").read_text(encoding="utf-8"),
+            )
+            legacy_dir = "." + "ai"
+            self.assertFalse((target / legacy_dir).exists())
+            workflow = (target / ".gj" / "workflow.yml").read_text(encoding="utf-8")
+            self.assertIn("roles:", workflow)
+            self.assertIn("rules:", workflow)
             self.assertTrue((target / "scripts" / "gitlab_api.py").exists())
             self.assertTrue((target / "scripts" / "release_dry_run.py").exists())
             self.assertIn(
-                ".ai/gitlab.local.json",
+                ".gj/gitlab.local.json",
                 (target / ".gitignore").read_text(encoding="utf-8"),
             )
             self.assertTrue((target / "docs" / "product" / "requirements" / "PRD.md").exists())
             subprocess.run(
                 [sys.executable, "scripts/workflow_assets_check.py"],
+                cwd=target,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.install_workflow(target)
+
+    def test_force_never_deletes_unrelated_project_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            target = self.make_repo(Path(temp), "existing")
+            script = target / "scripts" / "deploy.ps1"
+            script.parent.mkdir()
+            script.write_text("Write-Output deploy\n", encoding="utf-8")
+            context = target / "docs" / "context" / "business.md"
+            context.parent.mkdir(parents=True)
+            context.write_text("business facts\n", encoding="utf-8")
+            root_ci = target / ".gitlab-ci.yml"
+            root_ci.write_text("stages: [build, test]\n", encoding="utf-8")
+
+            self.install_workflow(target, "--force")
+
+            self.assertEqual("Write-Output deploy\n", script.read_text(encoding="utf-8"))
+            self.assertEqual("business facts\n", context.read_text(encoding="utf-8"))
+            ci_text = root_ci.read_text(encoding="utf-8")
+            self.assertIn(".gitlab/gj-workflow-ci.yml", ci_text)
+            self.assertIn("stages: [build, test]", ci_text)
+            backups = list((target / ".gj-workflow-backup").rglob(".gitlab-ci.yml"))
+            self.assertEqual(1, len(backups))
+
+    def test_existing_complex_include_requires_manual_merge(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            target = self.make_repo(Path(temp), "existing")
+            root_ci = target / ".gitlab-ci.yml"
+            original = "include:\n  - project: company/common-ci\n    file: base.yml\n"
+            root_ci.write_text(original, encoding="utf-8")
+
+            result = self.install_workflow(target, check=False)
+
+            self.assertEqual(2, result.returncode)
+            self.assertIn("manual action required", result.stdout)
+            self.assertEqual(original, root_ci.read_text(encoding="utf-8"))
+            self.assertTrue((target / ".gitlab/gj-workflow-ci.yml").exists())
+            subprocess.run(
+                [sys.executable, "scripts/context_freshness_check.py", "--strict"],
+                cwd=target,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+
+    def test_restrictive_workflow_rules_require_manual_merge_request_entry(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            target = self.make_repo(Path(temp), "existing")
+            root_ci = target / ".gitlab-ci.yml"
+            root_ci.write_text(
+                "workflow:\n  rules:\n    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'\n",
+                encoding="utf-8",
+            )
+
+            result = self.install_workflow(target, check=False)
+
+            self.assertEqual(2, result.returncode)
+            self.assertIn("workflow.rules must allow", result.stdout)
+            self.assertIn(
+                ".gitlab/gj-workflow-ci.yml", root_ci.read_text(encoding="utf-8")
+            )
+            subprocess.run(
+                [
+                    sys.executable,
+                    "scripts/validate_role_map.py",
+                    "--allow-placeholders",
+                ],
                 cwd=target,
                 check=True,
                 capture_output=True,
@@ -72,6 +158,18 @@ class InstallerTests(unittest.TestCase):
                 <= installed
             )
 
+    def test_optional_templates_are_not_core_gates(self) -> None:
+        import importlib.util
+
+        script = ROOT / "templates/scripts/workflow_assets_check.py"
+        spec = importlib.util.spec_from_file_location("workflow_assets_check", script)
+        assert spec and spec.loader
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        self.assertIn("docs/product/requirements/PRD.md", module.OPTIONAL_ASSETS)
+        self.assertNotIn("docs/product/requirements/PRD.md", module.CORE_REQUIRED)
+
     def test_skill_installer_supports_three_agents_from_one_source(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             project = Path(temp) / "project"
@@ -96,6 +194,12 @@ class InstallerTests(unittest.TestCase):
             self.assertEqual(8, len([path for path in claude.iterdir() if path.is_dir()]))
             self.assertTrue((shared / "gj-workflow-next" / "SKILL.md").exists())
             self.assertTrue((claude / "gj-workflow-next" / "SKILL.md").exists())
+            self.assertTrue(
+                (shared / "gj-workflow-bootstrap/scripts/bootstrap_from_github.py").exists()
+            )
+            self.assertTrue(
+                (claude / "gj-workflow-bootstrap/scripts/bootstrap_from_github.py").exists()
+            )
 
 if __name__ == "__main__":
     unittest.main()

@@ -4,7 +4,7 @@
 
 - MR description in `examples/demo-run/mr/merge-request.md`
 - Changed files in `examples/demo-run/mr/changed-files.txt`
-- Rule map in `.ai/rule-map.yml`
+- Rule map in `.gj/workflow.yml`
 
 ## AI Review Output
 

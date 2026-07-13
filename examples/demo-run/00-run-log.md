@@ -12,7 +12,7 @@ Merge request: [!1 feat(workflow): 初始化 GitLab AI 工作流骨架](https://
 
 | Step | Role | Input | Output | Failure / Friction | Human Confirmation |
 | --- | --- | --- | --- | --- | --- |
-| 1 | DevOps / Codex | Local repo and workflow doc | Labels, templates, `.ai`, CI files | API helper originally pointed at a different project before user fixed it | Confirm API ProjectId matches `origin` before writes |
+| 1 | DevOps / Codex | Local repo and workflow doc | Labels, templates, `.gj`, CI files | API helper originally pointed at a different project before user fixed it | Confirm API ProjectId matches `origin` before writes |
 | 2 | Product | Rough need: order approval | Requirement Issue #2 and AI clarification comment | Approval owner source and amount threshold unclear | Product confirms v1.0 excludes amount threshold |
 | 3 | Tech Lead | Requirement Issue #2 | Solution Issue #3 | Permission risk needs owner attention | Tech Lead accepts minimal state machine for demo |
 | 4 | Tech Lead | Requirement + solution | Task Issue #4, Test Issue #5, Release Issue #7 | Task split is easy to overdo for a tiny demo | Keep Web API, DB, notification out of scope |
@@ -72,7 +72,7 @@ Validation result:
 ## Stable Actions Worth Extracting
 
 - Validate GitLab project identity before any write.
-- Bootstrap labels, templates, `.ai`, docs, CI, and CODEOWNERS.
+- Bootstrap labels, templates, `.gj`, docs, CI, and CODEOWNERS.
 - Use triage to recommend one `flow::fast`, `flow::standard`, or
   `flow::hotfix` label for human confirmation.
 - Convert rough requirements into missing questions and acceptance criteria.

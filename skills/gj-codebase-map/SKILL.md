@@ -1,6 +1,6 @@
 ---
 name: gj-codebase-map
-description: Map an existing repository into AI-readable project context. Use when onboarding a GitLab project, refreshing docs/codebase, deriving docs/context and docs/modules, generating .ai/context-index.yml drafts, or scanning changed paths after major refactors.
+description: Map an existing repository into AI-readable project context. Use when onboarding a GitLab project, refreshing docs/codebase, deriving docs/context and docs/modules, generating .gj/context.yml drafts, or scanning changed paths after major refactors.
 ---
 
 # GJ Codebase Map
@@ -26,7 +26,7 @@ description: Map an existing repository into AI-readable project context. Use wh
    - `docs/context/module-map.md`
    - `docs/context/glossary.md`
    - `docs/modules/*.md`
-   - `.ai/context-index.yml`
+   - `.gj/context.yml`
 5. Mark every inference that needs human confirmation.
 6. Scan generated output for secrets before staging or sharing.
 

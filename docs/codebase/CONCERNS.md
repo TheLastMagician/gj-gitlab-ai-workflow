@@ -2,7 +2,7 @@
 
 ## Security
 
-- `.ai/gitlab.local.json` contains the local GitLab token and must stay ignored.
+- `.gj/gitlab.local.json` contains the local GitLab token and must stay ignored.
 - `policy_check.py` scans tracked files, not arbitrary untracked local files.
 - Orchestrator skeleton is not production-ready and has no webhook auth.
 

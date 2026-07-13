@@ -10,7 +10,7 @@ Related: #1 #2 #3 #5 #6 #7 #8
 
 - Add open-source workflow skeleton docs.
 - Add GitLab issue and MR templates.
-- Add `.ai` config and reusable templates.
+- Add `.gj` config and reusable templates.
 - Add CI policy and smoke check scripts.
 - Add Orchestrator routing skeleton.
 - Add order approval demo project.

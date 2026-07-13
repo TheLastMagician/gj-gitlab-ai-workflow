@@ -13,7 +13,7 @@ python scripts/gitlab_api.py configure --url https://gitlab.example.com --projec
 python scripts/gitlab_api.py doctor
 ```
 
-The helper reads ignored `.ai/gitlab.local.json`; CI environment variables may
+The helper reads ignored `.gj/gitlab.local.json`; CI environment variables may
 override it. Do not open, print, stage, or send the local config to an Agent.
 
 Use a current-user Personal Access Token with `read_api` when personal Todos are

@@ -7,7 +7,7 @@
 ## 已上线能力
 
 - GitLab 标签、Milestone、Issue 和评论样例已创建。
-- 仓库包含 `.gitlab` 模板、`.ai` 配置、docs/context、docs/modules、CI 脚本和 Orchestrator 骨架。
+- 仓库包含 `.gitlab` 模板、`.gj` 配置、docs/context、docs/modules、CI 脚本和 Orchestrator 骨架。
 - Demo 项目实现订单提交、审批、驳回、自审批禁止和重复审批禁止。
 
 ## 关键业务规则变化
@@ -24,7 +24,7 @@
 
 - `examples/demo-project/src/order_approval.py`
 - `examples/demo-project/tests/test_order_approval.py`
-- `.ai/context-index.yml`
+- `.gj/context.yml`
 - `docs/modules/order.md`
 - `scripts/policy_check.py`
 

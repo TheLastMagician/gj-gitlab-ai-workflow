@@ -78,6 +78,13 @@ comment so GitLab creates the expected Todo and notification.
 Every delivery Skill reports documentation impact. GitLab Issues and MR
 comments hold discussion; repository docs hold durable conclusions.
 
+Users do not need to invoke a separate documentation Skill. After durable facts
+are confirmed, `gj-plan-change`, `gj-develop-change`,
+`gj-release-readiness`, and `gj-close-loop` update their applicable documents
+within the current change when repository writes are available. `gj-mr-review`
+checks that those updates are present. If facts are unresolved or writes are
+unavailable, the Skill returns an exact draft and a human confirmation item.
+
 | Durable change | Document target |
 | --- | --- |
 | Product behavior or acceptance criteria | `docs/product/requirements/<feature>.md` |
@@ -85,4 +92,4 @@ comments hold discussion; repository docs hold durable conclusions.
 | Architecture, API, data, permission, rollout, rollback | `docs/technical/solutions/<feature>.md` |
 | Acceptance, regression, permission, release validation | `docs/qa/test-plans/<feature>.md`, `docs/qa/test-reports/<feature>.md` |
 | User-visible release scope or rollback | `docs/releases/<version>.md` |
-| Long-term AI context | `docs/context`, `docs/modules`, `.ai/context-index.yml`, `docs/iterations/*/ai-context-summary.md` |
+| Long-term AI context | `docs/context`, `docs/modules`, `.gj/context.yml`, `docs/iterations/*/ai-context-summary.md` |

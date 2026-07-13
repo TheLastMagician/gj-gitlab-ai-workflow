@@ -47,9 +47,19 @@ class PolicyFlowTests(unittest.TestCase):
         self.assertEqual([], policy_check.check_required_sections(text, "fast"))
 
     def test_standard_requires_issue(self) -> None:
-        errors = policy_check.check_required_sections(description("Standard"), "standard")
-        self.assertIn("MR 章节内容为空：关联 Issue", errors)
-        self.assertIn("MR 描述需要 Closes #<数字> 关联具体 Issue", errors)
+        warnings = policy_check.check_required_sections(description("Standard"), "standard")
+        self.assertIn("MR 章节内容为空：关联 Issue", warnings)
+        self.assertEqual(
+            ["Standard / Hotfix 的关联 Issue 章节需要填写 #<数字>"],
+            policy_check.check_issue_link(description("Standard"), "standard"),
+        )
+
+    def test_ai_usage_section_is_advisory(self) -> None:
+        text = description("Standard", "#42").replace(
+            "\n## AI 使用范围\n未使用。\n", "\n"
+        )
+
+        self.assertEqual([], policy_check.check_required_sections(text, "standard"))
 
     def test_fast_rejects_high_risk_paths(self) -> None:
         rules = [
@@ -78,6 +88,36 @@ class PolicyFlowTests(unittest.TestCase):
         )
         self.assertEqual([], errors)
 
+    def test_context_index_update_can_use_fast(self) -> None:
+        errors = policy_check.check_risk_flow(
+            [".gj/context.yml"],
+            policy_check.DEFAULT_HIGH_RISK_RULES,
+            "fast",
+        )
+
+        self.assertEqual([], errors)
+
+    def test_standard_docs_can_use_fast(self) -> None:
+        errors = policy_check.check_risk_flow(
+            ["docs/standards/01-development-standard.md"],
+            policy_check.DEFAULT_HIGH_RISK_RULES,
+            "fast",
+        )
+
+        self.assertEqual([], errors)
+
+    def test_combined_workflow_config_requires_standard(self) -> None:
+        errors = policy_check.check_risk_flow(
+            [".gj/workflow.yml"], policy_check.DEFAULT_HIGH_RISK_RULES, "fast"
+        )
+
+        self.assertEqual(1, len(errors))
+
+    def test_secret_scan_only_checks_changed_files(self) -> None:
+        candidates = policy_check.scan_candidate_files(["README.md"])
+
+        self.assertEqual([Path("README.md")], candidates)
+
     def test_missing_flow_label_is_rejected(self) -> None:
         flow, errors = policy_check.resolve_flow(description(""), "type-bug")
         self.assertEqual("standard", flow)
@@ -93,13 +133,13 @@ class PolicyFlowTests(unittest.TestCase):
         self.assertIn("只能选择一个", errors[0])
 
     def test_rule_map_uses_minimum_flow(self) -> None:
-        rules = policy_check.parse_simple_yaml_rule_map(ROOT / "templates" / "ai" / "rule-map.yml")
+        rules = policy_check.parse_workflow_rules(ROOT / "templates" / "gj" / "workflow.yml")
 
         self.assertTrue(rules)
         self.assertTrue(all(rule.get("minimum_flow") == "standard" for rule in rules))
 
     def test_local_gitlab_config_is_never_committable(self) -> None:
-        findings = policy_check.check_secrets([Path(".ai/gitlab.local.json")])
+        findings = policy_check.check_secrets([Path(".gj/gitlab.local.json")])
 
         self.assertEqual(1, len(findings))
         self.assertIn("本地凭据文件不能提交", findings[0])

@@ -37,6 +37,6 @@ first check assignment, reviewer, mention, and GitLab notification settings.
 
 ## Bootstrap Responsibility
 
-`gj-workflow-bootstrap` installs `.ai/role-map.yml`. Project maintainers must
+`gj-workflow-bootstrap` installs `.gj/workflow.yml`. Project maintainers must
 replace placeholder users with real GitLab usernames before relying on workflow
 handoffs.

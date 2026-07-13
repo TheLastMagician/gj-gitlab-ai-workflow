@@ -1,7 +1,7 @@
 # Review Standard
 
 - Confirm linked Issue and acceptance criteria.
-- Check risk paths from `.ai/rule-map.yml`.
+- Check risk paths from `.gj/workflow.yml`.
 - Verify self-test and rollback notes.
 - Treat the MR label and actual changed files as the final risk facts; the Issue
   records the initial plan.

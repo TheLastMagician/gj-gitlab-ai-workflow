@@ -2,7 +2,7 @@
 
 | Task | Owner | Output | Status |
 | --- | --- | --- | --- |
-| Bootstrap workflow assets | Codex / DevOps | templates, `.ai`, `.gitlab`, CI | Done |
+| Bootstrap workflow assets | Codex / DevOps | templates, `.gj`, `.gitlab`, CI | Done |
 | Refine requirement | Product | Requirement Issue #2 | Done |
 | Draft solution | Tech Lead | Solution Issue #3 | Done |
 | Implement approval service | Developer | Demo Python code | Done |

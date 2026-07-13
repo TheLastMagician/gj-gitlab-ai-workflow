@@ -5,7 +5,7 @@ The demo project is intentionally tiny:
 - Code: `examples/demo-project/src/order_approval.py`
 - Tests: `examples/demo-project/tests/test_order_approval.py`
 - Module doc: `docs/modules/order.md`
-- Context index: `.ai/context-index.yml`
+- Context index: `.gj/context.yml`
 
 For a real codebase map, expand this into:
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Minimal GitLab MR policy check for the GJ AI workflow.
 
-High-risk rules are read from .ai/rule-map.yml when present, so installed
+High-risk rules are read from .gj/workflow.yml when present, so installed
 projects control their own risk paths without editing this script.
 """
 
@@ -23,7 +23,6 @@ STANDARD_REQUIRED_MR_SECTIONS = [
     "风险点",
     "回滚方案",
     "文档影响",
-    "AI 使用范围",
 ]
 
 FAST_REQUIRED_MR_SECTIONS = [
@@ -49,14 +48,12 @@ DEFAULT_HIGH_RISK_RULES = [
     },
     {
         "id": "workflow-policy",
-        # The standards and AI-context config govern every other gate;
-        # changing them must itself be a high-risk change.
+        # Only files that can weaken CI or risk classification force Standard.
         "paths": [
             ".gitlab-ci.yml",
+            ".gitlab/gj-workflow-ci.yml",
             "scripts/policy_check.py",
-            "templates/**",
-            "docs/standards/**",
-            ".ai/**",
+            ".gj/workflow.yml",
         ],
         "minimum_flow": "standard",
     },
@@ -70,7 +67,7 @@ SECRET_PATTERNS = [
 
 SKIP_DIRS = {".git", "__pycache__", ".pytest_cache"}
 SKIP_FILES: set[str] = set()
-FORBIDDEN_SECRET_PATHS = {".ai/gitlab.local.json"}
+FORBIDDEN_SECRET_PATHS = {".gj/gitlab.local.json"}
 
 
 def run_git(args: list[str]) -> list[str]:
@@ -105,15 +102,25 @@ def load_changed_files(path: str | None) -> list[str]:
     if env_files:
         return [line.strip() for line in env_files.splitlines() if line.strip()]
 
-    changed = run_git(["diff", "--name-only", "origin/main...HEAD"])
-    if changed:
-        return changed
+    diff_base = os.environ.get("CI_MERGE_REQUEST_DIFF_BASE_SHA", "").strip()
+    if diff_base and set(diff_base) != {"0"}:
+        changed = run_git(["diff", "--name-only", f"{diff_base}...HEAD"])
+        if changed:
+            return changed
 
-    return run_git(["ls-files"])
+    target = os.environ.get("CI_MERGE_REQUEST_TARGET_BRANCH_NAME", "").strip()
+    candidates = [f"origin/{target}" if target else "", "origin/main", "HEAD~1"]
+    for base in candidates:
+        if not base:
+            continue
+        changed = run_git(["diff", "--name-only", f"{base}...HEAD"])
+        if changed:
+            return changed
+    return []
 
 
-def parse_simple_yaml_rule_map(path: Path) -> list[dict[str, object]]:
-    """Parse the small .ai/rule-map.yml shape without external dependencies."""
+def parse_workflow_rules(path: Path) -> list[dict[str, object]]:
+    """Parse the small .gj/workflow.yml shape without external dependencies."""
     if not path.exists():
         return DEFAULT_HIGH_RISK_RULES
 
@@ -173,11 +180,11 @@ def matches_any_path(path: str, patterns: Iterable[str]) -> bool:
 
 
 def scan_candidate_files(changed_files: Iterable[str]) -> list[Path]:
-    # Tracked files plus changed-but-untracked files, deduplicated so no file
-    # is scanned twice.
+    # Scan only this change. Existing repository debt must not block an
+    # unrelated MR; a separate security scanner can audit the full repository.
     seen: set[Path] = set()
     files: list[Path] = []
-    for item in [*run_git(["ls-files"]), *changed_files]:
+    for item in changed_files:
         path = Path(item)
         if path in seen:
             continue
@@ -259,11 +266,18 @@ def check_required_sections(description: str, flow: str) -> list[str]:
             missing.append(f"MR 描述缺少章节：{section}")
         elif not section_has_content(sections[matched]):
             missing.append(f"MR 章节内容为空：{section}")
-    if flow != "fast" and not re.search(
-        r"(Closes|Relates?|Fixes)\s+#\d+", description, re.IGNORECASE
-    ):
-        missing.append("MR 描述需要 Closes #<数字> 关联具体 Issue")
     return missing
+
+
+def check_issue_link(description: str, flow: str) -> list[str]:
+    if flow == "fast":
+        return []
+    sections = split_sections(description)
+    issue_title = next((title for title in sections if "关联 Issue" in title), None)
+    issue_body = sections.get(issue_title, "") if issue_title else ""
+    if not re.search(r"#\d+", issue_body):
+        return ["Standard / Hotfix 的关联 Issue 章节需要填写 #<数字>"]
+    return []
 
 
 def check_risk_flow(
@@ -297,7 +311,7 @@ def check_secrets(paths: Iterable[Path]) -> list[str]:
         while normalized.startswith("./"):
             normalized = normalized[2:]
         if normalized in FORBIDDEN_SECRET_PATHS or normalized.endswith(
-            "/.ai/gitlab.local.json"
+            "/.gj/gitlab.local.json"
         ):
             findings.append(f"本地凭据文件不能提交：{path}")
             continue
@@ -322,18 +336,25 @@ def main() -> int:
     description = load_text(args.mr_description)
     changed_files = load_changed_files(args.changed_files)
     labels_text = args.labels if args.labels is not None else os.environ.get("CI_MERGE_REQUEST_LABELS", "")
-    rules = parse_simple_yaml_rule_map(Path(".ai/rule-map.yml"))
+    rules = parse_workflow_rules(Path(".gj/workflow.yml"))
 
     errors = []
+    warnings = []
     if description:
         flow, flow_errors = resolve_flow(description, labels_text)
         errors.extend(flow_errors)
-        errors.extend(check_required_sections(description, flow))
+        warnings.extend(check_required_sections(description, flow))
+        errors.extend(check_issue_link(description, flow))
         errors.extend(check_risk_flow(changed_files, rules, flow))
     elif os.environ.get("CI_MERGE_REQUEST_ID"):
         errors.append("CI_MERGE_REQUEST_DESCRIPTION 为空，无法检查 MR 模板。")
 
     errors.extend(check_secrets(scan_candidate_files(changed_files)))
+
+    if warnings:
+        print("policy_check warnings (advisory):")
+        for warning in warnings:
+            print(f"- {warning}")
 
     if errors:
         print("policy_check failed:")

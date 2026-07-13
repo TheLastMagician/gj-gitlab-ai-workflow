@@ -8,7 +8,9 @@ description: Close completed GitLab work by capturing lessons and refreshing dur
 ## Workflow
 
 1. Read the completed work item, MR, pipeline and test evidence, release notes,
-   bugs, follow-ups, and current durable docs.
+   bugs, follow-ups, `.gj/context.yml`, relevant module docs, and only the
+   current iteration directory. Do not load older iteration archives unless a
+   specific decision conflict requires traceability.
 2. Scale closure to the flow:
    - Fast: record the result and update durable docs only if behavior changed.
    - Standard: summarize delivery, decisions, tests, friction, and context
@@ -19,7 +21,7 @@ description: Close completed GitLab work by capturing lessons and refreshing dur
    decisions.
 4. Update the smallest applicable set of `docs/context`, `docs/modules`, product
    docs, solution docs, test reports, release notes, ADRs, and
-   `.ai/context-index.yml`.
+   `.gj/context.yml`.
 5. Keep `recent_iteration_summaries` within its configured limit and ensure the
    latest summary is first.
 6. Preserve conflicts and ask for human confirmation instead of inventing a

@@ -13,6 +13,8 @@
 
 ## 执行点
 
-- Issue 关联、MR 章节完整性:CI `policy_check`。
-- 模块文档回写:评审员在决策门 3(合并)人工确认;
-  迭代级兜底由 CI `context_freshness_check` 在发布阶段拦截。
+- 唯一 flow、Standard/Hotfix Issue 关联、高风险路径和新增 secret:CI
+  `policy_check` 硬检查。
+- MR 章节完整性:`policy_check` 只告警，由评审员判断是否足够。
+- 模块文档和迭代上下文回写:对应 Skill 提醒，评审员或发布责任人人工确认。
+  `context_freshness_check` 仅供按需审计，不进入默认 CI。

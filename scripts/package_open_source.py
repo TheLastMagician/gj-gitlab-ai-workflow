@@ -9,9 +9,18 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-EXCLUDE_DIRS = {".git", "__pycache__", ".pytest_cache", ".idea", ".vscode", "dist", "build"}
+EXCLUDE_DIRS = {
+    ".git",
+    ".gj-workflow-backup",
+    "__pycache__",
+    ".pytest_cache",
+    ".idea",
+    ".vscode",
+    "dist",
+    "build",
+}
 EXCLUDE_FILES = {"gitlab-api.ps1"}
-EXCLUDE_PATHS = {Path(".ai/gitlab.local.json")}
+EXCLUDE_PATHS = {Path(".gj/gitlab.local.json")}
 
 
 def should_include(path: Path) -> bool:

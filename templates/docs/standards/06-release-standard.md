@@ -1,5 +1,8 @@
 # Release Standard
 
+上下文分层、文件拆分和加载预算见 `12-context-governance.md`;本文件定义发布与
+迭代关闭时由人确认的回写标准。
+
 - List included Issues and MRs.
 - Confirm testing result, configuration changes, database changes, rollback plan,
   monitoring, and post-release validation.
@@ -8,16 +11,16 @@
 - For shared test/staging, confirm human deployment approval, environment lock,
   deployed commit SHA, previous version, and rollback target.
 
-## 文档回写门禁(迭代关闭的必要条件)
+## 文档回写清单
 
-迭代产生的持久事实必须在迭代关闭前合并进长效文档。以下清单未完成,
-迭代不得关闭(执行点:CI `context_freshness_check` + 发布决策门人工确认):
+迭代产生的持久事实应在迭代关闭前合并进长效文档。由 `gj-close-loop` 提醒、
+发布责任人人工确认；`context_freshness_check` 可按需运行，但不作为默认 CI 门禁：
 
 - [ ] `docs/context/current-state.md` 已覆盖重写,反映当前迭代版本的事实
       (不追加变更历史,git 历史即归档)。
 - [ ] 涉及模块的 `docs/modules/*.md` 已更新为当前完整规则。
 - [ ] 本迭代 `ai-context-summary.md` 已写成且非空。
-- [ ] `.ai/context-index.yml` 的 `recent_iteration_summaries` 已修剪:
+- [ ] `.gj/context.yml` 的 `recent_iteration_summaries` 已修剪:
       只保留最新一轮,旧条目移除(上限见 `max_recent_summaries_per_module`)。
 - [ ] Retro 已回答:"长效文档里有什么已过时或没人读?" 过时内容直接删除。
 
@@ -26,7 +29,7 @@
 - **长效文档**(`docs/context/`、`docs/modules/`、`docs/standards/`、
   `docs/product/`、`docs/technical/`、`docs/qa/`):原地覆盖,
   永远描述"当前为真",数量恒定。AI 默认只读白名单
-  `.ai/context-index.yml` 列出的部分。
+  `.gj/context.yml` 列出的部分。
 - **迭代文档**(`docs/iterations/<迭代>/`、`docs/releases/<版本>.md`):
   一次写成,迭代结束冻结归档,默认不读;
   唯一例外是最近一轮 `ai-context-summary.md`。

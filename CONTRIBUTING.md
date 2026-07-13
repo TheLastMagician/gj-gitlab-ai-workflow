@@ -8,8 +8,8 @@
 - 用户入口文档只写安装、配置、使用和排错；维护细节留在本文。
 - `skills/` 是公开 Skill 源码，`templates/` 是安装到业务项目的工作流资产。
 - 修改脚本或规则时同步检查对应模板，避免源码与安装结果不一致。
-- 不提交 Token、`.ai/gitlab.local.json`、私有 GitLab 地址、生产日志或客户数据。
-- 工作流策略、`.ai/`、CI、模板和标准文档属于高风险路径，使用
+- 不提交 Token、`.gj/gitlab.local.json`、私有 GitLab 地址、生产日志或客户数据。
+- 工作流策略、`.gj/`、CI、模板和标准文档属于高风险路径，使用
   `flow::standard` 或 `flow::hotfix`。
 
 ## 本地校验
@@ -19,10 +19,10 @@
 ```powershell
 python -m unittest discover -s tests
 python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt --labels flow::standard
-python scripts/validate_role_map.py --role-map templates/ai/role-map.yml --allow-placeholders
+python scripts/validate_role_map.py --workflow-config templates/gj/workflow.yml --allow-placeholders
 python scripts/validate_skills.py
 python scripts/install_skills.py --dry-run
-python scripts/install_workflow.py --target C:\path\to\temporary-project --dry-run --only-missing
+python scripts/install_workflow.py --target C:\path\to\temporary-project --dry-run
 ```
 
 涉及安装行为时，还应在临时项目中实际安装一次，确认 Codex/OpenCode 的
@@ -53,14 +53,13 @@ python scripts/install_workflow.py --target C:\path\to\temporary-project --dry-r
 `scripts/install_workflow.py` 从 `templates/` 安装业务项目资产。修改以下任一内容时，
 检查源码、模板和测试是否需要同步：
 
-- `.ai/*.yml` 与 `templates/ai/*.yml`
-- `.gitlab-ci.yml` 与 `templates/gitlab/.gitlab-ci.yml`
+- `.gj/*.yml` 与 `templates/gj/*.yml`
+- `.gitlab-ci.yml`、`.gitlab/gj-workflow-ci.yml` 与对应 `templates/gitlab/` 文件
 - `.gitlab/` 与 `templates/gitlab/.gitlab/`
 - `scripts/` 与 `templates/scripts/`
 - 长效文档和 `templates/docs/`
 
-对已有项目默认使用 `--only-missing`；只有明确验证备份和覆盖行为时才使用
-`--force --backup`。
+安装器必须逐文件处理，禁止删除目标目录。`--force` 只能替换已知冲突文件并自动备份。
 
 ## 构建发布包
 

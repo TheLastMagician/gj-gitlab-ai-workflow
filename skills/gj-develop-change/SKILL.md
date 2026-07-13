@@ -8,7 +8,7 @@ description: Implement GitLab features, small changes, bugs, and hotfixes using 
 ## Workflow
 
 1. Read the active Issue or MR, confirmed flow label, accepted plan when
-   required, `.ai/context-index.yml`, `.ai/rule-map.yml`, and only the relevant
+   required, `.gj/context.yml`, `.gj/workflow.yml`, and only the relevant
    module docs, standards, ADRs, and recent summary.
 2. Confirm readiness:
    - Fast needs a bounded change, self-test, and documentation-impact answer.

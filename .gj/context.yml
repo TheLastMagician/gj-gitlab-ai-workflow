@@ -6,6 +6,13 @@ global:
     - "docs/context/module-map.md"
     - "docs/context/glossary.md"
 
+context_budget:
+  max_always_load_files: 3
+  max_always_load_chars: 24000
+  max_module_docs_per_module: 5
+  max_module_context_chars: 40000
+  allow_iteration_archives_in_always_load: false
+
 modules:
   order:
     name: 订单模块
@@ -25,4 +32,4 @@ modules:
 iteration_policy:
   require_ai_context_summary: true
   update_current_state_on_release: true
-  max_recent_summaries_per_module: 3
+  max_recent_summaries_per_module: 1

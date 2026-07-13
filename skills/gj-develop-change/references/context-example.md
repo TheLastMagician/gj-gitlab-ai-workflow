@@ -4,7 +4,7 @@ Developer context for Issue #4 loaded:
 
 - `docs/context/current-state.md`
 - `docs/modules/order.md`
-- `.ai/context-index.yml`
+- `.gj/context.yml`
 - Requirement #2.
 - Solution #3.
 

@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_WORKFLOW_ASSETS = [
-    ".ai/project.yml",
-    ".ai/context-index.yml",
+    ".gj/workflow.yml",
+    ".gj/context.yml",
     "docs/context/current-state.md",
 ]
 RELEASE_DOCS = [

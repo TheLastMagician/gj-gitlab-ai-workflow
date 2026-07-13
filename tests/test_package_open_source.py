@@ -18,7 +18,7 @@ SPEC.loader.exec_module(package_open_source)
 
 class PackageOpenSourceTest(unittest.TestCase):
     def test_local_gitlab_credentials_are_never_packaged(self) -> None:
-        self.assertFalse(package_open_source.should_include(ROOT / ".ai" / "gitlab.local.json"))
+        self.assertFalse(package_open_source.should_include(ROOT / ".gj" / "gitlab.local.json"))
 
 
 if __name__ == "__main__":

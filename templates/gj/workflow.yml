@@ -1,0 +1,50 @@
+version: 1
+
+project:
+  name: target-project
+  default_branch: main
+  gitlab_url: https://gitlab.example.com
+
+roles:
+  product:
+    gitlab_users: ["@product-owner"]
+  tech_lead:
+    gitlab_users: ["@tech-lead"]
+  developer:
+    gitlab_users: ["@developer"]
+  reviewer:
+    gitlab_users: ["@reviewer"]
+  qa:
+    gitlab_users: ["@qa-owner"]
+  devops:
+    gitlab_users: ["@devops-owner"]
+  pm:
+    gitlab_users: ["@pm-owner"]
+
+handoff_policy:
+  source_of_truth: gitlab
+  require_assignee_for_human_steps: true
+  require_reviewer_for_mr_review: true
+  require_mention_on_handoff: true
+
+rules:
+  - id: database
+    paths:
+      - "db/migration/**"
+      - "**/migrations/**"
+    minimum_flow: standard
+
+  - id: security
+    paths:
+      - "src/**/auth/**"
+      - "src/**/permission/**"
+      - "orchestrator/**"
+    minimum_flow: standard
+
+  - id: workflow-policy
+    paths:
+      - ".gitlab-ci.yml"
+      - ".gitlab/gj-workflow-ci.yml"
+      - "scripts/policy_check.py"
+      - ".gj/workflow.yml"
+    minimum_flow: standard

@@ -16,8 +16,8 @@ description: Review GitLab merge requests for workflow compliance, code risks, t
    - rollback.
    - database/config changes.
    - AI usage.
-3. Match changed paths against `.ai/rule-map.yml`.
-4. Load relevant module context from `.ai/context-index.yml`.
+3. Match changed paths against `.gj/workflow.yml`.
+4. Load relevant module context from `.gj/context.yml`.
 5. Check documentation impact:
    - MR description lists docs changed or explains why none are needed.
    - PRD/design/prototype/solution/test/release docs are updated when durable

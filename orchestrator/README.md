@@ -7,7 +7,7 @@ Production work still needed:
 
 - Authenticate webhook requests.
 - Fetch Issue, MR, diff, pipeline, and comments through GitLab API.
-- Load `.ai/rule-map.yml` and `.ai/context-index.yml`.
+- Load `.gj/workflow.yml` and `.gj/context.yml`.
 - Call an AI gateway with redaction, timeout, retry, and audit logging.
 - Write comments back to GitLab.
 - Keep workflow status labels mutually exclusive.

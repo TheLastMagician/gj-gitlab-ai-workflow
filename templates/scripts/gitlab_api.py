@@ -20,8 +20,8 @@ from typing import Mapping
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_CONFIG = ROOT / ".ai" / "gitlab.local.json"
-IGNORE_ENTRY = ".ai/gitlab.local.json"
+DEFAULT_CONFIG = ROOT / ".gj" / "gitlab.local.json"
+IGNORE_ENTRY = ".gj/gitlab.local.json"
 WRITE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
 SENSITIVE_PATH_PARTS = {
     "access_tokens",

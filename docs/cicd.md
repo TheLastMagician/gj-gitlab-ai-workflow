@@ -1,17 +1,18 @@
 # CI/CD Flow
 
-The installed pipeline validates the target business project and its workflow
-assets.
+The installed `.gitlab/gj-workflow-ci.yml` is included by the target business
+project. GJ jobs own their Python image and use GitLab's built-in `.pre`/`.post`
+stages, so existing project images, stages, and defaults are not replaced.
 
 ## Stages
 
 | Stage | Job | Purpose |
 | --- | --- | --- |
-| policy | `policy_check` | Require exactly one `flow::*` MR label; check MR content, changed-file risk paths, and committed secrets. |
-| workflow | `workflow_assets_check`, optional `validate_role_map` / `context_freshness_check` | Check installed assets; enable role validation explicitly and run context checks only for relevant changes. |
-| test | `smoke_check` | Run the target project smoke test command. |
-| deploy | `deploy_dev`, `deploy_test` | Optional project-specific deployment jobs. Dev may be automatic; shared test must be manual and locked. |
-| release | optional `release_dry_run` | On tags or manual default-branch pipelines, emit a release checklist artifact. |
+| `.pre` | `policy_check` | Block on one `flow::*` label, Standard/Hotfix Issue links, changed-file risk paths, and newly committed secrets; warn on MR template completeness. |
+| `.pre` | advisory `workflow_assets_check`, optional `validate_role_map` | Report workflow setup issues without blocking normal MRs. Context audits are run manually when needed. |
+| `.pre` | `smoke_check` | Run the target project smoke test command. |
+| project-owned | `deploy_dev`, `deploy_test` | Optional project-specific deployment jobs. Dev may be automatic; shared test must be manual and locked. |
+| `.post` | advisory `release_dry_run` | On tags or manual default-branch pipelines, emit a release checklist artifact for human confirmation. |
 
 ## Runner Requirement
 
@@ -42,8 +43,8 @@ locally, configure the runner with:
 ## Expected Pipeline
 
 ```text
-Fast MR: policy -> workflow -> test
-Release: policy -> workflow -> test -> deploy(optional) -> release
+MR hard gates: policy -> test
+Advisory jobs: workflow assets / release dry run
 ```
 
 ## Environment Deployment Policy
