@@ -12,7 +12,8 @@ stages, so existing project images, stages, and defaults are not replaced.
 | `.pre` | advisory `workflow_assets_check`, optional `validate_role_map` | Report workflow setup issues without blocking normal MRs. Context audits are run manually when needed. |
 | `.pre` | `smoke_check` | Run the target project smoke test command. |
 | project-owned | `deploy_dev`, `deploy_test` | Optional project-specific deployment jobs. Dev may be automatic; shared test must be manual and locked. |
-| `.post` | advisory `release_dry_run` | On tags or manual default-branch pipelines, emit a release checklist artifact for human confirmation. |
+| `.pre` | `release_version_check` | On tags only, require valid SemVer and a matching ready/released version note. |
+| `.post` | advisory `release_dry_run` | On tags or manual default-branch pipelines, emit a version-aware release checklist artifact for human confirmation. |
 
 ## Runner Requirement
 

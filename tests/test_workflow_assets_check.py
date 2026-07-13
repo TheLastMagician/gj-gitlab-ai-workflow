@@ -35,6 +35,16 @@ class WorkflowAssetsCheckTest(unittest.TestCase):
 
         self.assertTrue(workflow_assets_check.gj_ci_errors(broken))
 
+    def test_release_version_check_runs_on_tags(self) -> None:
+        gj_ci = (ROOT / "templates/gitlab/.gitlab/gj-workflow-ci.yml").read_text(
+            encoding="utf-8"
+        )
+
+        block = workflow_assets_check.top_level_block(gj_ci, "release_version_check")
+
+        self.assertIn("CI_COMMIT_TAG", block)
+        self.assertEqual([], workflow_assets_check.gj_ci_errors(gj_ci))
+
 
 if __name__ == "__main__":
     unittest.main()

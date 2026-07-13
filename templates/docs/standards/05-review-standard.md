@@ -3,6 +3,9 @@
 - Confirm linked Issue and acceptance criteria.
 - Check risk paths from `.gj/workflow.yml`.
 - Verify self-test and rollback notes.
+- Verify the documentation decision table against the actual diff and durable
+  behavior. Blank template rows are not evidence; every follow-up needs an
+  Issue, owner, and due date.
 - Treat the MR label and actual changed files as the final risk facts; the Issue
   records the initial plan.
 - On GitLab CE, use protected branches, restricted merge permissions, and a

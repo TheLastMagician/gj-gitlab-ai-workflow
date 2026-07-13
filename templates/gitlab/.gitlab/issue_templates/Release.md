@@ -1,5 +1,13 @@
 # 发布 Issue
 
+## 版本
+
+- Final version：
+- GitLab Milestone：
+- Planned Tag：
+- Source commit：
+- Pipeline：
+
 ## 发布范围
 
 ## 包含 Issue 和 MR
@@ -11,6 +19,8 @@
 ## 数据库变更
 
 ## Release Note
+
+- `docs/releases/<tag>.md`
 
 ## 回滚方案
 

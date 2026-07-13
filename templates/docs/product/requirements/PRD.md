@@ -4,9 +4,13 @@
 
 - Feature:
 - Owner:
-- Milestone:
-- Status: draft
 - Source Issue:
+- Target release:
+- GitLab Milestone:
+- Status: draft
+- Related design/prototype:
+- Related solution:
+- Related test plan:
 - Last updated:
 
 ## Background
@@ -36,6 +40,12 @@ Describe the business problem, user pain, or opportunity.
 ## Acceptance Criteria
 
 - [ ]
+
+## Rejection And Counterexamples
+
+| ID | Invalid or edge scenario | Expected rejection, error, or unchanged result |
+| --- | --- | --- |
+| E1 | | |
 
 ## Rules And Constraints
 

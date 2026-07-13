@@ -39,6 +39,17 @@ def description(flow: str, issue: str = "") -> str:
 
 
 class PolicyFlowTests(unittest.TestCase):
+    def test_blank_document_decision_table_is_not_content(self) -> None:
+        blank = """<!-- guidance -->
+| 文档 | 动作 | 原因 | 状态 / 确认人 |
+| --- | --- | --- | --- |
+| | | | |
+"""
+        filled = blank.replace("| | | | |", "| docs/modules/order.md | update | 规则变化 | @owner |")
+
+        self.assertFalse(policy_check.section_has_content(blank))
+        self.assertTrue(policy_check.section_has_content(filled))
+
     def test_fast_allows_mr_without_issue(self) -> None:
         text = description("Fast")
         flow, errors = policy_check.resolve_flow(text, "type-bug,flow::fast")

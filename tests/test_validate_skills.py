@@ -16,6 +16,32 @@ SPEC.loader.exec_module(validate_skills)
 
 
 class ValidateSkillsTest(unittest.TestCase):
+    def test_execution_skills_define_document_decisions(self) -> None:
+        for name in [
+            "gj-plan-change",
+            "gj-develop-change",
+            "gj-mr-review",
+            "gj-release-readiness",
+            "gj-close-loop",
+        ]:
+            text = (ROOT / "skills" / name / "SKILL.md").read_text(encoding="utf-8")
+            with self.subTest(skill=name):
+                self.assertIn("documentation decision", text.lower())
+
+    def test_delivery_skills_define_version_lifecycle(self) -> None:
+        expected = {
+            "gj-workflow-next": "Target release",
+            "gj-plan-change": "Target release",
+            "gj-develop-change": "do not bump",
+            "gj-mr-review": "version traceability",
+            "gj-release-readiness": "final SemVer",
+            "gj-close-loop": "released Tag",
+        }
+        for name, phrase in expected.items():
+            text = (ROOT / "skills" / name / "SKILL.md").read_text(encoding="utf-8")
+            with self.subTest(skill=name):
+                self.assertIn(phrase.lower(), text.lower())
+
     def test_skill_name_requires_gj_prefix(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             skill = Path(temp) / "plan-change"

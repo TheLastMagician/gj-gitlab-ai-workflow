@@ -228,6 +228,13 @@ def section_has_content(body: str) -> bool:
             continue
         if re.fullmatch(r"-?\s*(已更新|不需要更新，?原因|后续文档 Issue)[：:]\s*", stripped):
             continue
+        compact = stripped.replace(" ", "")
+        if compact in {
+            "|文档|动作|原因|状态/确认人|",
+            "|---|---|---|---|",
+            "|||||",
+        }:
+            continue
         return True
     return False
 

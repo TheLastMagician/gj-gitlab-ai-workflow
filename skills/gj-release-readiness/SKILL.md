@@ -21,12 +21,25 @@ description: Assess and prepare GitLab dev, test, staging, and production releas
    latest pipeline.
 2. Read the release Issue or milestone, included MRs, test results, known risks,
    environment policy, CI rules, and deploy scripts.
-3. Verify pipeline status, unresolved discussions, test evidence, config/data/
+3. Read `.gj/workflow.yml` versioning policy and determine the final SemVer from
+   compatibility impact and the latest released Tag. Confirm the GitLab
+   Milestone matches. This is the point where the version is locked.
+4. Verify pipeline status, unresolved discussions, test evidence, config/data/
    permission changes, environment isolation or lock, and rollback target.
-4. Prepare or update `docs/releases/<version>.md` and link the applicable test
-   report. Record branch, SHA, pipeline, target, owner, time window, and rollback.
-5. Produce rollout, monitoring, validation, and recovery steps.
-6. Stop at the human gate. Do not approve, merge, tag, or deploy.
+5. Create or update `docs/qa/test-reports/<tag>.md` with Version, planned Tag,
+   exact commit/build, Pipeline, environment, included Issues/MRs, results,
+   evidence, defects, and QA decision.
+6. Create or update the configured `docs/releases/<tag>.md` and link the test
+   report. Record Version, Milestone, planned Tag, branch, SHA,
+   pipeline, target, owner, time window, rollout, monitoring, validation, and
+   rollback. Freeze version evidence after the release completes.
+7. Update an existing project manifest version only when the technology stack
+   requires it. Do not introduce a generic VERSION file. Run
+   `python scripts/release_version_check.py --tag <tag>` before asking a human
+   to create the Tag.
+8. Output a documentation decision table using `create`, `update`, `no-change`,
+   or `follow-up`, with path, reason, and status/confirmer.
+9. Stop at the human gate. Do not approve, merge, tag, or deploy.
 
 ## Output
 
@@ -34,15 +47,18 @@ description: Assess and prepare GitLab dev, test, staging, and production releas
 ## Release Readiness
 
 Target and source:
+Final version / Milestone / planned Tag:
 Decision:
 Pipeline and tests:
 Included changes:
 Config / data / permission impact:
 Environment isolation or lock:
 Release note and documentation impact:
+Documentation decisions (path / action / reason / status or confirmer):
 Rollout and monitoring:
 Rollback target and steps:
 Post-release validation:
+Tag command for human execution:
 Human confirmation needed:
 ```
 

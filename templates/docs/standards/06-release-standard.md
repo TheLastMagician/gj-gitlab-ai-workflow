@@ -1,70 +1,39 @@
 # Release Standard
 
-上下文分层、文件拆分和加载预算见 `12-context-governance.md`;本文件定义发布与
-迭代关闭时由人确认的回写标准。
+本文只定义发布准备和迭代关闭。需求到收尾每个阶段的文档产物、文件规范和更新方式见
+`12-context-governance.md`;目标版本、Tag、构建和部署版本见
+`13-versioning-standard.md`。
 
-- List included Issues and MRs.
-- Confirm testing result, configuration changes, database changes, rollback plan,
-  monitoring, and post-release validation.
-- Confirm whether the release was validated on an isolated dev/review environment
-  or a shared test/staging environment.
-- For shared test/staging, confirm human deployment approval, environment lock,
-  deployed commit SHA, previous version, and rollback target.
+## 发布准备
 
-## 文档回写清单
+- 列出包含的 Issues、MRs、commit SHA 和 Pipeline。
+- 确认最终 SemVer、GitLab Milestone、计划 Tag 和对应发布说明路径。
+- 确认测试结果、配置/数据库/权限变化、发布步骤、监控、回滚和发布后验证。
+- 说明目标是隔离的 dev/review 环境，还是共享 test/staging/production 环境。
+- 共享环境必须确认人工部署决定、环境锁、当前版本、目标版本和回滚目标。
+- `gj-release-readiness` 准备证据，人决定并执行发布；AI 不自主 tag 或 deploy。
+- 普通功能 MR 不 bump 版本;版本和项目 manifest 在发布准备阶段集中收口。
 
-迭代产生的持久事实应在迭代关闭前合并进长效文档。由 `gj-close-loop` 提醒、
-发布责任人人工确认；`context_freshness_check` 可按需运行，但不作为默认 CI 门禁：
+## 发布文档
 
-- [ ] `docs/context/current-state.md` 已覆盖重写,反映当前迭代版本的事实
-      (不追加变更历史,git 历史即归档)。
-- [ ] 涉及模块的 `docs/modules/*.md` 已更新为当前完整规则。
-- [ ] 本迭代 `ai-context-summary.md` 已写成且非空。
-- [ ] `.gj/context.yml` 的 `recent_iteration_summaries` 已修剪:
-      只保留最新一轮,旧条目移除(上限见 `max_recent_summaries_per_module`)。
-- [ ] Retro 已回答:"长效文档里有什么已过时或没人读?" 过时内容直接删除。
+- 执行正式 QA 时创建或更新 `docs/qa/test-reports/<tag>.md`。
+- 有用户可见、运维、配置、数据库、权限、灰度或回滚影响时，创建或更新
+  `docs/releases/<tag>.md`。
+- 测试报告记录实际 build/commit、环境、结果和证据；发布说明记录计划和最终结果。
+- 一次发布完成后冻结该版本证据；后续发布新建版本文件，不覆盖旧证据。
 
-## 文档生命周期规则
+## 收尾回写清单
 
-- **长效文档**(`docs/context/`、`docs/modules/`、`docs/standards/`、
-  `docs/product/`、`docs/technical/`、`docs/qa/`):原地覆盖,
-  永远描述"当前为真",数量恒定。AI 默认只读白名单
-  `.gj/context.yml` 列出的部分。
-- **迭代文档**(`docs/iterations/<迭代>/`、`docs/releases/<版本>.md`):
-  一次写成,迭代结束冻结归档,默认不读;
-  唯一例外是最近一轮 `ai-context-summary.md`。
-- **过时内容直接删除**,不做"已废弃/superseded"标记,git 历史即归档。
-- **小改动**(SmallChange):不建迭代目录,但若改动触碰业务规则,
-  必须在同一 MR 内更新对应模块文档——回写纪律不因改动小而豁免。
-- GitLab Issue/MR 评论记录讨论过程;仓库文档记录稳定结论。
-  重要的产品、技术、测试、发布决策不允许只活在评论里,
-  评论与仓库文档冲突时,以人工确认后的仓库文档为准。
+`gj-close-loop` 按下列清单判断并输出文档决策，由发布责任人确认；这些不是默认 CI
+硬门禁：
 
-## 必备文档(按需创建,路径为默认约定)
+- [ ] 有跨项目当前事实变化时，已覆盖更新 `docs/context/current-state.md`。
+- [ ] 有业务规则、接口或模块行为变化时，相关 `docs/modules/*.md` 已在变更 MR 更新。
+- [ ] 有重要里程碑时，已写短小的 `ai-context-summary.md`；普通 Fast/单 Issue 可不写。
+- [ ] 文档路径或模块边界变化时，`.gj/context.yml` 已更新。
+- [ ] `recent_iteration_summaries` 只保留每模块最新一轮入口。
+- [ ] 过时的当前事实已直接删除，没有继续保留“已废弃”段落。
+- [ ] 未解决问题已进入 GitLab Issue，含负责人和期限。
 
-| 文档 | 默认路径 | 需要的时机 |
-| --- | --- | --- |
-| PRD | `docs/product/requirements/<feature>.md` | 新功能、行为/权限/金额/流程规则或验收标准变化 |
-| 产品设计 | `docs/product/designs/<feature>.md` | UX、交互、页面状态、文案、权限可见性、错误处理有讲究时 |
-| 原型记录 | `docs/product/prototypes/<feature>.md` | 存在 Figma/Axure/截图/可点击 demo 时 |
-| 技术方案 | `docs/technical/solutions/<feature>.md` | 架构、接口、数据、权限、兼容、灰度或回滚需要决策时 |
-| 测试计划 | `docs/qa/test-plans/<feature>.md` | 验收/回归/权限/失败路径覆盖不平凡时 |
-| 测试报告 | `docs/qa/test-reports/<feature>.md` | QA 执行过验证或发现失败时 |
-| 发布说明 | `docs/releases/<version>.md` | 用户可见行为、运维、灰度或回滚信息变化时 |
-| 迭代摘要 | `docs/iterations/<迭代>/ai-context-summary.md` | milestone 或重要工作流结束时 |
-
-## Definition Of Ready(进入方案设计前)
-
-- PRD 存在,或需求 Issue 明确说明为何不需要 PRD。
-- 验收标准可测试且包含反例。
-- 非目标已声明。
-- 产品负责人确认已记录。
-- UX/设计/原型需求已链接或明确标记不需要。
-
-## Definition Of Done(变更完成前)
-
-- 持久结论已进仓库文档,不是只在 GitLab 评论里。
-- MR 描述的"文档影响"段已填写(已更新什么/为何不需要/后续 Issue)。
-- 相关文档在同一 MR 更新,或链接了后续文档 Issue。
-- 长期 AI 上下文变化时,`docs/context/`、`docs/modules/` 或
-  `ai-context-summary.md` 已更新。
+`context_freshness_check.py` 可按需报告结构和预算问题，但不进入默认 CI。文档事实是否
+正确，仍由对应责任人确认。

@@ -55,6 +55,15 @@ smoke_check:
   script:
     - python scripts/smoke_check.py
 
+release_version_check:
+  extends: .gj_python_job
+  stage: .pre
+  rules:
+    - if: '$CI_COMMIT_TAG'
+    - when: never
+  script:
+    - python scripts/release_version_check.py
+
 release_dry_run:
   extends: .gj_python_job
   stage: .post

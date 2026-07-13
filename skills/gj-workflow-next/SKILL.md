@@ -24,10 +24,15 @@ description: Accept a new requirement or inspect a GitLab inbox or active work i
      cross-module work, or unclear validation.
    - Hotfix for urgent production, security, or data risk.
    Recommend exactly one `flow::*` label; a human confirms it before coding.
-5. Identify the current stage and route to one of the small set of downstream
+5. Resolve version planning separately from flow. Read `.gj/workflow.yml`
+   `versioning` when present. For new releasable work, recommend a Target
+   release and matching GitLab Milestone from compatibility impact and the
+   latest released Tag. A human confirms it; do not bump a manifest, create a
+   Tag, or describe a Milestone as already released.
+6. Identify the current stage and route to one of the small set of downstream
    skills: `gj-plan-change`, `gj-develop-change`, `gj-mr-review`,
    `gj-release-readiness`, or `gj-close-loop`.
-6. Check blockers:
+7. Check blockers:
    - missing or conflicting `flow::*` label.
    - missing Issue or acceptance criteria.
    - missing solution review.
@@ -36,8 +41,9 @@ description: Accept a new requirement or inspect a GitLab inbox or active work i
    - a high-risk path incorrectly using `flow::fast`.
    - missing context update.
    - missing documentation impact answer or required repo docs.
-7. Identify assignment, reviewer, mention, due-date, and documentation gaps.
-8. Keep the answer action-oriented and include evidence links or file paths.
+8. Identify assignment, reviewer, mention, due-date, target-release/Milestone,
+   and documentation gaps.
+9. Keep the answer action-oriented and include evidence links or file paths.
    Read-only inspection is the default; only set labels or hand off work after
    the human confirms the action.
 
@@ -49,6 +55,8 @@ description: Accept a new requirement or inspect a GitLab inbox or active work i
 Current stage:
 
 Flow recommendation:
+
+Target release / Milestone recommendation:
 
 Evidence:
 

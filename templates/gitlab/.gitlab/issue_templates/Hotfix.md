@@ -4,6 +4,10 @@
 
 ## 故障等级和影响范围
 
+- Affected version：
+- Target patch version：
+- GitLab Milestone：
+
 ## 当前止血方案
 
 ## 修复方案

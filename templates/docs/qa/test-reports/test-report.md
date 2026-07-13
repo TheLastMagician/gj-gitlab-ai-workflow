@@ -3,11 +3,15 @@
 ## Metadata
 
 - Feature:
+- Version:
+- Tag:
 - QA owner:
+- Related Issues/MRs:
 - Related test plan:
 - Related release:
 - Environment:
-- Build/commit:
+- Commit:
+- Pipeline:
 - Status: draft
 - Last updated:
 

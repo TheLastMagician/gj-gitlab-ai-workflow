@@ -52,11 +52,24 @@ class InstallerTests(unittest.TestCase):
             self.assertIn("rules:", workflow)
             self.assertTrue((target / "scripts" / "gitlab_api.py").exists())
             self.assertTrue((target / "scripts" / "release_dry_run.py").exists())
+            self.assertTrue((target / "scripts" / "release_version_check.py").exists())
             self.assertIn(
                 ".gj/gitlab.local.json",
                 (target / ".gitignore").read_text(encoding="utf-8"),
             )
             self.assertTrue((target / "docs" / "product" / "requirements" / "PRD.md").exists())
+            governance = (
+                target / "docs" / "standards" / "12-context-governance.md"
+            ).read_text(encoding="utf-8")
+            self.assertIn("一个新需求各阶段写什么", governance)
+            self.assertIn("Skill 的文档决策输出", governance)
+            prd = (
+                target / "docs" / "product" / "requirements" / "PRD.md"
+            ).read_text(encoding="utf-8")
+            self.assertIn("## Rejection And Counterexamples", prd)
+            workflow = (target / ".gj" / "workflow.yml").read_text(encoding="utf-8")
+            self.assertIn("versioning:", workflow)
+            self.assertIn('tag_pattern: "v{version}"', workflow)
             subprocess.run(
                 [sys.executable, "scripts/workflow_assets_check.py"],
                 cwd=target,

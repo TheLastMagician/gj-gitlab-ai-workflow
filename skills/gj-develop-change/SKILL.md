@@ -9,7 +9,8 @@ description: Implement GitLab features, small changes, bugs, and hotfixes using 
 
 1. Read the active Issue or MR, confirmed flow label, accepted plan when
    required, `.gj/context.yml`, `.gj/workflow.yml`, and only the relevant
-   module docs, standards, ADRs, and recent summary.
+   module docs, standards, ADRs, and recent summary. When present, use
+   `docs/standards/12-context-governance.md` for document lifecycle decisions.
 2. Confirm readiness:
    - Fast needs a bounded change, self-test, and documentation-impact answer.
    - Standard needs an Issue, testable acceptance criteria, and an accepted
@@ -25,10 +26,20 @@ description: Implement GitLab features, small changes, bugs, and hotfixes using 
 4. Inspect the codebase before editing and stay within the confirmed scope.
 5. Add or update tests for acceptance criteria, failure paths, permissions, and
    the reported regression as applicable.
-6. Update module or durable docs in the same MR when behavior or a lasting rule
-   changes. Otherwise state why no documentation update is needed.
-7. Run focused tests first, then the repository's broader required checks.
-8. Prepare a GitLab-ready implementation summary. Never approve, merge, or
+6. Re-evaluate the plan against the actual changed paths. Update module,
+   requirement, design, solution, interface, or other current-fact docs in the
+   same MR when behavior, contracts, permissions, data meaning, operations, or
+   a lasting rule changes. Update existing semantic files in place. Otherwise
+   state why no documentation update is needed.
+7. Keep the Issue, MR, and feature documents linked to the confirmed Target
+   release/Milestone. Ordinary feature, bug, and Fast MRs do not bump the
+   repository version or create Tags; version fields in project manifests are
+   changed only by explicit release-preparation work.
+8. Run focused tests first, then the repository's broader required checks.
+9. Output a documentation decision table using `create`, `update`, `no-change`,
+   or `follow-up`, with path, reason, and status/confirmer. A follow-up is only
+   valid with an Issue, owner, and due date.
+10. Prepare a GitLab-ready implementation summary. Never approve, merge, or
    deploy from this skill.
 
 ## Output
@@ -37,12 +48,14 @@ description: Implement GitLab features, small changes, bugs, and hotfixes using 
 ## Development Result
 
 Flow and mode:
+Target release / Milestone:
 Context loaded:
 Implemented:
 Root cause (bug/hotfix):
 Files changed:
 Tests and results:
 Documentation impact:
+Documentation decisions (path / action / reason / status or confirmer):
 Risks and rollback:
 Follow-up Issues:
 Ready for MR when:

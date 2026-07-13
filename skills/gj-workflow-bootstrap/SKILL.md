@@ -26,6 +26,9 @@ description: Install and verify the GitLab AI workflow skeleton in a repository.
      installation editions.
 3. Ask the maintainer to replace placeholder roles in `.gj/workflow.yml` when
    role routing is needed and review `docs/standards/06-release-standard.md`.
+   Confirm `.gj/workflow.yml` versioning policy, the Tag pattern, release-note
+   path, and `docs/standards/13-versioning-standard.md` without adding a generic
+   VERSION file.
 4. Create GitLab labels, milestone, and starter Issues idempotently through the
    configured helper or an approved GitLab connector.
 5. Assign human-owned starter Issues/MRs from `.gj/workflow.yml` when requested

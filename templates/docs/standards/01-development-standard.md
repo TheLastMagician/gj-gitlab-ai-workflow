@@ -16,5 +16,5 @@
 - 唯一 flow、Standard/Hotfix Issue 关联、高风险路径和新增 secret:CI
   `policy_check` 硬检查。
 - MR 章节完整性:`policy_check` 只告警，由评审员判断是否足够。
-- 模块文档和迭代上下文回写:对应 Skill 提醒，评审员或发布责任人人工确认。
+- 文档决策和持久事实回写:对应 Skill 执行，评审员或发布责任人人工确认。
   `context_freshness_check` 仅供按需审计，不进入默认 CI。

@@ -19,6 +19,7 @@ CORE_REQUIRED = [
     "scripts/policy_check.py",
     "scripts/smoke_check.py",
     "scripts/workflow_assets_check.py",
+    "scripts/release_version_check.py",
 ]
 
 OPTIONAL_ASSETS = [
@@ -28,6 +29,7 @@ OPTIONAL_ASSETS = [
     "docs/standards/10-environment-standard.md",
     "docs/standards/11-notification-standard.md",
     "docs/standards/12-context-governance.md",
+    "docs/standards/13-versioning-standard.md",
     "scripts/context_freshness_check.py",
     "scripts/validate_role_map.py",
     "scripts/gitlab_api.py",
@@ -43,6 +45,7 @@ OPTIONAL_ASSETS = [
 
 OPTIONAL_DIRS = ["docs/modules"]
 MANDATORY_MR_JOBS = ["policy_check", "smoke_check"]
+MANDATORY_TAG_JOBS = ["release_version_check"]
 GJ_CI_INCLUDE = ".gitlab/gj-workflow-ci.yml"
 
 
@@ -68,6 +71,12 @@ def gj_ci_errors(text: str) -> list[str]:
             errors.append(f"{GJ_CI_INCLUDE} 缺少必跑 Job：{job}")
         elif 'CI_PIPELINE_SOURCE == "merge_request_event"' not in block:
             errors.append(f"{GJ_CI_INCLUDE} 的 {job} 未加入 MR Pipeline")
+    for job in MANDATORY_TAG_JOBS:
+        block = top_level_block(text, job)
+        if not block:
+            errors.append(f"{GJ_CI_INCLUDE} 缺少 Tag 发布 Job：{job}")
+        elif "CI_COMMIT_TAG" not in block:
+            errors.append(f"{GJ_CI_INCLUDE} 的 {job} 未加入 Tag Pipeline")
     return errors
 
 

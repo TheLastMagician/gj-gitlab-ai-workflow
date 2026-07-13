@@ -143,6 +143,8 @@ python scripts/workflow_assets_check.py
 python scripts/validate_role_map.py
 python scripts/context_freshness_check.py
 python scripts/release_dry_run.py --output build/release-dry-run.md
+# After docs/releases/v1.3.0.md is ready:
+python scripts/release_version_check.py --tag v1.3.0
 ```
 
 ## 6. Run CI/CD In A Target Project
@@ -154,10 +156,12 @@ stages, or `before_script`. Existing complex `include` blocks require the exact
 manual include action printed by the installer.
 
 Configure a GitLab Runner with Docker executor. Policy and project tests are the
-only default hard gates; advisory Jobs may still appear in other stages:
+MR hard gates; release-version consistency is a Tag-only hard gate. Advisory
+Jobs may still appear in other stages:
 
 ```text
 MR hard gates: policy -> test
+Tag hard gate: release version -> test
 Advisory: workflow assets / release dry run
 ```
 

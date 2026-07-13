@@ -73,6 +73,7 @@ Access Token，但它代表机器人账号，不能代替当前用户的个人 T
 - PRD、产品设计、原型记录、技术方案、测试计划、测试报告、发布说明等文档模板。
 - 目标业务项目 CI：MR 只由 `policy -> test` 硬阻断；工作流资产和发布清单只提醒。
 - `policy_check.py`、`workflow_assets_check.py`、`validate_role_map.py` 等检查脚本。
+- SemVer/Milestone/Tag/构建/部署版本治理，以及 Tag-only `release_version_check.py`。
 - GitLab webhook Orchestrator 骨架。
 - 八个跨 Agent workflow skills。
 - 所有 Skill 固定使用 `gj-` 前缀；GJ 是“公交”工作流的简称。
@@ -188,34 +189,34 @@ python scripts/install_workflow.py --target C:\path\to\your-project
 ```mermaid
 flowchart TD
   A["需求提出人 / PdM<br/>描述新需求或选择 GitLab 待办"] --> B["任意成员 + gj-workflow-next<br/>识别阶段、推荐 flow 和下一步"]
-  B --> C{"需求责任人 / Dev Lead<br/>确认需求与唯一 flow 标签"}
-  C -- "flow::standard" --> D["PdM + Dev Lead / gj-plan-change<br/>完整验收、方案、任务和测试"]
+  B --> C{"需求责任人 / Dev Lead<br/>确认需求、flow 和目标 Milestone"}
+  C -- "flow::standard" --> D["PdM + Dev Lead / gj-plan-change<br/>验收、方案、测试和 Target release"]
   C -- "flow::fast" --> DF["Dev / gj-plan-change<br/>极简边界、自测和文档影响"]
   C -- "flow::hotfix" --> DH["Dev Lead + Dev / gj-plan-change<br/>最小修复、验证和回滚"]
   D --> E["Dev / gj-develop-change<br/>实现、测试并更新随改文档"]
   DF --> E
   DH --> E
-  E --> F["Dev<br/>创建 MR 并选择相同 flow 标签"]
+  E --> F["Dev<br/>创建 MR，沿用 flow 和 Milestone，不逐 MR bump"]
   F --> G["CI 硬门禁 policy / test<br/>workflow 检查只提醒"]
   G --> H["Reviewer / gj-mr-review<br/>代码、测试、文档和合并就绪检查"]
   H --> I{"Reviewer<br/>存在阻塞问题？"}
   I -- "是" --> E
   I -- "否" --> J["Maintainer<br/>决定并执行合并"]
-  J --> K["QA + DevOps / gj-release-readiness<br/>测试、发布、验证和回滚证据"]
-  K --> L["DevOps / Maintainer<br/>决定并执行发布"]
-  L --> M["PM + Dev Lead / gj-close-loop<br/>复盘并更新长期上下文"]
+  J --> K["QA + DevOps / gj-release-readiness<br/>锁定 SemVer，生成测试报告和发布说明"]
+  K --> L["DevOps / Maintainer<br/>决定 Tag、构建和部署"]
+  L --> M["PM + Dev Lead / gj-close-loop<br/>回写实际 Tag/SHA/环境和长期上下文"]
 ```
 
 | 阶段 | 角色 | 使用 skill | 产物 |
 | --- | --- | --- | --- |
 | 入口和分流 | 任意成员（Member） | `gj-workflow-next` | 待办、flow 建议、阻塞项和下一步；人确认标签 |
-| 变更计划 | 产品经理（PdM）/开发经理（Dev Lead） | `gj-plan-change` | 与 flow 匹配的验收、方案、任务、测试和回滚计划 |
+| 变更计划 | 产品经理（PdM）/开发经理（Dev Lead） | `gj-plan-change` | 验收、方案、任务、测试、Target release/Milestone 和回滚计划 |
 | 开发和修复 | 开发（Dev） | `gj-develop-change` | 功能、Fast 改动、Bug 或 Hotfix 的实现、测试和文档 |
 | MR 审阅 | 代码审阅（Reviewer） | `gj-mr-review` | 按严重级别排列的问题和合并就绪结论 |
 | 合并 | 合并（Maintainer） | GitLab | 人检查证据并决定、执行合并 |
-| 发布准备 | 运维（DevOps）/测试（QA） | `gj-release-readiness` | 环境锁、发布说明、验证、回滚和人工确认项 |
+| 发布准备 | 运维（DevOps）/测试（QA） | `gj-release-readiness` | 最终 SemVer、版本测试报告、发布说明、环境、验证和回滚 |
 | 发布 | 运维（DevOps）/Maintainer | GitLab CI/CD | 人决定、执行发布 |
-| 收尾 | 项目经理（PM）/开发经理（Dev Lead） | `gj-close-loop` | 复盘、模块文档、ADR、context index 和摘要更新 |
+| 收尾 | 项目经理（PM）/开发经理（Dev Lead） | `gj-close-loop` | 实际 Tag/SHA/部署版本、复盘、长期文档和 context 更新 |
 
 每个节点完成后，都要在 GitLab 上设置下一个处理人的 assignee/reviewer，并用
 `@username` 评论交接。被指派的人可以用 `gj-workflow-next` 查看自己的待办，再进入
@@ -281,29 +282,63 @@ flowchart TD
 
 ## 文档与上下文怎么持续迭代
 
-文档不能全部塞进一个文件，也不能让 AI 默认扫描整个 `docs/`。工作流使用
-`.gj/context.yml` 做白名单和上下文预算，按五层渐进加载：
+文档随需求阶段更新，不是在发布后一次性补，也不是每个需求都复制一套模板：
 
-| 层级 | 内容 | AI 默认行为 |
+| 阶段 | 使用 Skill | 文档动作 |
 | --- | --- | --- |
-| 当前工作 | Issue、MR、验收、讨论和 Pipeline | 每个任务首先读取 |
-| 全局事实 | current state、module map、glossary | 常驻，最多 3 个文件/24000 字符 |
-| 模块事实 | `docs/modules/<module>.md` 与有效决策 | changed paths 命中后按模块读取 |
-| 功能文档 | PRD、设计、方案、测试、发布说明 | 仅在工作项或模块明确链接时读取 |
-| 历史归档 | `docs/iterations/` 和旧发布证据 | 默认不读，追溯时读取指定文件 |
+| 需求确认 | `gj-plan-change` | 产品行为变化更新 PRD；有交互再更新设计/原型 |
+| 方案和测试设计 | `gj-plan-change` | 有技术决策更新方案；测试不平凡更新测试计划 |
+| 开发 | `gj-develop-change` | 行为、契约或规则变化时，在同一 MR 更新模块/当前事实文档 |
+| MR 审阅 | `gj-mr-review` | 核对代码、测试、文档决策和实际 diff 是否一致 |
+| QA/发布 | `gj-release-readiness` | 正式 QA 写测试报告；有用户/运维影响写发布说明 |
+| 收尾 | `gj-close-loop` | 按需更新 current state、context index；重要里程碑写短摘要 |
 
-每个模块默认只保留最新 1 轮 `ai-context-summary.md` 进入 AI 上下文。长效文档原地
-覆盖为“当前为真”，讨论过程和旧迭代留在 GitLab/Git 历史，不复制进常驻文档。
+规则只有三条：
 
-人使用对应 Skill 后，Skill 会判断并随当前改动更新所需文档；没有持久事实变化时说明
-原因，事实未确认时只给草稿。`gj-close-loop` 负责迭代收尾、修剪 context index 和写入
-最新摘要。`context_freshness_check` 不进入默认 CI；需要治理审计时手工运行，默认只
-报告数量、体积、历史引用和回写问题，显式使用 `--strict` 才返回失败状态。
+1. Issue/MR 保存本次讨论和过程；当前事实文档原地更新，过时内容直接删，Git 负责历史。
+2. 测试报告、发布说明和重要迭代摘要按版本新增，完成后冻结。普通 Fast 和多数单 Issue
+   变更不建 `docs/iterations/`，更不要求 00~06 全套文档。
+3. 每个执行 Skill 都输出“文档决策”表，逐项说明 `create`、`update`、`no-change` 或
+   `follow-up`。人只确认事实，不需要背文档路径；Reviewer 按表核对。
+
+AI 仍通过 `.gj/context.yml` 渐进加载：先读当前 Issue/MR 和 3 个全局事实文件，再按
+changed paths 读取对应模块和明确链接的功能文档；默认不扫描历史。每模块只允许最新
+1 轮 `ai-context-summary.md` 进入日常上下文。
+
+三种 flow 的文档深度也不同：Fast 默认只写 MR 证据，但业务规则变化不能免模块文档；
+Standard 按实际影响更新 PRD/方案/测试；Hotfix 先止血，发布后补回归证据和当前事实。
 
 完整的拆分原则、读取/写入算法和各 Skill 文档职责见
 [可持续文档与 AI 上下文治理](docs/documentation-governance.md)。安装到业务项目后的
 团队标准位于 `docs/standards/12-context-governance.md`；发布回写清单由
 `docs/standards/06-release-standard.md` 定义并由人确认。
+
+## Git 项目版本怎么流转
+
+版本不是每个 MR 自增。以当前生产 `v1.2.3`、新功能目标 `v1.3.0` 为例：
+
+```text
+Requirement Issue + Milestone v1.3.0
+  -> PRD / 方案 / 测试计划记录 Target release v1.3.0
+  -> 功能 MR 沿用 Milestone，不修改项目版本
+  -> release-readiness 锁定 v1.3.0
+  -> docs/qa/test-reports/v1.3.0.md
+  -> docs/releases/v1.3.0.md
+  -> 人创建 Git Tag v1.3.0
+  -> Tag Pipeline 记录 v1.3.0 + commit SHA + Pipeline
+  -> 部署后 close-loop 回写实际环境版本
+```
+
+- GitLab Milestone 是可调整的目标版本；Git Tag 才是仓库已发布版本事实。
+- 默认 SemVer：不兼容改动升 Major，新功能升 Minor，修复升 Patch；flow 不决定版本号。
+- PRD/方案/模块文档原地更新，只记录 Target release；测试报告和发布说明按 Tag 新建。
+- 普通 MR 没有版本硬门禁。只有 Tag Pipeline 硬检查 Tag 格式、发布说明存在且
+  Version/Tag 一致，避免错版进入构建和部署。
+- 项目已有 `package.json`、`pyproject.toml`、`pom.xml` 等 manifest 时只在发布准备阶段
+  同步；工作流不强制增加通用 `VERSION` 文件。
+
+完整规则见 [Git 项目版本治理](docs/versioning.md)；安装后的团队规范是
+`docs/standards/13-versioning-standard.md`。
 
 ## 目标项目 CI/CD
 
@@ -319,6 +354,7 @@ MR 硬门禁: policy -> test
 - `policy`：硬检查唯一 `flow::*`、Standard/Hotfix Issue 关联、高风险 Fast 和本次新增 secret；MR 描述完整度只告警。
 - `workflow`：工作流资产只告警，不阻断合并；AI Review 未配置前不创建伪成功 Job。
 - `test`：运行目标项目自己的测试或 smoke check。
+- `release_version_check`：仅 Tag Pipeline 硬检查 Tag 与发布说明一致。
 - `release`：生成 advisory release dry run，用于发布前人工确认。
 
 Fast MR 默认运行 policy、workflow assets 和 test，但只有 policy 与项目测试是硬门禁。
@@ -343,6 +379,8 @@ Fast MR 默认运行 policy、workflow assets 和 test，但只有 policy 与项
 - `docs/workflow.md`
 - `docs/skills.md`
 - `docs/cicd.md`
+- `docs/documentation-governance.md`
+- `docs/versioning.md`
 
 ## 参与维护
 

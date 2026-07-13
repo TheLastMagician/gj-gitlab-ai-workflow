@@ -1,38 +1,28 @@
 #!/usr/bin/env python3
-"""Write a business-project release dry-run artifact."""
+"""Write a version-aware business-project release dry-run artifact."""
 
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 
+from release_version_check import load_policy, release_version_errors, resolve_version
 
-ROOT = Path(__file__).resolve().parents[1]
+
+ROOT = Path.cwd().resolve()
 REQUIRED_WORKFLOW_ASSETS = [
     ".gj/workflow.yml",
     ".gj/context.yml",
     "docs/context/current-state.md",
+    "scripts/release_version_check.py",
 ]
-RELEASE_DOCS = [
-    "04-test-report.md",
-    "05-release.md",
-    "ai-context-summary.md",
-]
-
-
-def latest_iteration_dir() -> Path | None:
-    iterations_root = ROOT / "docs" / "iterations"
-    if not iterations_root.exists():
-        return None
-    candidates = sorted(path for path in iterations_root.iterdir() if path.is_dir())
-    if not candidates:
-        return None
-    return candidates[-1]
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", default="build/release-dry-run.md")
+    parser.add_argument("--tag", default=os.environ.get("CI_COMMIT_TAG", ""))
     args = parser.parse_args()
 
     output = ROOT / args.output
@@ -40,36 +30,49 @@ def main() -> int:
     if missing:
         raise RuntimeError(f"release dry run is missing workflow assets: {missing}")
 
-    iteration = latest_iteration_dir()
-    release_doc_lines = []
-    if iteration is None:
-        release_doc_lines.append("- No iteration directory found under `docs/iterations`.")
+    policy = load_policy(ROOT / ".gj" / "workflow.yml")
+    version_lines: list[str] = [f"- Scheme: `{policy.scheme}`."]
+    findings: list[str] = []
+    if args.tag:
+        version = resolve_version(args.tag, policy)
+        version_lines.append(f"- Release tag: `{args.tag}`.")
+        if version:
+            relative = policy.release_note_pattern.format(tag=args.tag, version=version)
+            version_lines.append(f"- Release note: `{relative}`.")
+        findings = release_version_errors(ROOT, args.tag, policy)
     else:
-        release_doc_lines.append(f"- Latest iteration: `{iteration.relative_to(ROOT)}`.")
-        for doc in RELEASE_DOCS:
-            state = "present" if (iteration / doc).exists() else "missing"
-            release_doc_lines.append(f"- `{doc}`: {state}.")
+        version_lines.extend(
+            [
+                "- Release tag: not locked; use the GitLab Milestone as the target release.",
+                "- No manifest or repository version is bumped during ordinary feature MRs.",
+            ]
+        )
+        findings.append("No Tag supplied; Tag/release-note consistency was not evaluated.")
 
+    finding_lines = (
+        [f"- {finding}" for finding in findings]
+        if findings
+        else ["- No tag/release-note consistency issue found for the supplied input."]
+    )
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(
         f"""# Release Dry Run
 
-## Result
+## Version
 
-Workflow assets are present. Review the release document status below before a
-human-authorized release.
+{chr(10).join(version_lines)}
 
-## Release Documents
+## Findings
 
-{chr(10).join(release_doc_lines)}
+{chr(10).join(finding_lines)}
 
 ## Required Manual Release Checks
 
-- Product owner confirms the acceptance criteria are still correct.
-- Reviewer confirms the MR can be approved or merged with human authorization.
-- QA confirms the latest test report is acceptable.
-- DevOps confirms rollback target and previous deployed version are known.
-- PM confirms `ai-context-summary.md` is updated after release.
+- Confirm the final SemVer and matching GitLab Milestone.
+- Confirm included Issues/MRs, test report, source commit, and Pipeline.
+- Confirm configuration, data, permission, rollout, monitoring, and rollback impact.
+- A human decides whether to create and push the release Tag.
+- After deployment, record the actual Tag, commit, Pipeline, environment, and validation.
 """,
         encoding="utf-8",
     )

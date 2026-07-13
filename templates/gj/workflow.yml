@@ -1,9 +1,14 @@
-version: 1
+version: 1  # GJ config schema version, not the project release version.
 
 project:
   name: target-project
   default_branch: main
   gitlab_url: https://gitlab.example.com
+
+versioning:
+  scheme: semver
+  tag_pattern: "v{version}"
+  release_note_pattern: "docs/releases/{tag}.md"
 
 roles:
   product:
@@ -46,5 +51,6 @@ rules:
       - ".gitlab-ci.yml"
       - ".gitlab/gj-workflow-ci.yml"
       - "scripts/policy_check.py"
+      - "scripts/release_version_check.py"
       - ".gj/workflow.yml"
     minimum_flow: standard

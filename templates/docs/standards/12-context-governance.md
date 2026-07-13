@@ -1,48 +1,108 @@
-# Context Governance Standard
+# 文档生命周期与 AI 上下文治理
 
-## Loading Order
+## 核心规则
 
-AI loads context progressively, never by scanning all of `docs/`:
+1. GitLab Issue/MR 记录本次工作的过程、讨论和证据。
+2. 需求、设计、方案、模块和当前状态文档原地更新，始终描述“当前为真”。
+3. 测试报告、发布说明和迭代摘要按版本新增，关闭后冻结。
+4. 每个 Skill 判断自己阶段需要创建、更新或保持不变的文档，并输出文档决策表。
+5. AI 只加载当前工作和命中模块的文档，不扫描全部历史。
 
-1. Current Issue or MR.
-2. `.gj/context.yml` and its `global.always_load` files.
-3. Only the module whose `paths` match the requested or changed files.
-4. Only feature, decision, test, or release docs linked by the work item or module.
-5. At most the latest listed `ai-context-summary.md` for that module.
+本规范定义文档演进；Target release、Git Tag、构建和部署版本见
+`13-versioning-standard.md`。
 
-`docs/iterations/` is frozen history and is not loaded by default. A specific
-historical file may be read only to answer an explicit traceability question.
+## 一个新需求各阶段写什么
 
-## Context Budget
+| 阶段 | 主要 Skill | 创建或更新的文档 | 完成标志 |
+| --- | --- | --- | --- |
+| 入口分流 | `gj-workflow-next` | Standard/Hotfix 创建 Issue；可发布工作关联目标 Milestone | 人确认 flow、Target release 和下一步 |
+| 需求确认 | `gj-plan-change` | 产品行为变化时更新 PRD；有交互时更新设计/原型记录 | 目标、非目标、规则、可测试验收和反例已确认 |
+| 方案与测试设计 | `gj-plan-change` | 有技术决策时更新技术方案；测试不平凡时更新测试计划 | 影响、风险、测试和回滚可实施 |
+| 开发 | `gj-develop-change` | 行为/契约/业务规则变化时，在同一 MR 更新模块及相关当前事实文档 | 代码、测试、文档一起进入 MR |
+| MR 审阅 | `gj-mr-review` | 通常不新建；发现代码与文档不一致时要求原 MR 修正 | 文档决策和实际 diff 一致 |
+| QA 与发布准备 | `gj-release-readiness` | 正式 QA 写测试报告；有用户/运维影响时写发布说明 | 发布或不发布所需证据齐全 |
+| 收尾 | `gj-close-loop` | 按需更新 current state、模块文档、context index；重要里程碑写短摘要 | 当前事实已回写，证据已冻结 |
 
-The default `.gj/context.yml` budget is mandatory:
+文档更新发生在对应阶段的同一个分支/MR 中。不要默认另开“补文档”Issue；只有 Hotfix
+需要先止血或结论尚未确认时，才允许登记负责人和期限后跟进。
 
-- at most 3 `always_load` files and 24,000 total characters;
-- no iteration archive in `always_load`;
-- at most 5 docs and 40,000 total characters for one module context;
-- at most 1 recent iteration summary per module.
+## 三种 flow 的最低要求
 
-`context_freshness_check.py` reports these machine-checkable limits as advisory
-warnings by default. Use `--strict` only for an explicit governance audit; normal
-MRs must not be blocked solely by documentation size or archive hygiene.
+| Flow | 最低文档要求 |
+| --- | --- |
+| `flow::fast` | 不强制 PRD、方案或迭代目录；MR 写清范围、自测和文档影响。行为或规则变化仍须更新当前事实文档。 |
+| `flow::standard` | Issue 必须；产品行为变化更新 PRD；存在技术决策更新方案；测试不平凡更新测试计划；正式 QA/发布按需写证据。 |
+| `flow::hotfix` | Hotfix Issue 必须，先记录影响、最小修复、验证和回滚；发布后补回归证据、当前事实和简短复盘。 |
 
-## File Boundaries
+文档需求由“是否产生持久事实”决定，不由改动行数决定。持久事实包括业务规则、权限、
+状态流、接口契约、数据含义、关键技术决策、测试基线、发布/回滚方式和当前运行状态。
 
-- `docs/context/current-state.md`: current cross-project facts only; overwrite,
-  never append a changelog.
-- `docs/context/module-map.md`: module routing and ownership, not detailed rules.
-- `docs/modules/<module>.md`: current complete rules for one bounded module.
-- `docs/product`, `docs/technical`, `docs/qa`: one feature or decision scope per
-  file; split by stable ownership or review boundary, not by iteration date.
-- `docs/releases` and `docs/iterations`: immutable release/iteration evidence.
-- GitLab Issues/MRs: discussion and confirmation history, not durable truth.
+## 文档类型与迭代方式
 
-When a file mixes unrelated modules, owners, or review lifecycles, split it and
-update `.gj/context.yml`. Do not create a single project encyclopedia.
+| 类型 | 默认位置 | 迭代方式 | 默认读取方式 |
+| --- | --- | --- | --- |
+| 工作过程 | GitLab Issue/MR/讨论/Pipeline | 工作中持续追加，关闭后保留 | 当前任务首先读取 |
+| 当前事实 | `docs/product/`、`docs/technical/`、`docs/modules/`、`docs/context/` | 原文件覆盖；过时内容直接删，Git 历史负责追溯 | 按工作项和模块读取 |
+| 交付证据 | `docs/qa/test-reports/`、`docs/releases/`、`docs/iterations/` | 按版本/里程碑新建，完成后冻结 | 发布、审计或明确追溯时读取 |
+| 机器路由 | `.gj/context.yml` | 文档路径或模块边界变化时更新 | Agent 每次先读取 |
 
-## Writeback
+`docs/iterations/` 不是第二套 PRD/方案库。它只保存重要里程碑的短摘要或确有价值的
+交付证据；普通 Fast 和多数单 Issue 变更不建迭代目录。
 
-The active Skill updates its applicable durable docs in the same change when
-facts are confirmed. `gj-close-loop` rewrites current state, prunes the context
-index, and records the latest iteration summary. Humans review factual decisions;
-they do not need to remember every documentation path.
+## 创建还是更新
+
+1. 没有改变后续人员需要依赖的事实：不建文档。
+2. 已有同一功能、模块或决策边界的文档：原地更新，不创建 v2/final/new 副本。
+3. 出现新的稳定功能、模块或独立评审边界：用语义名称创建文件。
+4. 某次构建、测试、发布或里程碑证据：按版本或里程碑新建，完成后冻结。
+5. 文档路径、模块边界或默认加载项变化：同步更新 `.gj/context.yml`。
+
+## 文件与内容规范
+
+- 使用 kebab-case 语义名，例如 `order-approval.md`，不要使用
+  `PRD-v2-final-new.md`。
+- 当前事实文档状态只用 `draft` 和 `confirmed`；事实失效时直接修改或删除。
+- 证据文档按版本或里程碑命名，完成后冻结。
+- 功能文档至少包含 Owner、Status、Source Issue、Target release、Last updated 和直接上下游链接。
+- 验收标准必须可测试，并至少包含一个拒绝、报错或保持不变的反例。
+- 不写 Token、密钥、生产数据和无脱敏日志。
+
+| 文档 | 最低内容 |
+| --- | --- |
+| PRD | 背景、目标、非目标、场景、规则、验收、反例、依赖、待确认问题 |
+| 产品设计/原型 | 用户流、页面/状态、权限差异、异常/空态、关键文案、原型链接 |
+| 技术方案 | 影响、方案、备选取舍、接口/数据/权限、风险、测试、发布和回滚 |
+| 测试计划 | 需求/风险到用例的映射、成功/失败/权限/回归、环境、阻断条件 |
+| 模块文档 | 当前职责、规则、接口/数据契约、失败行为、测试入口、相关链接 |
+| 测试报告 | commit/build、环境、结果、证据、缺陷、剩余风险和 QA 结论 |
+| 发布说明 | 包含项、影响、来源 SHA、验证、发布、监控和回滚 |
+| current state | 当前版本、能力、限制和近期重点，不写变更流水账 |
+| AI 上下文摘要 | 本轮交付、最终决策、验证、风险和长效文档链接，保持短小 |
+
+## Skill 的文档决策输出
+
+每个执行 Skill 必须在回复、Issue 评论或 MR 描述中输出下表；它不是新文件：
+
+```markdown
+## 文档决策
+
+| 文档 | 动作 | 原因 | 状态/确认人 |
+| --- | --- | --- | --- |
+| docs/modules/order.md | update | 金额审批规则变化 | confirmed / @owner |
+| docs/releases/v1.2.0.md | no-change | 当前阶段尚未进入发布 | - |
+```
+
+动作只能是 `create`、`update`、`no-change` 或 `follow-up`。`follow-up` 必须带 GitLab
+Issue、负责人和期限。Reviewer 根据该表核对实际 diff 和文档内容。
+
+## AI 渐进加载
+
+1. 当前 Issue/MR。
+2. `.gj/context.yml` 的 `global.always_load`。
+3. changed paths 命中的模块文档、有效决策和最新摘要。
+4. 工作项或模块明确链接的 PRD、设计、方案、测试或发布文档。
+5. 仅为明确追溯问题读取指定历史文件，不遍历 `docs/iterations/`。
+
+默认预算：常驻最多 3 个文件/24000 字符；单模块最多 5 个文件/40000 字符；每模块
+最多 1 个近期摘要。`context_freshness_check.py` 默认只告警这些结构问题，不进入默认
+CI；专项治理时才使用 `--strict`。事实是否正确仍由对应阶段责任人确认。

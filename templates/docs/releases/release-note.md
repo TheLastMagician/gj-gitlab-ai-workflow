@@ -1,8 +1,13 @@
 # Release Note
 
+<!-- Template only. For a real release, create docs/releases/<tag>.md. -->
+
 ## Metadata
 
 - Version:
+- Tag:
+- Source commit:
+- Pipeline:
 - Owner:
 - Milestone:
 - Release Issue:
@@ -35,6 +40,13 @@
 - Test plan:
 - Test report:
 - Pipeline:
+
+## Deployment Result
+
+- Environment:
+- Deployed Tag/SHA:
+- Deployed at:
+- Post-release validation:
 
 ## Rollout Plan
 

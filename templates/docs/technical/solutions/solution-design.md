@@ -4,6 +4,8 @@
 
 - Feature:
 - Owner:
+- Source Issue:
+- Target release:
 - Related PRD:
 - Related Issues/MRs:
 - Status: draft

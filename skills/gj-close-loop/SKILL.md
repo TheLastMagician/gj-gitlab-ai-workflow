@@ -21,12 +21,23 @@ description: Close completed GitLab work by capturing lessons and refreshing dur
    decisions.
 4. Update the smallest applicable set of `docs/context`, `docs/modules`, product
    docs, solution docs, test reports, release notes, ADRs, and
-   `.gj/context.yml`.
-5. Keep `recent_iteration_summaries` within its configured limit and ensure the
+   `.gj/context.yml`. Only update `current-state.md` for cross-project current
+   facts, and only create an iteration summary for an important milestone or
+   when project policy explicitly requires it. Normal Fast and most single-Issue
+   changes do not need an iteration directory.
+5. After a release or deployment, distinguish planned from actual state. Update
+   the release note and `docs/context/current-state.md` with the released Tag,
+   commit SHA, Pipeline, environment, deployment time, post-release validation,
+   and rollback result. Never claim a Milestone or untagged commit is released.
+6. Keep `recent_iteration_summaries` within its configured limit and ensure the
    latest summary is first.
-6. Preserve conflicts and ask for human confirmation instead of inventing a
+7. Preserve conflicts and ask for human confirmation instead of inventing a
    single truth.
-7. Create tracked improvement items for unresolved defects or process changes.
+8. Remove superseded current facts instead of retaining deprecation sections;
+   Git and frozen evidence provide history.
+9. Output a documentation decision table using `create`, `update`, `no-change`,
+   or `follow-up`. Every follow-up includes an Issue, owner, and due date.
+10. Create tracked improvement items for unresolved defects or process changes.
 
 ## Output
 
@@ -35,11 +46,13 @@ description: Close completed GitLab work by capturing lessons and refreshing dur
 
 Completed scope:
 Evidence:
+Released Tag / SHA / Pipeline / deployed environments:
 What worked or failed:
 Durable facts:
 Historical-only notes:
 Files updated:
 Documentation impact:
+Documentation decisions (path / action / reason / status or confirmer):
 Follow-up Issues:
 Human confirmation needed:
 Closure status:

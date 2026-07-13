@@ -9,6 +9,11 @@ flow::fast / flow::standard / flow::hotfix
 
 Closes #
 
+## 目标版本
+
+- Target release / Milestone：
+- 本 MR 是否修改项目版本：否（默认；发布准备 MR 才修改）
+
 ## 变更内容
 
 ## 自测结果
@@ -23,9 +28,14 @@ Closes #
 
 ## 文档影响
 
-- 已更新：
-- 不需要更新，原因：
-- 后续文档 Issue：
+<!--
+动作只能是 create / update / no-change / follow-up。
+follow-up 必须填写 GitLab Issue、负责人和期限。
+-->
+
+| 文档 | 动作 | 原因 | 状态 / 确认人 |
+| --- | --- | --- | --- |
+| | | | |
 
 ## AI 使用范围
 

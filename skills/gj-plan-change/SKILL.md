@@ -10,7 +10,8 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
 1. Read the work item, current labels, `.gj/context.yml`, and known
    constraints. Load only `always_load`, modules matched by expected paths, and
    feature docs linked by the work item. Never scan `docs/iterations/` by
-   default.
+   default. When present, use `docs/standards/12-context-governance.md` as the
+   document lifecycle and content standard.
 2. Resolve exactly one flow label. Recommend a label when missing, but wait for
    human confirmation before treating it as selected.
 3. Scale the plan to the selected flow:
@@ -23,15 +24,33 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
      minimum review, release validation, rollback, and mandatory follow-up.
 4. Match changed or expected paths against `.gj/workflow.yml`. Upgrade Fast to
    Standard or Hotfix when the minimum flow requires it.
-5. Split work only when separate ownership, dependencies, or review boundaries
+5. Plan the target version independently from flow when the work will be
+   released. Use the configured SemVer policy and compatibility impact to
+   recommend Major, Minor, or Patch, then link the Requirement Issue and GitLab
+   Milestone. Treat this as `Target release`, not a released version. Do not
+   bump project manifests or create a Tag during feature planning.
+6. Split work only when separate ownership, dependencies, or review boundaries
    make additional Issues useful.
-6. Cover happy, failure, permission, regression, and release-validation paths
+7. Cover happy, failure, permission, regression, and release-validation paths
    according to risk. Failed checks become Bug Issues rather than hidden notes.
-7. Record documentation impact. When confirmed lasting facts exist and the
-   repository is writable, directly update the applicable requirement, design,
-   solution, test, module, or release docs as part of the current change. Do not
-   create a separate documentation task by default. When facts are unresolved
-   or write access is unavailable, return an exact draft and confirmation item.
+8. Decide documentation at this stage:
+   - create or update a PRD when product behavior, rules, permissions, or
+     acceptance criteria change;
+   - create or update product design/prototype records only when interaction or
+     UI states matter;
+   - create or update a technical solution when an interface, data, permission,
+     architecture, compatibility, rollout, or rollback decision is needed;
+   - create or update a test plan when acceptance or regression coverage is not
+     trivial.
+   Add Source Issue, Target release/Milestone, and direct document links to the
+   applicable feature documents. Update an existing feature document in place
+   instead of creating versioned copies. When confirmed lasting facts exist and
+   the repository is writable,
+   edit the applicable documents in the current change. When facts are
+   unresolved, leave them as drafts and request human confirmation.
+9. End with a documentation decision table. Use only `create`, `update`,
+   `no-change`, or `follow-up`; a follow-up requires an Issue, owner, and due
+   date. Do not create a separate documentation task by default.
 
 ## Output
 
@@ -39,6 +58,7 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
 ## Change Plan
 
 Flow and reason:
+Target release / Milestone and SemVer reason:
 Goal and non-goals:
 Acceptance criteria:
 Technical approach:
@@ -46,6 +66,7 @@ Impact and risk:
 Tasks and dependencies:
 Test coverage:
 Documentation impact:
+Documentation decisions (path / action / reason / status or confirmer):
 Rollout and rollback:
 Human confirmation needed:
 Ready to implement when:

@@ -4,6 +4,8 @@
 
 - Feature:
 - QA owner:
+- Source Issue:
+- Target release:
 - Related PRD:
 - Related solution:
 - Related MR:

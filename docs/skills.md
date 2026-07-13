@@ -75,8 +75,11 @@ comment so GitLab creates the expected Todo and notification.
 
 ## Documentation Impact
 
-Every delivery Skill reports documentation impact. GitLab Issues and MR
-comments hold discussion; repository docs hold durable conclusions.
+Every delivery Skill reports a documentation decision table with the target
+path, one of `create` / `update` / `no-change` / `follow-up`, the reason, and
+the status or human confirmer. A follow-up is valid only with an Issue, owner,
+and due date. GitLab Issues and MR comments hold discussion; repository docs
+hold durable conclusions.
 
 Users do not need to invoke a separate documentation Skill. After durable facts
 are confirmed, `gj-plan-change`, `gj-develop-change`,
@@ -84,6 +87,9 @@ are confirmed, `gj-plan-change`, `gj-develop-change`,
 within the current change when repository writes are available. `gj-mr-review`
 checks that those updates are present. If facts are unresolved or writes are
 unavailable, the Skill returns an exact draft and a human confirmation item.
+Current-fact documents are updated in place; versioned test/release evidence is
+created per version and then frozen. Fast and most single-Issue changes do not
+need an iteration directory.
 
 | Durable change | Document target |
 | --- | --- |
@@ -91,5 +97,19 @@ unavailable, the Skill returns an exact draft and a human confirmation item.
 | UI, user flow, screen state, copy, prototype | `docs/product/designs/<feature>.md`, `docs/product/prototypes/<feature>.md` |
 | Architecture, API, data, permission, rollout, rollback | `docs/technical/solutions/<feature>.md` |
 | Acceptance, regression, permission, release validation | `docs/qa/test-plans/<feature>.md`, `docs/qa/test-reports/<feature>.md` |
-| User-visible release scope or rollback | `docs/releases/<version>.md` |
+| User-visible release scope or rollback | `docs/releases/<tag>.md` |
 | Long-term AI context | `docs/context`, `docs/modules`, `.gj/context.yml`, `docs/iterations/*/ai-context-summary.md` |
+
+## Version Responsibilities
+
+- `gj-workflow-next` recommends a Target release/GitLab Milestone separately
+  from flow; a human confirms both.
+- `gj-plan-change` links the Issue and feature documents to that target.
+- `gj-develop-change` and normal MRs do not bump the repository version.
+- `gj-release-readiness` locks the final SemVer, prepares per-Tag test/release
+  evidence, and checks it before the human Tag decision.
+- `gj-close-loop` records the actual Tag, SHA, Pipeline, environment, and
+  deployment validation. A Milestone is never reported as released.
+
+See `docs/versioning.md` and the installed
+`docs/standards/13-versioning-standard.md`.
