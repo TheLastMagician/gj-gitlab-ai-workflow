@@ -1,37 +1,37 @@
-# Environment Deployment Policy
+# 环境部署策略
 
-Use this reference when deciding whether to deploy a branch or MR to a non-production environment.
+判断是否把分支或 MR 部署到非生产环境时使用本参考资料。
 
-## Default Model
+## 默认模型
 
-- Dev is fast and may be automatic.
-- Shared test is stable and requires human confirmation.
-- Production is outside this skill and belongs to release governance.
+- 开发环境追求速度，可以自动部署。
+- 共享测试环境追求稳定，需要人工确认。
+- 生产环境不属于本 Skill，由发布治理负责。
 
-## Required Record For Shared Test
+## 共享测试环境必填记录
 
-Before deploying to shared test, record:
+部署到共享测试环境前记录：
 
-- target environment
-- source branch or MR
+- 目标环境
+- 来源分支或 MR
 - commit SHA
-- pipeline URL and status
-- deploy requester
-- deploy approver when different
-- previous deployed version
-- rollback command or rollback target
-- expected QA owner and test window
+- Pipeline URL 和状态
+- 部署申请人
+- 不同时的部署批准人
+- 上一个已部署版本
+- 回滚命令或回滚目标
+- 预期 QA 负责人和测试窗口
 
-After deploying, record:
+部署后记录：
 
-- deployment time
-- deployed version
-- deployment job URL
-- smoke result
-- QA status
-- whether the environment should be restored to baseline
+- 部署时间
+- 已部署版本
+- 部署 Job URL
+- 冒烟结果
+- QA 状态
+- 是否需要把环境恢复到基线
 
-## GitLab CI Pattern
+## GitLab CI 模式
 
 ```yaml
 stages:
@@ -66,4 +66,4 @@ deploy_test:
     - ./scripts/deploy_test.sh
 ```
 
-If the project has only one test environment, do not deploy every MR branch there automatically.
+项目只有一个测试环境时，不要把每个 MR 分支自动部署到该环境。

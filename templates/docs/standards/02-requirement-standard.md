@@ -1,4 +1,4 @@
-# Requirement Standard
+# 需求规范
 
 字段的权威定义是 `.gitlab/issue_templates/Requirement.md`,本标准不重复
 字段清单,只规定模板管不了的原则:
@@ -16,5 +16,5 @@
 
 - 字段完整性:需求助理 agent 检查(补齐草稿时标出缺失字段)。
 - 可测试性与反例:决策门 1(PM 确认需求)人工确认。
-- 产品事实确认后:更新语义化 PRD 的 Owner、Status、Source Issue、Target release、
-  Effective from、Implemented by、Related documents 和 Last verified。
+- 产品事实确认后：更新语义化 PRD 的负责人、状态、来源 Issue、目标版本、生效范围、
+  实现 MR、相关文档和最后核验日期。

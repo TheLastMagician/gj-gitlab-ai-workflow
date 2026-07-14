@@ -1,19 +1,19 @@
-# Demo Run Reference
+# 示例演练参考
 
-The first run did not need a production hotfix, but it clarified boundaries.
+首次演练不需要生产 Hotfix，但明确了边界。
 
-Use hotfix only for:
+Hotfix 只用于：
 
-- P0/P1 production incidents.
-- security risk.
-- release blockers.
-- data damage.
-- core workflow unavailable.
+- P0/P1 生产故障。
+- 安全风险。
+- 发布阻塞。
+- 数据损坏。
+- 核心流程不可用。
 
-Even when moving fast, require:
+即使紧急处理，也必须有：
 
-- minimal human review.
-- release validation.
-- rollback.
-- post-fix root cause.
-- tests and context updates.
+- 最低人工审阅。
+- 发布验证。
+- 回滚方案。
+- 修复后根因分析。
+- 测试和上下文更新。

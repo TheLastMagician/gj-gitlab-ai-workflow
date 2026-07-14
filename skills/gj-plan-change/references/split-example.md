@@ -1,15 +1,14 @@
-# Demo Run Reference
+# 示例演练参考
 
-The historical first run split one requirement into:
+历史首次演练把一个需求拆为：
 
-- #3 solution.
-- #4 development task.
-- #5 test issue.
-- #6 bug issue after QA failure.
-- #7 release issue.
-- #8 retro issue.
+- #3 方案。
+- #4 开发任务。
+- #5 测试 Issue。
+- #6 QA 失败后的缺陷 Issue。
+- #7 发布 Issue。
+- #8 复盘 Issue。
 
-That split exposed excess process for a small demo. Under the current rule,
-Requirement #2 remains the main work item; Solution, Task, and Test Issues are
-created only when they have separate owners, dependencies, schedules, or
-tracking value. Release, Bug, and Retro Issues still serve distinct purposes.
+该拆分对小型示例显得流程过重。按当前规则，Requirement #2 保持为主工作项；只有存在
+独立负责人、依赖、排期或跟踪价值时才创建 Solution、Task 和 Test Issue。Release、Bug
+和 Retro Issue 仍有各自独立用途。

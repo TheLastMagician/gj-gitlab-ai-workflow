@@ -1,4 +1,4 @@
-# Hotfix Issue
+# 紧急修复 Issue
 
 /label ~"type-hotfix" ~"flow::hotfix"
 

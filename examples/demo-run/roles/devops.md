@@ -1,26 +1,25 @@
-# DevOps Role
+# DevOps 角色
 
-## Input
+## 输入
 
 - Release Issue #7
 - `.gitlab-ci.yml`
 - `scripts/policy_check.py`
 - `scripts/smoke_check.py`
 
-## Output
+## 输出
 
-Release checklist:
+发布清单：
 
-- CI has `policy` and `test` stages.
-- `policy_check.py` verifies the unique flow label, MR evidence, high-risk
-  changed files, and committed secrets.
-- `smoke_check.py` runs demo unit tests.
-- Rollback is reverting the MR.
+- CI 包含 `policy` 和 `test` 阶段。
+- `policy_check.py` 校验唯一 flow 标签、MR 证据、高风险变更文件和已提交秘密。
+- `smoke_check.py` 运行示例单元测试。
+- 回滚方式是回退 MR。
 
-## Manual Confirmation
+## 人工确认
 
-Needs GitLab UI or admin API confirmation:
+需要 GitLab UI 或管理员 API 确认：
 
-- Default branch is protected.
-- Merge requires successful pipeline.
-- Discussions must be resolved before merge.
+- 默认分支已保护。
+- Pipeline 成功后才能合并。
+- 合并前必须解决讨论。

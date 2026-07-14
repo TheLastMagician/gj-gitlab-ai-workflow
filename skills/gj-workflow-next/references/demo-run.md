@@ -1,18 +1,18 @@
-# Demo Run Reference
+# 示例演练参考
 
-First-run stage trace:
+首次演练阶段轨迹：
 
-1. Bootstrap assets.
-2. Choose Standard and plan the change.
-3. Develop with focused context and tests.
-4. Review the MR and confirm merge readiness.
-5. Prepare release readiness.
-6. Close the loop and refresh durable context.
+1. 初始化资产。
+2. 选择 Standard 并规划变更。
+3. 使用聚焦上下文和测试开发。
+4. 审阅 MR 并确认合并就绪度。
+5. 准备发布证据。
+6. 闭环并刷新长期上下文。
 
-When asked "what next", inspect evidence in this order:
+被问到“下一步是什么”时，按以下顺序检查证据：
 
-1. Git status.
-2. Open MR and latest pipeline.
-3. Current Issue labels and comments.
-4. Missing required artifacts.
-5. Human confirmation points.
+1. Git 状态。
+2. 开放 MR 和最新 Pipeline。
+3. 当前 Issue 标签和评论。
+4. 缺失的必要产物。
+5. 人工确认点。

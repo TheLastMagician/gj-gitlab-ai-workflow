@@ -1,8 +1,6 @@
-# Security Standard
+# 安全规范
 
-- Do not send secrets, tokens, certificates, customer private data, or raw
-  production logs to AI.
-- Mask sensitive values before writing comments or docs.
-- Auth, permission, and orchestrator changes cannot use `flow::fast`. Require
-  Standard or Hotfix evidence and a human with merge permission to make the
-  final merge decision.
+- 不得向 AI 发送秘密、令牌、证书、客户隐私数据或未经处理的生产日志。
+- 在评论或文档中写入敏感值前必须脱敏。
+- 认证、权限和编排器变更不能使用 `flow::fast`。必须提供 Standard 或 Hotfix 证据，
+  并由有合并权限的人作出最终合并决定。

@@ -1,15 +1,15 @@
-# Reviewer Role
+# 代码审阅角色
 
-## Input
+## 输入
 
-- MR description in `examples/demo-run/mr/merge-request.md`
-- Changed files in `examples/demo-run/mr/changed-files.txt`
-- Rule map in `.gj/workflow.yml`
+- `examples/demo-run/mr/merge-request.md` 中的 MR 描述
+- `examples/demo-run/mr/changed-files.txt` 中的变更文件
+- `.gj/workflow.yml` 中的规则地图
 
-## AI Review Output
+## AI 审阅输出
 
 ```markdown
-## MR Review
+## MR 审阅
 
 变更摘要：新增 GitLab AI 工作流骨架、demo 项目、demo-run 产物和首批 skill 草案。
 
@@ -24,6 +24,6 @@
 - 验证 skill metadata。
 ```
 
-## Human Confirmation
+## 人工确认
 
-Reviewer accepts the MR only if CI passes and the token helper remains untracked.
+只有 CI 通过且 Token helper 保持未跟踪时，Reviewer 才接受 MR。

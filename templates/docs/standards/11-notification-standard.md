@@ -1,42 +1,37 @@
-# Notification And Handoff Standard
+# 通知和交接规范
 
-## Principles
+## 原则
 
-- GitLab is the source of truth for workflow responsibility.
-- Enterprise WeCom, email, or other company channels may deliver GitLab
-  notifications, but they are not the workflow state store.
-- AI may help a human inspect, summarize, assign, mention, and route work. AI
-  must not treat notification delivery as approval, merge permission, or deploy
-  permission.
+- GitLab 是流程责任的唯一事实源。
+- 企业微信、邮件或其他公司渠道可以投递 GitLab 通知，但不保存流程状态。
+- AI 可以帮助人检查、总结、指派、提醒和路由工作，但不能把通知已送达视为批准、
+  合并权限或部署权限。
 
-## Complete Handoff
+## 完整交接
 
-A handoff to a human is complete only when the GitLab item has:
+只有 GitLab 工作项满足以下条件，才算完成向人的交接：
 
-- A responsible assignee, or a reviewer for MR review.
-- A workflow label or status.
-- A comment that mentions the next human with `@username` when notification is
-  expected.
-- A specific requested action.
-- A milestone or due date when timing matters.
+- 有明确的负责人；MR 审阅有 Reviewer。
+- 有流程标签或状态。
+- 需要通知时，评论中使用 `@username` 提及下一位处理人。
+- 写明具体需要执行的动作。
+- 时间重要时设置里程碑或截止日期。
 
-## Inbox Source
+## 待办来源
 
-Use GitLab API data for personal workflow inboxes:
+个人流程待办使用 GitLab API 数据：
 
-- GitLab Todos.
-- Assigned Issues.
-- Assigned MRs.
-- Review-requested MRs.
-- Mentions and unresolved discussions.
-- Failed or blocked pipelines linked to the person's active work.
+- GitLab Todo。
+- 分配给当前用户的 Issue。
+- 分配给当前用户的 MR。
+- 请求当前用户审阅的 MR。
+- 提及和未解决讨论。
+- 与当前用户活跃工作关联的失败或阻塞 Pipeline。
 
-Do not build a separate email/Enterprise WeCom inbox reader unless the project
-explicitly needs non-GitLab tasks. When notification delivery seems missing,
-first check assignment, reviewer, mention, and GitLab notification settings.
+除非项目明确需要处理 GitLab 之外的任务，否则不要另建邮件或企业微信待办读取器。通知
+似乎未送达时，先检查 assignee、reviewer、提及和 GitLab 通知设置。
 
-## Bootstrap Responsibility
+## 初始化责任
 
-`gj-workflow-bootstrap` installs `.gj/workflow.yml`. Project maintainers must
-replace placeholder users with real GitLab usernames before relying on workflow
-handoffs.
+`gj-workflow-bootstrap` 会安装 `.gj/workflow.yml`。依赖流程交接前，项目维护者必须把
+占位用户替换为真实 GitLab 用户名。

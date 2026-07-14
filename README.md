@@ -33,7 +33,7 @@ python scripts/install_skills.py --agent all --project-root C:\path\to\your-proj
 `gj-workflow-bootstrap` 初始化本项目。bootstrap Skill 自带 GitHub 引导器，即使业务
 项目里还没有 `scripts/install_workflow.py`，也能获取同源模板并完成非破坏式安装。
 
-## GitLab Access Token 怎么配置
+## GitLab 访问令牌怎么配置
 
 只安装 Skill、生成计划或处理本地代码不需要 Token。以下操作需要连接真实 GitLab：
 
@@ -165,6 +165,69 @@ python scripts/install_workflow.py --target C:\path\to\your-project
 - 企业微信、邮箱等只是 GitLab 通知投递渠道。
 - 个人待办统一由 `gj-workflow-next` 通过 GitLab API 读取，不绕到邮件里解析。
 
+## 项目文档体系
+
+仓库文档只保存后续迭代仍要依赖的稳定结论。需求讨论、任务分工、审批过程、临时测试记录
+和状态流转留在 GitLab Issue/MR；不要在仓库里再建一份 Issue 文档。Git 已经保存每次
+文档修改的历史，因此长期文档维护“当前完整事实”，不使用 `v2`、`final`、`new` 等副本。
+
+### 有哪些文档，放在哪里
+
+| 文档 | 规范路径 | 什么时候创建或更新 | 生命周期 |
+| --- | --- | --- | --- |
+| 产品需求 | `docs/product/requirements/<capability>.md` | 产品行为、业务规则、权限或验收标准变化时 | 按能力原地更新，保留当前完整要求 |
+| 产品设计 | `docs/product/designs/<capability>.md` | 用户流程、页面状态或交互变化时 | 按能力原地更新 |
+| 原型记录 | `docs/product/prototypes/<capability>.md` | 存在原型或需要保存评审结论时 | 记录原型链接、版本和评审结论，不复制原型文件 |
+| 技术方案 | `docs/technical/solutions/<capability>.md` | 架构、兼容、发布、监控或回滚需要设计时 | 按能力原地更新 |
+| API 契约 | 机器契约 + `docs/technical/apis/<domain>.md` | 端点、事件、字段、错误、权限或兼容语义变化时 | schema 与说明文档在同一 MR 成对更新 |
+| 数据库设计 | schema/migration + `docs/technical/database/<domain>.md` | 结构、字段含义、约束、迁移或恢复策略变化时 | 执行事实与说明文档在同一 MR 成对更新 |
+| 架构决策记录 | `docs/technical/decisions/ADR-<编号>-<主题>.md` | 存在长期、跨边界且有取舍的技术决策时 | 确认后冻结；后续变化新建 ADR 并关联旧决策 |
+| 模块文档 | `docs/modules/<module>.md` | 模块职责、业务规则、状态或契约变化时 | 在实现 MR 中原地更新；Fast 也不能豁免 |
+| 测试计划 | `docs/qa/test-plans/<capability>.md` | 验收、回归、权限、数据或发布验证不平凡时 | 作为长期测试基线原地更新 |
+| 测试报告 | `docs/qa/test-reports/<tag>.md` | 执行正式 QA 或准备发布时 | 按 Tag 新建，发布完成后冻结 |
+| 发布说明 | `docs/releases/<tag>.md` | 存在用户、运维、配置、数据、权限或回滚影响时 | 按 Tag 新建，发布完成后冻结 |
+| 当前状态 | `docs/context/current-state.md` | 实际版本、环境、全局约束或项目状态变化时 | 只保留当前事实，原地更新 |
+| 模块地图和术语 | `docs/context/module-map.md`、`docs/context/glossary.md` | 模块边界、路径或统一术语变化时 | 原地更新，并同步 `.gj/context.yml` |
+
+模板统一安装在 `.gj/doc-templates/`。新文档从对应模板创建，但必须换成有业务含义的
+文件名；模板目录是工作流资产，不是项目事实。不是每个需求都要把所有模板填一遍，只有
+触发事实发生变化的文档才创建或更新。
+
+### 按什么规范创建和维护
+
+长期事实文档统一使用中文标题、中文表头和中文元数据字段；路径、Skill 名、GitLab
+对象名和机器枚举可以保留英文。功能文档至少包含以下元数据：
+
+```markdown
+## 元数据
+
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
+```
+
+`draft` 表示仍待对应决策门确认，`confirmed` 表示内容已经由责任人确认；它们不表示
+已经部署。测试报告和发布说明使用各自模板中的版本证据字段和状态枚举。
+
+文档流转遵守六条规则：
+
+1. GitLab Issue/MR 保存“这次为什么改、怎么讨论、谁处理”；仓库文档保存“现在规则是什么”。
+2. 产品、技术、模块和测试计划按能力或领域原地更新；过时内容直接删，历史由 Git 保存。
+3. 测试报告和发布说明按 Tag 新建并冻结；一次发布对应一组可追溯证据。
+4. API schema、数据库 migration 等机器事实必须与说明文档在同一 MR 更新。
+5. 每个执行 Skill 输出“文档决策”表，动作只能是 `create`、`update`、`no-change`
+   或 `follow-up`；`follow-up` 必须给出 Issue、负责人和期限。
+6. `.gj/context.yml` 只列 AI 默认需要读取的当前事实；文档路径或模块边界变化时同步更新。
+
+完整字段、触发条件和责任人规则见
+[可持续文档与 AI 上下文治理](docs/documentation-governance.md)。安装到业务项目后的团队
+规范位于 `docs/standards/12-context-governance.md`。
+
 ## 一个新需求怎么流转
 
 新需求可以直接用自然语言交给 `gj-workflow-next`。它识别这是新工作，推荐 flow，
@@ -191,7 +254,7 @@ python scripts/install_workflow.py --target C:\path\to\your-project
 flowchart TD
   A["需求提出人 / PdM<br/>描述新需求或选择 GitLab 待办"] --> B["任意成员 + gj-workflow-next<br/>识别阶段、推荐 flow 和下一步"]
   B --> C{"需求责任人 / Dev Lead<br/>确认需求、flow 和目标 Milestone"}
-  C -- "flow::standard" --> D["PdM + Dev Lead / gj-plan-change<br/>验收、方案、测试和 Target release"]
+  C -- "flow::standard" --> D["PdM + Dev Lead / gj-plan-change<br/>验收、方案、测试和目标版本"]
   C -- "flow::fast" --> DF["Dev / gj-plan-change<br/>极简边界、自测和文档影响"]
   C -- "flow::hotfix" --> DH["Dev Lead + Dev / gj-plan-change<br/>最小修复、验证和回滚"]
   D --> E["Dev / gj-develop-change<br/>实现、测试并更新随改文档"]
@@ -208,16 +271,15 @@ flowchart TD
   L --> M["PM + Dev Lead / gj-close-loop<br/>回写实际 Tag/SHA/环境和长期上下文"]
 ```
 
-| 阶段 | 角色 | 使用 skill | 产物 |
+| 步骤 | GitLab 动作 | 仓库文档产物 | 人工确认 |
 | --- | --- | --- | --- |
-| 入口和分流 | 任意成员（Member） | `gj-workflow-next` | 待办、flow 建议、阻塞项和下一步；人确认标签 |
-| 变更计划 | 产品经理（PdM）/开发经理（Dev Lead） | `gj-plan-change` | 验收和按影响形成的产品、技术、API、数据库、测试文档草案及回滚计划 |
-| 开发和修复 | 开发（Dev） | `gj-develop-change` | 功能、Fast 改动、Bug 或 Hotfix 的实现、测试和文档 |
-| MR 审阅 | 代码审阅（Reviewer） | `gj-mr-review` | 按严重级别排列的问题和合并就绪结论 |
-| 合并 | 合并（Maintainer） | GitLab | 人检查证据并决定、执行合并 |
-| 发布准备 | 运维（DevOps）/测试（QA） | `gj-release-readiness` | 最终 SemVer、版本测试报告、发布说明、环境、验证和回滚 |
-| 发布 | 运维（DevOps）/Maintainer | GitLab CI/CD | 人决定、执行发布 |
-| 收尾 | 项目经理（PM）/开发经理（Dev Lead） | `gj-close-loop` | 实际 Tag/SHA/部署版本、复盘、长期文档和 context 更新 |
+| 需求进入 | 先整理 Issue 草稿；人确认需求和 flow 后再创建 Requirement/Hotfix Issue，Fast 按规则可只写 MR | 暂不创建文档，只判断受影响的长期事实 | 确认需求来源、唯一 flow 和目标 Milestone |
+| 需求确认 | 在主 Issue 补齐目标、非目标、验收标准和反例 | 产品行为变化时创建或更新 PRD；有交互变化时更新设计和原型记录 | 产品经理确认需求和产品文档 |
+| 方案确认 | 在主 Issue 评审方案；只有独立负责人或排期需要时才拆子 Issue | 按影响创建或更新技术方案、API 契约、数据库设计、ADR 和测试计划 | 开发经理确认方案；QA 确认测试基线 |
+| 开发 | 创建分支并持续回写主 Issue；准备 MR | 实现代码；在同一 MR 更新模块文档以及所有受影响的长期事实文档 | 开发确认实现、自测和文档决策完整 |
+| MR 审阅 | MR 沿用同一 flow 和 Milestone；核对 Pipeline、讨论和差异 | 通常不新建文档；发现实现与文档不一致时在原 MR 修正 | Reviewer 确认代码、测试和文档一致；Maintainer 决定合并 |
+| QA 和发布准备 | Release Issue/Milestone 汇总实际 MR，锁定 Tag 和发布范围 | 按 Tag 创建测试报告；有发布影响时创建发布说明 | QA 确认测试结论；DevOps/Maintainer 决定 Tag 和发布 |
+| 发布和收尾 | 记录 Tag、commit、Pipeline、环境和验证结果；未完成项建后续 Issue | 回写发布说明、`current-state.md`；路径变化时更新 `.gj/context.yml` | 项目经理/开发经理确认长期事实已闭环 |
 
 每个节点完成后，都要在 GitLab 上设置下一个处理人的 assignee/reviewer，并用
 `@username` 评论交接。被指派的人可以用 `gj-workflow-next` 查看自己的待办，再进入
@@ -270,7 +332,7 @@ flowchart TD
 
 ## 常用 skill 使用场景
 
-| Skill | 什么时候用 |
+| Skill 名 | 什么时候用 |
 | --- | --- |
 | `gj-workflow-bootstrap` | 新项目接入，安装并检查标签、模板、上下文和 CI 配置 |
 | `gj-codebase-map` | 旧项目第一次接入或大型重构后刷新代码库上下文 |
@@ -281,47 +343,13 @@ flowchart TD
 | `gj-release-readiness` | 准备环境、发布说明、验证、监控和回滚证据 |
 | `gj-close-loop` | 完成后复盘并更新长期文档和 AI 上下文 |
 
-## 文档与上下文怎么持续迭代
-
-文档随需求阶段更新，不是在发布后一次性补，也不是每个需求都复制一套模板：
-
-| 阶段 | 使用 Skill | 文档动作 |
-| --- | --- | --- |
-| 需求确认 | `gj-plan-change` | 产品行为变化更新 PRD；有交互再更新设计/原型 |
-| 方案和测试设计 | `gj-plan-change` | 有技术决策更新方案；测试不平凡更新测试计划 |
-| 开发 | `gj-develop-change` | 行为、契约或规则变化时，在同一 MR 更新模块/当前事实文档 |
-| MR 审阅 | `gj-mr-review` | 核对代码、测试、文档决策和实际 diff 是否一致 |
-| QA/发布 | `gj-release-readiness` | 正式 QA 写测试报告；有用户/运维影响写发布说明 |
-| 收尾 | `gj-close-loop` | 按需更新 current state、长期文档和 context index；复盘留在 GitLab Retro Issue |
-
-规则只有四条：
-
-1. Issue/MR 保存本次讨论和过程；当前事实文档原地更新，过时内容直接删，Git 负责历史。
-2. 测试报告和发布说明按版本新增，完成后冻结；过程与讨论只保留在 GitLab，
-   不在仓库中重复保存。
-3. 每个执行 Skill 都输出“文档决策”表，逐项说明 `create`、`update`、`no-change` 或
-   `follow-up`。人只确认事实，不需要背文档路径；Reviewer 按表核对。
-4. Requirement/Hotfix 是主工作项；Solution/Task/Test Issue 只按协作需要拆分，不能
-   替代仓库中的长期方案或测试文档。新文档从 `.gj/doc-templates/` 创建并使用语义名。
-
-AI 仍通过 `.gj/context.yml` 渐进加载：先读当前 Issue/MR 和 3 个全局事实文件，再按
-changed paths 读取对应模块和明确链接的功能文档；默认不扫描历史。
-
-三种 flow 的文档深度也不同：Fast 默认只写 MR 证据，但业务规则变化不能免模块文档；
-Standard 按实际影响更新 PRD/方案/测试；Hotfix 先止血，发布后补回归证据和当前事实。
-
-完整的拆分原则、读取/写入算法和各 Skill 文档职责见
-[可持续文档与 AI 上下文治理](docs/documentation-governance.md)。安装到业务项目后的
-团队标准位于 `docs/standards/12-context-governance.md`；发布回写清单由
-`docs/standards/06-release-standard.md` 定义并由人确认。
-
 ## Git 项目版本怎么流转
 
 版本不是每个 MR 自增。以当前生产 `v1.2.3`、新功能目标 `v1.3.0` 为例：
 
 ```text
 Requirement Issue + Milestone v1.3.0
-  -> PRD / 方案 / 测试计划记录 Target release v1.3.0
+  -> PRD / 方案 / 测试计划记录目标版本 v1.3.0
   -> 功能 MR 沿用 Milestone，不修改项目版本
   -> release-readiness 锁定 v1.3.0
   -> docs/qa/test-reports/v1.3.0.md
@@ -333,7 +361,7 @@ Requirement Issue + Milestone v1.3.0
 
 - GitLab Milestone 是可调整的目标版本；Git Tag 才是仓库已发布版本事实。
 - 默认 SemVer：不兼容改动升 Major，新功能升 Minor，修复升 Patch；flow 不决定版本号。
-- PRD/方案/模块文档原地更新，只记录 Target release；测试报告和发布说明按 Tag 新建。
+- PRD/方案/模块文档原地更新，只记录目标版本；测试报告和发布说明按 Tag 新建。
 - 普通 MR 没有版本硬门禁。只有 Tag Pipeline 硬检查 Tag 格式、发布说明存在且
   Version/Tag 一致，避免错版进入构建和部署。
 - 项目已有 `package.json`、`pyproject.toml`、`pom.xml` 等 manifest 时只在发布准备阶段

@@ -23,13 +23,13 @@ Requirement 或 Hotfix Issue 是一次变更的主工作项。Solution、Task、
 
 | 阶段 | Skill | 仓库文档动作 | 完成标志 |
 | --- | --- | --- | --- |
-| 入口 | `gj-workflow-next` | 只列预期文档影响 | 人确认 flow、Target release 和主工作项 |
+| 入口 | `gj-workflow-next` | 只列预期文档影响 | 人确认 flow、目标版本和主工作项 |
 | 需求确认 | `gj-plan-change` | 产品变化更新 PRD；交互变化更新设计/原型 | PdM 确认需求事实 |
 | 方案/测试设计 | `gj-plan-change` | 按影响更新方案、API、数据库、ADR 和测试计划 | Dev Lead/QA 确认可实施、可验证 |
 | 开发 | `gj-develop-change` | 代码、测试和受影响长期文档在同一 MR 更新 | 分支文档与分支代码一致 |
 | MR 审阅 | `gj-mr-review` | 通常不新建；发现差异在原 MR 修正 | Reviewer 核对决策表和实际 diff |
 | QA/发布 | `gj-release-readiness` | 按 Tag 生成测试报告和发布说明 | 发布证据足以让人决策 |
-| 收尾 | `gj-close-loop` | 回写实际 Tag/SHA/环境和当前事实，冻结证据 | 未解决项都有 Issue、Owner 和期限 |
+| 收尾 | `gj-close-loop` | 回写实际 Tag/SHA/环境和当前事实，冻结证据 | 未解决项都有 Issue、负责人和期限 |
 
 `confirmed` 只表示相应责任人确认了规范，不等于已经部署。生产事实必须由 Git Tag、
 commit SHA、Pipeline、Environment 和 `current-state.md` 共同证明。
@@ -72,20 +72,20 @@ docs/releases/<tag>.md
 当前产品、技术、模块和测试计划文档至少包含：
 
 ```markdown
-- Owner:
-- Status: draft | confirmed
-- Source Issue:
-- Target release:
-- Effective from:
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft | confirmed
+- 来源 Issue：
+- 目标版本：
+- 生效范围：
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 ```
 
 正文描述当前完整事实，不写“本次新增了什么”的变更流水账。API 结构优先以 OpenAPI、
 AsyncAPI、protobuf 等机器契约为事实源；数据库结构以 schema/model/migration 为执行事实
 源，Markdown 解释业务语义、权限、不变量、兼容、迁移和恢复。计划、实现摘要和 MR
-文档决策必须同时写出可执行路径与 Markdown 路径；未知路径要写 `TBD + Owner`。
+文档决策必须同时写出可执行路径与 Markdown 路径；未知路径要写 `TBD + 负责人`。
 
 测试报告状态使用 `draft/passed/failed/blocked`，发布说明使用
 `draft/ready/released/rolled-back`。版本证据关闭后冻结；当前事实过时时直接修改或删除，
@@ -108,4 +108,4 @@ AsyncAPI、protobuf 等机器契约为事实源；数据库结构以 schema/mode
 
 安装到业务项目后的完整内容契约、各类文档必填正文、责任人和结构审计规则位于
 `docs/standards/12-context-governance.md`。`context_freshness_check.py` 默认只告警，
-专项治理时使用 `--strict`；内容正确性仍由对应 Owner 确认。
+专项治理时使用 `--strict`；内容正确性仍由对应负责人确认。

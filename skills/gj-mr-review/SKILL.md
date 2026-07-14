@@ -3,78 +3,63 @@ name: gj-mr-review
 description: Review GitLab merge requests for workflow compliance, code risks, test and documentation gaps, and merge readiness. Use when an MR is opened, marked ready, has review feedback, or needs a decision-ready report before a human chooses whether to merge.
 ---
 
-# GJ MR Review
+# GJ 合并请求审阅
 
-## Workflow
+## 工作流程
 
-1. Read MR title, description, linked Issues, diff, pipeline result, and comments.
-2. Check required MR sections:
-   - linked Issue.
-   - change summary.
-   - self-test.
-   - risks.
-   - rollback.
-   - database/config changes.
-   - AI usage.
-3. Match changed paths against `.gj/workflow.yml`.
-4. Load relevant module context from `.gj/context.yml`.
-5. Check documentation impact:
-   - MR description or Skill result includes a documentation decision table
-     with path, action, triggering fact, stage/status, and confirmer/follow-up;
-   - each action is `create`, `update`, `no-change`, or `follow-up`, and every
-     follow-up has an Issue, owner, and due date;
-   - the table agrees with the actual diff and changed behavior;
-   - product, interaction, API/event, database, architecture/ADR, module rule,
-     test baseline, release, and runtime-state impacts were considered;
-   - machine contracts/migrations, explanatory docs, implementation, and tests
-     agree, and both executable and explanatory paths are named;
-   - new current-fact docs use semantic filenames and required metadata rather
-     than template names;
-   - GitLab Solution/Task/Test Issues are not treated as substitutes for
-     durable repository docs.
-6. Check version traceability: the Issue, MR, and feature docs use the same
-   Target release/Milestone; a normal feature MR does not create a Tag or bump
-   project manifests without explicit release scope. For release-preparation
-   MRs, verify the final SemVer, release note path, included work, tests, and
-   rollback evidence.
-7. Review code for bugs, regressions, missing tests, and missing docs.
-8. Check merge readiness: open non-draft MR, successful head pipeline, resolved
-   discussions, valid flow evidence, linked Issue when required, test evidence,
-   and rollback readiness.
-9. Lead with findings ordered by severity. Keep summaries secondary.
-10. Stop at the human gate. Never approve, merge, deploy, force, skip CI, or
-   bypass unresolved discussions.
+1. 读取 MR 标题、描述、关联 Issue、diff、Pipeline 结果和评论。
+2. 检查 MR 必填章节：关联 Issue、变更摘要、自测、风险、回滚、数据库/配置变化、AI 使用。
+3. 根据 `.gj/workflow.yml` 匹配变更路径。
+4. 从 `.gj/context.yml` 加载相关模块上下文。
+5. 检查文档影响：
+   - MR 描述或 Skill 结果包含文档决策表，含路径、动作、触发事实、阶段/状态和确认人/
+     跟进项；
+   - 动作是 `create`、`update`、`no-change` 或 `follow-up`，且每个 `follow-up` 都有
+     Issue、负责人和期限；
+   - 决策表与实际 diff 和行为变化一致；
+   - 已考虑产品、交互、API/事件、数据库、架构/ADR、模块规则、测试基线、发布和运行
+     状态影响；
+   - 机器契约/migration、说明文档、实现和测试一致，并列出可执行与说明路径；
+   - 新当前事实文档使用语义文件名和必填元数据，不使用模板名；
+   - GitLab Solution/Task/Test Issue 没有被当成仓库长期文档的替代品。
+6. 检查版本追溯：Issue、MR 和功能文档使用同一目标版本/Milestone；普通功能 MR 不在
+   没有明确发布范围时创建 Tag 或提升 manifest 版本。发布准备 MR 要核验最终 SemVer、
+   发布说明路径、包含工作、测试和回滚证据。
+7. 审阅代码中的缺陷、回归、测试缺口和文档缺口。
+8. 检查合并就绪度：MR 已打开且非草稿、head Pipeline 成功、讨论已解决、flow 证据有效、
+   必要时已关联 Issue、测试证据完整、回滚已准备。
+9. 先按严重级别列出发现，摘要放在后面。
+10. 停在人工决策门。不得批准、合并、部署、强制操作、跳过 CI 或绕过未解决讨论。
 
-## Output
+## 输出格式
 
 ```markdown
-## MR Review
+## MR 审阅
 
-Findings:
+问题：
 
-Workflow policy:
+流程策略：
 
-Risk paths:
+风险路径：
 
-Target release / version traceability:
+目标版本/版本追溯：
 
-Test gaps:
+测试缺口：
 
-Documentation gaps:
+文档缺口：
 
-Documentation decision verification:
+文档决策核验：
 
-Context updates needed:
+需要更新的上下文：
 
-Merge readiness:
+合并就绪度：
 
-Open questions:
+待确认问题：
 
-Summary:
+摘要：
 ```
 
-## References
+## 参考资料
 
-- Read `references/demo-run.md` for the first MR review example.
-- Read `references/gitlab-readiness.md` when live MR and pipeline evidence is
-  needed.
+- 需要首次 MR 审阅示例时读取 `references/demo-run.md`。
+- 需要真实 MR 和 Pipeline 证据时读取 `references/gitlab-readiness.md`。

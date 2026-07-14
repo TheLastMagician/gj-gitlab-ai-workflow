@@ -1,13 +1,12 @@
-# Bug Fix Record
+# 缺陷修复记录
 
-## Root Cause
+## 根因
 
-The first implementation only validated that an order was `pending`. It did not
-compare `order.applicant` with the acting `approver`.
+首版只校验订单为 `pending`，没有比较 `order.applicant` 与当前 `approver`。
 
-## Fix
+## 修复
 
-Add:
+新增：
 
 ```python
 def _ensure_not_self_approval(order: Order, approver: str) -> None:
@@ -15,9 +14,9 @@ def _ensure_not_self_approval(order: Order, approver: str) -> None:
         raise OrderApprovalError("applicant cannot approve their own order")
 ```
 
-Call it from both `approve` and `reject`.
+在 `approve` 和 `reject` 中调用。
 
-## Regression
+## 回归
 
 - `test_applicant_cannot_approve_own_order`
-- Non-applicant approval still passes.
+- 非申请人审批仍然通过。

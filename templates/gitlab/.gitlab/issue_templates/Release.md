@@ -2,10 +2,10 @@
 
 ## 版本
 
-- Final version：
+- 最终版本：
 - GitLab Milestone：
-- Planned Tag：
-- Source commit：
+- 计划 Tag：
+- 来源提交：
 - Pipeline：
 
 ## 发布范围
@@ -14,7 +14,7 @@
 
 ## 测试结论
 
-## Test Report
+## 测试报告
 
 - `docs/qa/test-reports/<tag>.md`
 
@@ -22,7 +22,7 @@
 
 ## 数据库变更
 
-## Release Note
+## 发布说明
 
 - `docs/releases/<tag>.md`
 

@@ -1,19 +1,13 @@
-# Review Standard
+# 代码审阅规范
 
-- Confirm linked Issue and acceptance criteria.
-- Check risk paths from `.gj/workflow.yml`.
-- Verify self-test and rollback notes.
-- Verify the documentation decision table includes path, action, triggering
-  fact, stage/status, and confirmer/follow-up, then compare it with the actual
-  diff and durable behavior. Blank rows are not evidence; every follow-up needs
-  an Issue, owner, and due date.
-- Check product, interaction, API/event, database, architecture/ADR, module
-  rule, test baseline, release, and runtime-state impact. GitLab child Issues do
-  not replace durable repository docs.
-- Treat the MR label and actual changed files as the final risk facts; the Issue
-  records the initial plan.
-- On GitLab CE, use protected branches, restricted merge permissions, and a
-  successful Pipeline for hard enforcement. CODEOWNERS or an optional Approve
-  action may guide review but are not mandatory approval evidence.
-- Keep AI review advisory by default. Humans may use AI to assist approval and
-  merge operations after they explicitly decide to proceed.
+- 确认关联 Issue 和验收标准。
+- 根据 `.gj/workflow.yml` 检查风险路径。
+- 核验自测和回滚说明。
+- 核验文档决策表包含路径、动作、触发事实、阶段/状态和确认人/跟进项，再与实际 diff
+  和长期行为对照。空行不是证据；每个 `follow-up` 都要有 Issue、负责人和期限。
+- 检查产品、交互、API/事件、数据库、架构/ADR、模块规则、测试基线、发布和运行状态
+  影响。GitLab 子 Issue 不能替代仓库长期文档。
+- 以 MR 标签和实际变更文件作为最终风险事实；Issue 只记录初始计划。
+- GitLab CE 使用保护分支、受限合并权限和成功 Pipeline 作为硬门禁。CODEOWNERS 或可选
+  Approve 动作可以辅助审阅，但不作为强制审批证据。
+- AI 审阅默认只提供建议。人明确决定后，可以用 AI 协助准备审批证据或执行合并操作。

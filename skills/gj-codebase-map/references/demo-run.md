@@ -1,13 +1,13 @@
-# Demo Run Reference
+# 示例演练参考
 
-The demo project is intentionally tiny:
+示例项目刻意保持精简：
 
-- Code: `examples/demo-project/src/order_approval.py`
-- Tests: `examples/demo-project/tests/test_order_approval.py`
-- Module doc: `docs/modules/order.md`
-- Context index: `.gj/context.yml`
+- 代码：`examples/demo-project/src/order_approval.py`
+- 测试：`examples/demo-project/tests/test_order_approval.py`
+- 模块文档：`docs/modules/order.md`
+- 上下文索引：`.gj/context.yml`
 
-For a real codebase map, expand this into:
+真实代码库建图时扩展为：
 
 - `docs/codebase/STACK.md`
 - `docs/codebase/INTEGRATIONS.md`
@@ -17,5 +17,4 @@ For a real codebase map, expand this into:
 - `docs/codebase/TESTING.md`
 - `docs/codebase/CONCERNS.md`
 
-Always mark demo-level assumptions as needing human confirmation before they
-become `docs/context/current-state.md`.
+示例级假设写入 `docs/context/current-state.md` 前，必须标记为需要人工确认。

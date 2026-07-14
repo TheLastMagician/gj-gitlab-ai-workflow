@@ -1,28 +1,28 @@
-# QA Role
+# QA 角色
 
-## Input
+## 输入
 
-- Requirement acceptance criteria.
-- Demo service behavior.
-- Unit tests.
+- Requirement 验收标准。
+- 示例服务行为。
+- 单元测试。
 
-## Failure Found
+## 发现的失败
 
-The first implementation allowed:
+首版允许：
 
 ```text
-Alice submits order -> Alice approves same order -> approved
+Alice 提交订单 -> Alice 审批同一订单 -> approved
 ```
 
-## Expected
+## 预期
 
-The service must reject self-approval.
+服务必须拒绝自审批。
 
-## Action
+## 动作
 
-QA creates Bug Issue #6 and requires a regression test.
+QA 创建 Bug Issue #6 并要求回归测试。
 
-## Regression
+## 回归
 
 - `test_applicant_cannot_approve_own_order`
-- Manual check that non-applicant approval still works.
+- 手工检查非申请人审批仍然有效。

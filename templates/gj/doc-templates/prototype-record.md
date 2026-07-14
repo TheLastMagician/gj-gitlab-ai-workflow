@@ -1,28 +1,28 @@
-# Prototype Record: <Capability>
+# 原型记录：<能力名称>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Source Issue:
-- Target release:
-- Effective from: pending
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 
-## Prototype Links
+## 原型链接
 
-| Type | Link/path | Version | Access notes |
+| 类型 | 链接/路径 | 版本 | 访问说明 |
 | --- | --- | --- | --- |
 | | | | |
 
-## Scope And Key Flows
+## 范围和关键流程
 
-## Known Gaps
+## 已知缺口
 
-## Review Record
+## 评审记录
 
-| Reviewer | Date | Decision | Notes |
+| 评审人 | 日期 | 结论 | 说明 |
 | --- | --- | --- | --- |
 | | | | |

@@ -1,30 +1,30 @@
-# Test Plan: <Capability>
+# 测试计划：<能力名称>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Source Issue:
-- Target release:
-- Effective from: pending
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 
-## Scope And Blocking Conditions
+## 范围和阻断条件
 
-## Requirement And Risk Matrix
+## 需求和风险矩阵
 
-| ID | Requirement/risk | Scenario | Expected result | Type |
+| 编号 | 需求/风险 | 场景 | 预期结果 | 类型 |
 | --- | --- | --- | --- | --- |
-| T1 | | | | manual/auto |
+| T1 | | | | 手工/自动化 |
 
-## Failure, Permission And Regression Coverage
+## 失败、权限和回归覆盖
 
-## Test Data And Environments
+## 测试数据和环境
 
-## Confirmation
+## 确认记录
 
-- QA owner:
-- Date:
-- Decision:
+- QA 负责人：
+- 日期：
+- 结论：

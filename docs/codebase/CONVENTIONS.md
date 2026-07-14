@@ -1,16 +1,13 @@
-# Conventions
+# 约定
 
-## Observed Facts
+## 已确认事实
 
-- Workflow docs are primarily Chinese.
-- Code and config paths use lowercase hyphenated names where possible.
-- Skill folders use lowercase hyphenated names.
-- Python scripts avoid third-party dependencies for MVP portability.
-- Git commit messages should follow Angular convention in Chinese when commits
-  are created.
+- 面向人的工作流文档使用中文。
+- 代码和配置路径尽量使用小写连字符命名。
+- Skill 目录使用小写连字符命名。
+- Python 脚本避免第三方依赖，保证 MVP 可移植性。
+- 创建 Git 提交时，提交信息使用中文并遵循 Angular 规范。
 
-## Needs Confirmation
+## 待确认
 
-- Long-term language policy for public README and docs.
-- Whether generated demo-run artifacts should stay in the main repo after the
-  project becomes a reusable template.
+- 项目成为可复用模板后，生成的示例演练产物是否继续保留在主仓库。

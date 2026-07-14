@@ -3,65 +3,59 @@ name: gj-workflow-bootstrap
 description: Install and verify the GitLab AI workflow skeleton in a repository. Use when setting up labels, issue/MR templates, .gj workflow and context config, role ownership, docs/context, CI policy checks, CODEOWNERS, orchestrator skeletons, or preflight checks before writing workflow objects to GitLab.
 ---
 
-# GJ Workflow Bootstrap
+# GJ 工作流初始化
 
-## Workflow
+## 工作流程
 
-1. Run preflight before any GitLab write:
-   - When `.gj/gitlab.local.json` is missing, run
+1. 任何 GitLab 写操作前先运行预检：
+   - 缺少 `.gj/gitlab.local.json` 时运行
      `python scripts/gitlab_api.py configure --url <url> --project-id <id>`.
-   - Run `python scripts/gitlab_api.py doctor` to compare `git remote origin`
-     with the GitLab API project path without printing the token.
-   - Confirm `.gj/gitlab.local.json` is ignored and not staged.
-   - Confirm GitLab runner availability and prefer Docker executor for the
-     example pipeline.
-   - Record missing GitLab permissions as human confirmation points.
-2. Install all reusable assets once:
-   - In a source checkout, run `scripts/install_workflow.py --target <repo>`.
-   - When only this Skill is installed, resolve this Skill's own directory and
-     run `scripts/bootstrap_from_github.py --target <repo>`. It fetches the
-     trusted source archive and invokes the same non-destructive installer.
-   - If the installer reports exit code `2`, stop and show the exact manual CI
-     include action. Fast, Standard, and Hotfix are runtime routes, not
-     installation editions.
-3. Ask the maintainer to replace placeholder roles in `.gj/workflow.yml` when
-   role routing is needed and review `docs/standards/06-release-standard.md`.
-   Confirm `.gj/workflow.yml` versioning policy, the Tag pattern, release-note
-   path, and `docs/standards/13-versioning-standard.md` without adding a generic
-   VERSION file.
-   Confirm `.gj/doc-templates/` was installed as workflow scaffolding and that
-   no generic template files were placed in the project's fact directories.
-4. Create GitLab labels, milestone, and starter Issues idempotently through the
-   configured helper or an approved GitLab connector.
-5. Assign human-owned starter Issues/MRs from `.gj/workflow.yml` when requested
-   and add `@username` handoff comments when notification is expected.
-6. Run local validation.
-7. Write a bootstrap summary with created, skipped, failed, and manual-confirmation items.
+   - 运行 `python scripts/gitlab_api.py doctor`，在不输出 Token 的前提下比较
+     `git remote origin` 与 GitLab API 项目路径。
+   - 确认 `.gj/gitlab.local.json` 已忽略且未暂存。
+   - 确认 GitLab Runner 可用；示例 Pipeline 优先使用 Docker executor。
+   - 把缺失的 GitLab 权限记录为人工确认项。
+2. 一次性安装所有可复用资产：
+   - 在源码目录运行 `scripts/install_workflow.py --target <repo>`。
+   - 只有本 Skill 已安装时，定位本 Skill 目录并运行
+     `scripts/bootstrap_from_github.py --target <repo>`；它获取可信源码包并调用同一个
+     非破坏式安装器。
+   - 安装器返回退出码 `2` 时停止，并给出准确的手工 CI include 操作。Fast、Standard
+     和 Hotfix 是运行时通道，不是安装版本。
+3. 需要角色路由时，让 Maintainer 替换 `.gj/workflow.yml` 中的占位角色，并审阅
+   `docs/standards/06-release-standard.md`。确认 `.gj/workflow.yml` 版本策略、Tag 格式、
+   发布说明路径和 `docs/standards/13-versioning-standard.md`，不要添加通用 `VERSION`
+   文件。确认 `.gj/doc-templates/` 作为工作流模板安装，项目事实目录没有通用模板文件。
+4. 通过已配置 helper 或获准 GitLab connector 幂等创建标签、Milestone 和起始 Issue。
+5. 按需根据 `.gj/workflow.yml` 指派由人负责的起始 Issue/MR；需要通知时添加
+   `@username` 交接评论。
+6. 运行本地校验。
+7. 输出初始化摘要，列出已创建、已跳过、失败和需人工确认的项目。
 
-## Output
+## 输出格式
 
 ```markdown
-## Bootstrap Summary
+## 初始化摘要
 
-GitLab project:
+GitLab 项目：
 
-Created:
+已创建：
 
-Skipped / already existed:
+已跳过/已存在：
 
-Failed:
+失败：
 
-Local files changed:
+本地变更文件：
 
-Validation:
+校验结果：
 
-Human confirmation needed:
+需要人工确认：
 
-Documentation templates installed under .gj/doc-templates:
+已安装到 `.gj/doc-templates/` 的文档模板：
 
-Friction found:
+发现的阻碍：
 ```
 
-## References
+## 参考资料
 
-Read `references/demo-run.md` when you need a concrete first-run example.
+需要具体首次运行示例时读取 `references/demo-run.md`。

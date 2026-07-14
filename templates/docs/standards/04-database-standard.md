@@ -14,11 +14,11 @@
 
 ## 最低内容
 
-- schema/model/migration 的权威路径和 Owner。
+- schema/model/migration 的权威路径和负责人。
 - 实体关系、字段业务语义、唯一性和状态不变量。
 - 索引、主要查询模式、容量或锁风险。
 - 敏感等级、数据保留、审计和清理要求。
 - 向前迁移、回填、双读写/兼容窗口、验证和回滚步骤。
 
-生产影响的 migration 必须由 Data Owner 或 Dev Lead 确认；不可逆迁移必须说明恢复方案
+生产影响的 migration 必须由数据负责人或开发经理确认；不可逆迁移必须说明恢复方案
 和数据损失边界。Reviewer 对照 migration、测试、发布和回滚文档。

@@ -1,26 +1,26 @@
-# ADR-<Number>: <Decision>
+# ADR-<编号>：<决策名称>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Source Issue:
-- Target release:
-- Effective from: pending
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 
-## Context
+## 背景
 
-## Decision
+## 决策
 
-## Alternatives Considered
+## 备选方案
 
-## Consequences And Trade-offs
+## 结果和取舍
 
-## Confirmation
+## 确认记录
 
-- Dev Lead:
-- Date:
-- Decision:
+- 开发经理：
+- 日期：
+- 结论：

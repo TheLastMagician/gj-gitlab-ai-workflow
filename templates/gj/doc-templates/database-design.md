@@ -1,35 +1,35 @@
-# Database Design: <Domain>
+# 数据库设计：<领域名称>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Source Issue:
-- Target release:
-- Effective from: pending
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 
-## Schema And Migration Sources
+## Schema 和迁移事实源
 
-- Schema/model path:
-- Migration path:
+- Schema/model 路径：
+- Migration 路径：
 
-## Entities And Relationships
+## 实体和关系
 
-## Field Semantics And Invariants
+## 字段语义和不变量
 
-## Constraints, Indexes And Query Patterns
+## 约束、索引和查询模式
 
-## Data Classification, Retention And Audit
+## 数据分级、保留和审计
 
-## Migration, Backfill And Compatibility
+## 迁移、回填和兼容
 
-## Rollback And Recovery
+## 回滚和恢复
 
-## Confirmation
+## 确认记录
 
-- Data owner / Dev Lead:
-- Date:
-- Decision:
+- 数据负责人/开发经理：
+- 日期：
+- 结论：

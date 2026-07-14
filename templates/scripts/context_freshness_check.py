@@ -30,14 +30,14 @@ DEFAULT_MAX_ALWAYS_LOAD_CHARS = 24_000
 DEFAULT_MAX_MODULE_DOCS = 5
 DEFAULT_MAX_MODULE_CONTEXT_CHARS = 40_000
 COMMON_FACT_FIELDS = (
-    "Owner",
-    "Status",
-    "Source Issue",
-    "Target release",
-    "Effective from",
-    "Implemented by",
-    "Related documents",
-    "Last verified",
+    "负责人",
+    "状态",
+    "来源 Issue",
+    "目标版本",
+    "生效范围",
+    "实现 MR",
+    "相关文档",
+    "最后核验日期",
 )
 FACT_DOC_DIRS = (
     "docs/product/requirements",
@@ -158,7 +158,7 @@ def validate_context_budget(text: str, root: Path = ROOT) -> list[str]:
 def markdown_fields(text: str) -> dict[str, str]:
     fields: dict[str, str] = {}
     for line in text.splitlines():
-        match = re.match(r"^-\s+([^:]+):\s*(.*)$", line.strip())
+        match = re.match(r"^-\s+([^:：]+)[:：]\s*(.*)$", line.strip())
         if match:
             fields[match.group(1).strip()] = match.group(2).strip()
     return fields
@@ -178,9 +178,9 @@ def validate_fact_document(path: Path, root: Path) -> list[str]:
     for field in COMMON_FACT_FIELDS:
         if not fields.get(field):
             errors.append(f"项目事实文档缺少非空元数据 {field}：{relative}")
-    status = fields.get("Status")
+    status = fields.get("状态")
     if status and status not in {"draft", "confirmed"}:
-        errors.append(f"项目事实文档 Status 非法({status})：{relative}")
+        errors.append(f"项目事实文档状态非法({status})：{relative}")
     return errors
 
 
@@ -198,9 +198,9 @@ def validate_evidence_document(
     for field in required_fields:
         if not fields.get(field):
             errors.append(f"版本证据缺少非空元数据 {field}：{relative}")
-    status = fields.get("Status")
+    status = fields.get("状态")
     if status and status not in allowed_statuses:
-        errors.append(f"版本证据 Status 非法({status})：{relative}")
+        errors.append(f"版本证据状态非法({status})：{relative}")
     return errors
 
 
@@ -222,16 +222,16 @@ def validate_document_contracts(root: Path = ROOT) -> list[str]:
                     root,
                     {"draft", "passed", "failed", "blocked"},
                     (
-                        "Owner",
-                        "Status",
-                        "Version",
+                        "负责人",
+                        "状态",
+                        "版本",
                         "Tag",
-                        "Commit",
+                        "提交",
                         "Pipeline",
-                        "Environment",
-                        "Related Issues/MRs",
-                        "Related documents",
-                        "Last verified",
+                        "环境",
+                        "关联 Issue/MR",
+                        "相关文档",
+                        "最后核验日期",
                     ),
                 )
             )
@@ -245,16 +245,16 @@ def validate_document_contracts(root: Path = ROOT) -> list[str]:
                     root,
                     {"draft", "ready", "released", "rolled-back"},
                     (
-                        "Owner",
-                        "Status",
-                        "Version",
+                        "负责人",
+                        "状态",
+                        "版本",
                         "Tag",
-                        "Source commit",
+                        "来源提交",
                         "Pipeline",
-                        "Milestone",
-                        "Release Issue",
-                        "Related documents",
-                        "Last verified",
+                        "里程碑",
+                        "发布 Issue",
+                        "相关文档",
+                        "最后核验日期",
                     ),
                 )
             )

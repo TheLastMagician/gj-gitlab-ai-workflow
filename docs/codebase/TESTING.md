@@ -1,17 +1,15 @@
-# Testing
+# 测试
 
-## Observed Facts
+## 已确认事实
 
-- `python scripts/policy_check.py` checks the unique flow label, MR evidence,
-  changed-file risk paths, and committed secrets. High-risk paths cannot use
-  `flow::fast`.
-- `python scripts/smoke_check.py` runs demo unit tests.
-- Demo tests use `unittest`.
-- Repository validation enforces the eight-skill catalog and portable
-  `SKILL.md` metadata; Codex skill-creator `quick_validate.py` can provide an
-  additional compatibility check.
+- `python scripts/policy_check.py` 检查唯一 flow 标签、MR 证据、变更文件风险路径和已提交
+  的秘密；高风险路径不能使用 `flow::fast`。
+- `python scripts/smoke_check.py` 运行示例单元测试。
+- 示例测试使用 `unittest`。
+- 仓库校验检查八个 Skill 的目录清单和可移植 `SKILL.md` 元数据；Codex skill-creator 的
+  `quick_validate.py` 可以提供额外兼容性检查。
 
-## Needs Confirmation
+## 待确认
 
-- Whether CI should add SAST or dependency scanning.
-- Whether future Orchestrator needs contract tests for GitLab webhook payloads.
+- CI 是否增加 SAST 或依赖扫描。
+- 后续 Orchestrator 是否需要 GitLab webhook payload 契约测试。

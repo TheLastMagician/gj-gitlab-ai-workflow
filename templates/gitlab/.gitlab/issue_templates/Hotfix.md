@@ -1,11 +1,11 @@
-# Hotfix Issue
+# 紧急修复 Issue
 
 /label ~"type-hotfix" ~"flow::hotfix"
 
 ## 故障等级和影响范围
 
-- Affected version：
-- Target patch version：
+- 受影响版本：
+- 目标修复版本：
 - GitLab Milestone：
 
 ## 当前止血方案

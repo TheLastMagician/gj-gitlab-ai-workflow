@@ -1,15 +1,14 @@
-# Development Standard
+# 开发规范
 
-- Standard and Hotfix changes must link a GitLab Issue. A Fast low-risk MR may
-  omit the Issue when its motivation and scope are clear in the MR description.
-- Confirm one route label before implementation and use the same label on the
-  MR: `flow::fast`, `flow::standard`, or `flow::hotfix`.
-- Keep changes scoped to the accepted requirement and solution.
-- Add or update tests when behavior changes.
-- Record AI assistance in the MR description.
-- When a change touches a business rule, update the matching
-  `docs/modules/*.md` in the same MR. This applies to SmallChange MRs too:
-  Fast may skip planning documents, but it may not skip changed durable facts.
+- Standard 和 Hotfix 变更必须关联 GitLab Issue。低风险 Fast MR 在描述中写清动机和
+  范围后可以不建 Issue。
+- 实现前确认唯一流程标签，并在 MR 中沿用：`flow::fast`、`flow::standard` 或
+  `flow::hotfix`。
+- 变更范围不得超出已确认的需求和方案。
+- 行为变化时新增或更新测试。
+- 在 MR 描述中记录 AI 使用范围。
+- 变更业务规则时，在同一 MR 更新对应的 `docs/modules/*.md`。SmallChange MR 也适用：
+  Fast 可以省略计划文档，但不能省略已变化的长期事实。
 
 ## 执行点
 

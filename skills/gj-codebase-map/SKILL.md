@@ -3,17 +3,17 @@ name: gj-codebase-map
 description: Map an existing repository into AI-readable project context. Use when onboarding a GitLab project, refreshing docs/codebase, deriving docs/context and docs/modules, generating .gj/context.yml drafts, or scanning changed paths after major refactors.
 ---
 
-# GJ Codebase Map
+# GJ 代码库建图
 
-## Workflow
+## 工作流程
 
-1. Discover the repository structure with `rg --files`.
-2. Scan from four views:
-   - tech: stack, runtime, dependencies, integrations.
-   - arch: entry points, layers, data flow, module boundaries.
-   - quality: conventions, tests, CI, error handling.
-   - concerns: security, brittle areas, performance, unknowns.
-3. Write or update:
+1. 使用 `rg --files` 了解仓库结构。
+2. 从四个视角扫描：
+   - 技术：技术栈、运行时、依赖、外部集成。
+   - 架构：入口、分层、数据流、模块边界。
+   - 质量：约定、测试、CI、错误处理。
+   - 风险：安全、脆弱区域、性能、未知项。
+3. 创建或更新：
    - `docs/codebase/STACK.md`
    - `docs/codebase/INTEGRATIONS.md`
    - `docs/codebase/ARCHITECTURE.md`
@@ -21,42 +21,41 @@ description: Map an existing repository into AI-readable project context. Use wh
    - `docs/codebase/CONVENTIONS.md`
    - `docs/codebase/TESTING.md`
    - `docs/codebase/CONCERNS.md`
-4. Derive draft current context:
+4. 生成当前上下文草稿：
    - `docs/context/current-state.md`
    - `docs/context/module-map.md`
    - `docs/context/glossary.md`
    - `docs/modules/*.md`
    - `.gj/context.yml`
-   Create module files from `.gj/doc-templates/module.md`, use semantic module
-   names, include the common metadata contract, and keep observed facts
-   separate from inferences.
-5. Mark every inference that needs human confirmation.
-6. Scan generated output for secrets before staging or sharing.
+   从 `.gj/doc-templates/module.md` 创建模块文档，使用语义化模块名，包含通用元数据契约，
+   并明确区分已观察事实和推断。
+5. 标记所有需要人工确认的推断。
+6. 暂存或分享前扫描生成内容中的秘密信息。
 
-## Rules
+## 规则
 
-- Treat `docs/codebase/*` as observed facts, not approved business truth.
-- Do not convert observed behavior into current-state rules without confirmation.
-- Stop and ask for human action if a token, private key, password, or connection string appears.
+- `docs/codebase/*` 只记录已观察事实，不代表已批准的业务规则。
+- 未经确认，不要把观察到的行为转为当前状态规则。
+- 发现 Token、私钥、密码或连接字符串时停止，并要求人处理。
 
-## Output
+## 输出格式
 
 ```markdown
-## Codebase Map Summary
+## 代码库建图摘要
 
-Scanned paths:
+扫描路径：
 
-Generated / updated docs:
+创建/更新的文档：
 
-Observed facts:
+已观察事实：
 
-Inferences needing confirmation:
+待确认推断：
 
-Risks and concerns:
+风险和关注点：
 
-Secret scan:
+秘密扫描：
 ```
 
-## References
+## 参考资料
 
-Read `references/demo-run.md` for the demo-sized mapping example.
+需要查看小型示例建图时，读取 `references/demo-run.md`。

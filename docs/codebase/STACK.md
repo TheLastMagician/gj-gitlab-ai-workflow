@@ -1,14 +1,14 @@
-# Stack
+# 技术栈
 
-## Observed Facts
+## 已确认事实
 
-- Repository is a GitLab workflow template and demo project.
-- Scripts are Python 3.
-- Local shell examples target PowerShell on Windows.
-- Demo project uses Python standard library only.
-- CI uses GitLab CI with `policy` and `test` stages.
+- 本仓库是 GitLab 工作流模板和示例项目。
+- 脚本使用 Python 3。
+- 本地 shell 示例面向 Windows PowerShell。
+- 示例项目只使用 Python 标准库。
+- CI 使用 GitLab CI，包含 `policy` 和 `test` 阶段。
 
-## Needs Confirmation
+## 待确认
 
-- Target production Orchestrator runtime is not chosen.
-- AI gateway provider and deployment platform are not chosen.
+- 尚未选择生产 Orchestrator 运行时。
+- 尚未选择 AI 网关提供方和部署平台。

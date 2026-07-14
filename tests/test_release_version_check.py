@@ -33,23 +33,23 @@ versioning:
         notes = root / "docs" / "releases"
         notes.mkdir(parents=True)
         (notes / "v1.3.0.md").write_text(
-            f"""# Release v1.3.0
+            f"""# 发布说明：v1.3.0
 
-## Metadata
+## 元数据
 
-- Version: {note_version}
-- Tag: v1.3.0
-- Status: ready
+- 版本：{note_version}
+- Tag：v1.3.0
+- 状态：ready
 
-## Included Issues And MRs
+## 范围和包含的 Issue/MR
 
 - #123 / !45
 
-## Validation
+## 验证和测试报告
 
 - passed
 
-## Rollback Plan
+## 发布、监控和回滚
 
 - redeploy v1.2.3
 """,
@@ -83,7 +83,7 @@ versioning:
 
             errors = release_version_check.release_version_errors(root, "v1.3.0", policy)
 
-            self.assertTrue(any("Version 必须是 v1.3.0" in error for error in errors))
+            self.assertTrue(any("版本必须是 v1.3.0" in error for error in errors))
 
     def test_missing_release_note_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

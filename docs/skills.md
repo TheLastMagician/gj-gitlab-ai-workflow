@@ -1,49 +1,44 @@
-# Skills
+# 工作流 Skills
 
-Install the complete workflow skill set from one GitHub source into Codex,
-Claude Code, and OpenCode with:
+使用同一个 GitHub 源把完整工作流 Skill 安装到 Codex、Claude Code 和 OpenCode：
 
 ```powershell
 npx --yes skills@1.5.15 add https://github.com/TheLastMagician/gj-gitlab-ai-workflow --skill '*' -a codex -a claude-code -a opencode --copy -y
 ```
 
-All agents consume the same `skills/*/SKILL.md` source. The Python fallback is
-`python scripts/install_skills.py --agent all --project-root <project> --force`.
-Every Skill uses the `gj-` namespace; GJ is the project abbreviation for
-Chinese `公交`.
+所有 Agent 使用同一份 `skills/*/SKILL.md`。Python 兜底命令是
+`python scripts/install_skills.py --agent all --project-root <project> --force`。
+所有 Skill 使用 `gj-` 命名空间；GJ 是“公交”的项目缩写。
 
-Daily work starts from `gj-workflow-next`; users do not need to memorize the
-other names.
+日常工作从 `gj-workflow-next` 开始，用户不需要记住其他 Skill 名。
 
-## The Eight Skills
+## 八个 Skill
 
-| Stage | Skill | Purpose |
+| 阶段 | Skill | 作用 |
 | --- | --- | --- |
-| Bootstrap | `gj-workflow-bootstrap` | Install and verify labels, templates, AI config, docs, CI, and project gates. |
-| Existing project map | `gj-codebase-map` | Map codebase facts into focused context and module documentation. |
-| Route | `gj-workflow-next` | Read inbox/current state, recommend one flow label, and choose the next action. |
-| Plan | `gj-plan-change` | Scale requirements, solution, task boundaries, tests, docs, rollout, and rollback to the flow. |
-| Develop | `gj-develop-change` | Implement features, small changes, bugs, and hotfixes with focused context and tests. |
-| Review | `gj-mr-review` | Review policy, code, tests, documentation, and merge readiness; stop at the human merge gate. |
-| Release | `gj-release-readiness` | Prepare environment and release evidence, rollout, rollback, and validation; stop at the human deploy gate. |
-| Close | `gj-close-loop` | Capture lessons and refresh durable project context after completed work. |
+| 初始化 | `gj-workflow-bootstrap` | 安装并校验标签、模板、AI 配置、文档、CI 和项目门禁。 |
+| 现有项目建图 | `gj-codebase-map` | 把代码库事实整理为精简上下文和模块文档。 |
+| 分流 | `gj-workflow-next` | 读取待办/当前状态，推荐唯一 flow 标签并选择下一步。 |
+| 计划 | `gj-plan-change` | 按 flow 深度准备需求、方案、任务边界、测试、文档、发布和回滚。 |
+| 开发 | `gj-develop-change` | 使用聚焦上下文和测试实现功能、小改动、缺陷和紧急修复。 |
+| 审阅 | `gj-mr-review` | 审阅策略、代码、测试、文档和合并就绪度，停在人工合并门。 |
+| 发布准备 | `gj-release-readiness` | 准备环境和发布证据、发布、回滚与验证，停在人工发布门。 |
+| 收尾 | `gj-close-loop` | 工作完成后沉淀经验并刷新长期项目上下文。 |
 
-## Flow Depth
+## Flow 深度
 
-| Flow | Plan and delivery depth |
+| Flow | 计划和交付深度 |
 | --- | --- |
-| `flow::fast` | Bounded change, self-test, documentation impact, MR, and review. No extra planning Issues by default. |
-| `flow::standard` | Linked Issue, acceptance criteria, technical approach, risks, tests, rollout, rollback, and durable docs. |
-| `flow::hotfix` | Incident impact, smallest safe fix, minimum review, release validation, rollback, and mandatory follow-up. |
+| `flow::fast` | 有边界的改动、自测、文档影响、MR 和审阅；默认不额外创建计划 Issue。 |
+| `flow::standard` | 关联 Issue、验收标准、技术方案、风险、测试、发布、回滚和长期文档。 |
+| `flow::hotfix` | 故障影响、最小安全修复、最低审阅、发布验证、回滚和强制跟进。 |
 
-The Issue template proposes a flow, a human confirms it before coding, the MR
-uses the same single `flow::*` label, and CI validates the choice against
-changed paths. Skills recommend and enforce the selected depth; they do not
-decide business risk for the human.
+Issue 模板提出 flow，人编码前确认，MR 沿用同一个唯一 `flow::*` 标签，CI 根据变更路径
+校验选择。Skill 推荐并执行已选深度，不代替人判断业务风险。
 
-## Comment Commands
+## 评论命令
 
-The optional orchestrator exposes only these commands:
+可选 Orchestrator 只暴露以下命令：
 
 ```text
 /ai-next
@@ -54,73 +49,57 @@ The optional orchestrator exposes only these commands:
 /ai-close
 ```
 
-`gj-workflow-bootstrap` and `gj-codebase-map` are invoked directly when needed.
+`gj-workflow-bootstrap` 和 `gj-codebase-map` 按需直接调用。
 
-## Decision Boundary
+## 决策边界
 
-AI may inspect, draft, edit, test, and prepare decision evidence. It must not
-autonomously approve, merge, tag, deploy, overwrite a shared environment, or
-bypass protections. Humans confirm the flow label and make merge and release
-decisions.
+AI 可以检查、起草、编辑、测试和准备决策证据。AI 不得自主批准、合并、创建 Tag、部署、
+覆盖共享环境或绕过保护。人确认 flow 标签并作出合并和发布决定。
 
-## Inbox And Notifications
+## 待办和通知
 
-`gj-workflow-next` uses GitLab API state as the inbox source: Todos, assigned
-Issues/MRs, review requests, mentions, unresolved discussions, and failed
-pipelines. Email or Enterprise WeCom may deliver notifications but is not a
-workflow state source.
+`gj-workflow-next` 使用 GitLab API 状态作为待办源：Todo、分配的 Issue/MR、审阅请求、
+提及、未解决讨论和失败 Pipeline。邮件或企业微信可以投递通知，但不是流程状态源。
 
-Handoffs should assign the responsible person in GitLab and mention them in a
-comment so GitLab creates the expected Todo and notification.
+交接时应在 GitLab 指派负责人，并在评论中提及对方，让 GitLab 创建预期 Todo 和通知。
 
-## Documentation Impact
+## 文档影响
 
-Every delivery Skill reports a documentation decision table with the target
-path, one of `create` / `update` / `no-change` / `follow-up`, the triggering
-fact, stage/status, and human confirmer or follow-up. A follow-up is valid only
-with an Issue, owner, and due date. GitLab Issues and MR comments hold process;
-repository docs hold durable conclusions.
+每个交付 Skill 都输出文档决策表，包含目标路径、`create` / `update` / `no-change` /
+`follow-up` 动作、触发事实、阶段/状态和人工确认人或跟进项。`follow-up` 只有包含 Issue、
+负责人和期限时才有效。GitLab Issue 和 MR 评论保存过程，仓库文档保存长期结论。
 
-Users do not need to invoke a separate documentation Skill. After durable facts
-are confirmed, `gj-plan-change`, `gj-develop-change`,
-`gj-release-readiness`, and `gj-close-loop` update their applicable documents
-within the current change when repository writes are available. `gj-mr-review`
-checks that those updates are present. If facts are unresolved or writes are
-unavailable, the Skill returns an exact draft and a human confirmation item.
-Current-fact documents are updated in place; versioned test/release evidence is
-created per Tag and then frozen. Process history remains in GitLab and Git.
+用户不需要另行调用文档 Skill。长期事实确认后，`gj-plan-change`、`gj-develop-change`、
+`gj-release-readiness` 和 `gj-close-loop` 在仓库可写时于当前变更中更新对应文档；
+`gj-mr-review` 检查更新是否存在。事实未确认或仓库不可写时，Skill 返回准确草稿和人工
+确认项。当前事实文档原地更新；测试/发布证据按 Tag 新建后冻结。过程历史留在 GitLab
+和 Git。
 
-| Durable change | Document target |
+| 长期变化 | 文档目标 |
 | --- | --- |
-| Product behavior or acceptance criteria | `docs/product/requirements/<capability>.md` |
-| UI, user flow, screen state, copy, prototype | `docs/product/designs/<capability>.md`, `docs/product/prototypes/<capability>.md` |
-| Architecture, permission, rollout, rollback | `docs/technical/solutions/<capability>.md`, ADR |
-| API/event contract | machine schema + `docs/technical/apis/<domain>.md` |
-| Database structure or meaning | schema/migration + `docs/technical/database/<domain>.md` |
-| Acceptance, regression, permission baseline | `docs/qa/test-plans/<capability>.md` |
-| Executed release validation | `docs/qa/test-reports/<tag>.md` |
-| User-visible release scope or rollback | `docs/releases/<tag>.md` |
-| Long-term AI context | `docs/context`, `docs/modules`, ADRs, `.gj/context.yml` |
+| 产品行为或验收标准 | `docs/product/requirements/<capability>.md` |
+| UI、用户流程、页面状态、文案、原型 | `docs/product/designs/<capability>.md`、`docs/product/prototypes/<capability>.md` |
+| 架构、权限、发布、回滚 | `docs/technical/solutions/<capability>.md`、ADR |
+| API/事件契约 | 机器 schema + `docs/technical/apis/<domain>.md` |
+| 数据库结构或含义 | schema/migration + `docs/technical/database/<domain>.md` |
+| 验收、回归和权限基线 | `docs/qa/test-plans/<capability>.md` |
+| 已执行发布验证 | `docs/qa/test-reports/<tag>.md` |
+| 用户可见发布范围或回滚 | `docs/releases/<tag>.md` |
+| 长期 AI 上下文 | `docs/context`、`docs/modules`、ADR、`.gj/context.yml` |
 
-Requirement or Hotfix is the main work item. Solution, Task, and Test Issues are
-created only for separately owned or tracked work and never replace repository
-documents. New document templates are installed under `.gj/doc-templates/`;
-project fact directories contain only semantic files such as
-`order-approval.md`, never generic template filenames.
-API and database decisions name both the executable contract/schema/migration
-path and its explanatory Markdown path so the two facts can be reviewed
-together.
+Requirement 或 Hotfix 是主工作项。Solution、Task 和 Test Issue 只为需要单独负责或跟踪
+的工作创建，绝不替代仓库文档。新文档模板安装在 `.gj/doc-templates/`；项目事实目录只
+包含 `order-approval.md` 这类语义文件，不保留通用模板文件名。API 和数据库决策同时
+写明可执行 contract/schema/migration 路径与解释性 Markdown 路径，便于一起审阅。
 
-## Version Responsibilities
+## 版本职责
 
-- `gj-workflow-next` recommends a Target release/GitLab Milestone separately
-  from flow; a human confirms both.
-- `gj-plan-change` links the Issue and feature documents to that target.
-- `gj-develop-change` and normal MRs do not bump the repository version.
-- `gj-release-readiness` locks the final SemVer, prepares per-Tag test/release
-  evidence, and checks it before the human Tag decision.
-- `gj-close-loop` records the actual Tag, SHA, Pipeline, environment, and
-  deployment validation. A Milestone is never reported as released.
+- `gj-workflow-next` 独立于 flow 推荐目标版本/GitLab Milestone，由人分别确认。
+- `gj-plan-change` 把 Issue 和功能文档关联到该目标。
+- `gj-develop-change` 和普通 MR 不提升仓库版本。
+- `gj-release-readiness` 锁定最终 SemVer，准备按 Tag 保存的测试/发布证据，并在人工决定
+  Tag 前检查。
+- `gj-close-loop` 记录实际 Tag、SHA、Pipeline、环境和部署验证。Milestone 不能描述为
+  已发布。
 
-See `docs/versioning.md` and the installed
-`docs/standards/13-versioning-standard.md`.
+详见 `docs/versioning.md` 和安装后的 `docs/standards/13-versioning-standard.md`。

@@ -1,10 +1,7 @@
-# AI Development Boundary
+# AI 开发边界
 
-- AI may draft analysis, code suggestions, tests, review comments, release notes,
-  and retrospectives.
-- AI must not autonomously approve, merge, deploy, or bypass human confirmation.
-- A human role may explicitly use AI to prepare approval evidence, perform an
-  assisted merge operation, or draft deployment steps; the human remains the
-  decision maker and accountable owner.
-- Store useful AI outputs as GitLab comments or repository docs.
-- Do not store full prompts unless the organization approves that practice.
+- AI 可以起草分析、代码建议、测试、审阅意见、发布说明和复盘。
+- AI 不得自主批准、合并、部署或绕过人工确认。
+- 人可以明确要求 AI 准备审批证据、辅助执行合并或起草部署步骤；人仍是决策者和责任人。
+- 有价值的 AI 输出应保存为 GitLab 评论或仓库文档。
+- 除非组织明确允许，不保存完整提示词。

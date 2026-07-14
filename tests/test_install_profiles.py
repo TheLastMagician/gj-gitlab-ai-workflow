@@ -78,7 +78,7 @@ class InstallerTests(unittest.TestCase):
             prd = (
                 target / ".gj" / "doc-templates" / "product-requirement.md"
             ).read_text(encoding="utf-8")
-            self.assertIn("## Rejection And Counterexamples", prd)
+            self.assertIn("## 拒绝条件和反例", prd)
             workflow = (target / ".gj" / "workflow.yml").read_text(encoding="utf-8")
             self.assertIn("versioning:", workflow)
             self.assertIn('tag_pattern: "v{version}"', workflow)

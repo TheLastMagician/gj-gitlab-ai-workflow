@@ -84,7 +84,7 @@ context_budget:
             errors = context_check.validate_document_contracts(root)
 
         self.assertTrue(any("通用模板文件" in error for error in errors))
-        self.assertTrue(any("Owner" in error for error in errors))
+        self.assertTrue(any("负责人" in error for error in errors))
 
     def test_document_contract_accepts_semantic_current_fact(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
@@ -92,18 +92,18 @@ context_budget:
             path = root / "docs/modules/order.md"
             path.parent.mkdir(parents=True)
             path.write_text(
-                """# Order
+                """# 订单模块
 
-## Metadata
+## 元数据
 
-- Owner: order-team
-- Status: confirmed
-- Source Issue: #9
-- Target release: v1.1.0
-- Effective from: pending
-- Implemented by: !3
-- Related documents: docs/product/requirements/order-approval.md
-- Last verified: 2026-07-13
+- 负责人：order-team
+- 状态：confirmed
+- 来源 Issue：#9
+- 目标版本：v1.1.0
+- 生效范围：pending
+- 实现 MR：!3
+- 相关文档：docs/product/requirements/order-approval.md
+- 最后核验日期：2026-07-13
 """,
                 encoding="utf-8",
             )
@@ -117,7 +117,7 @@ context_budget:
             root = Path(temp)
             path = root / "docs/releases/release-note.md"
             path.parent.mkdir(parents=True)
-            path.write_text("- Status: ready\n", encoding="utf-8")
+            path.write_text("- 状态：ready\n", encoding="utf-8")
 
             errors = context_check.validate_document_contracts(root)
 

@@ -1,18 +1,17 @@
-# Demo Run Reference
+# 示例演练参考
 
-Context outputs from the first run:
+首次演练的上下文产物：
 
 - `docs/context/current-state.md`
 - `docs/modules/order.md`
 - `.gj/context.yml`
 
-Durable facts extracted:
+提取的长期事实：
 
-- Self-approval is forbidden.
-- Docker executor is the stable CI runner path for this demo.
-- Local token helpers are ignored and must not be packaged.
+- 禁止自审批。
+- Docker executor 是本示例稳定的 CI Runner 方案。
+- 本地 Token helper 必须被忽略且不能进入分发包。
 
-Historical-only facts:
+仅属历史的事实：
 
-- The first failed policy job was a runner pull-policy issue, not a workflow
-  policy failure.
+- 首次失败的 policy Job 是 Runner 拉取策略问题，不是工作流策略失败。

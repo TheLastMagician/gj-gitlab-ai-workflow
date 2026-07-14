@@ -1,4 +1,4 @@
-# Bug Issue
+# 缺陷 Issue
 
 /label ~"type-bug"
 

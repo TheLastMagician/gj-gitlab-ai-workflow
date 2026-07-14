@@ -1,4 +1,4 @@
-# Merge Request
+# 合并请求
 
 <!--
 创建 MR 时必须在 GitLab Labels 中选择一个且只能选择一个：
@@ -11,7 +11,7 @@ Closes #
 
 ## 目标版本
 
-- Target release / Milestone：
+- 目标版本/Milestone：
 - 本 MR 是否修改项目版本：否（默认；发布准备 MR 才修改）
 
 ## 变更内容
@@ -44,4 +44,4 @@ API/数据库变化同时列出机器契约/schema/migration 路径和 Markdown 
 
 <!-- Fast 可填写“未使用”；Standard / Hotfix 记录 AI 参与范围。 -->
 
-## Reviewer 重点关注
+## 代码审阅重点

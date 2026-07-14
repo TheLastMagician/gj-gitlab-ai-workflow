@@ -1,4 +1,4 @@
-# Merge Request
+# 合并请求
 
 <!--
 创建 MR 时必须在 GitLab Labels 中选择一个且只能选择一个：
@@ -21,4 +21,4 @@ Closes #
 
 ## AI 使用范围
 
-## Reviewer 重点关注
+## 代码审阅重点

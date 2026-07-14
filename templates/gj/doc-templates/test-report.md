@@ -1,30 +1,30 @@
-# Test Report: <Tag>
+# 测试报告：<Tag>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Version:
+- 负责人：
+- 状态：draft
+- 版本：
 - Tag:
-- Commit:
-- Pipeline:
-- Environment:
-- Related Issues/MRs:
-- Related documents:
-- Last verified:
+- 提交：
+- Pipeline：
+- 环境：
+- 关联 Issue/MR：
+- 相关文档：
+- 最后核验日期：
 
-## Summary
+## 摘要
 
-## Executed Tests And Evidence
+## 已执行测试和证据
 
-| Test ID | Result | Evidence | Notes |
+| 测试编号 | 结果 | 证据 | 说明 |
 | --- | --- | --- | --- |
 | | | | |
 
-## Defects And Remaining Risk
+## 缺陷和剩余风险
 
-## QA Decision
+## QA 结论
 
-- QA owner:
-- Date:
-- Decision:
+- QA 负责人：
+- 日期：
+- 结论：

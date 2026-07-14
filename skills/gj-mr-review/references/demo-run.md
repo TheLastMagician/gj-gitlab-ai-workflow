@@ -1,16 +1,16 @@
-# Demo Run Reference
+# 示例演练参考
 
-MR input:
+MR 输入：
 
-- Description: `examples/demo-run/mr/merge-request.md`
-- Changed files: `examples/demo-run/mr/changed-files.txt`
-- AI review: `examples/demo-run/mr/ai-review.md`
+- 描述：`examples/demo-run/mr/merge-request.md`
+- 变更文件：`examples/demo-run/mr/changed-files.txt`
+- AI 审阅：`examples/demo-run/mr/ai-review.md`
 
-Review lessons:
+审阅经验：
 
-1. Check workflow sections before code details.
-2. Match changed files against `.gj/workflow.yml`.
-3. Reject `flow::fast` when policy or orchestrator files change; require
-   Standard/Hotfix evidence and a human merge decision.
-4. Confirm local token helpers are not committed.
-5. Keep draft skill maturity honest.
+1. 先检查工作流章节，再看代码细节。
+2. 根据 `.gj/workflow.yml` 匹配变更文件。
+3. 策略或 Orchestrator 文件变化时拒绝 `flow::fast`；要求 Standard/Hotfix 证据和人工
+   合并决定。
+4. 确认本地 Token helper 未提交。
+5. 如实标注草稿 Skill 的成熟度。

@@ -1,37 +1,37 @@
-# Release Note: <Tag>
+# 发布说明：<Tag>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Version:
+- 负责人：
+- 状态：draft
+- 版本：
 - Tag:
-- Source commit:
-- Pipeline:
-- Milestone:
-- Release Issue:
-- Related documents:
-- Last verified:
+- 来源提交：
+- Pipeline：
+- 里程碑：
+- 发布 Issue：
+- 相关文档：
+- 最后核验日期：
 
-## Scope And Included Issues/MRs
+## 范围和包含的 Issue/MR
 
-## User-visible Changes
+## 用户可见变化
 
-## Operations, Configuration, Database And Permission Changes
+## 运维、配置、数据库和权限变化
 
-## Validation And Test Report
+## 验证和测试报告
 
-## Rollout, Monitoring And Rollback
+## 发布、监控和回滚
 
-## Deployment Result
+## 部署结果
 
-- Environment:
-- Deployed Tag/SHA:
-- Deployed at:
-- Post-release validation:
+- 环境：
+- 已部署 Tag/SHA：
+- 部署时间：
+- 发布后验证：
 
-## Human Confirmations
+## 人工确认
 
-| Role | User | Decision | Date |
+| 角色 | 用户 | 结论 | 日期 |
 | --- | --- | --- | --- |
 | | | | |

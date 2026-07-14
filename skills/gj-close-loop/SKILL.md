@@ -3,59 +3,50 @@ name: gj-close-loop
 description: Close completed GitLab work by capturing lessons and refreshing durable project context. Use after an MR, bug fix, hotfix, release, or milestone when current-state, module docs, ADRs, context indexes, release evidence, or process follow-ups may need updates.
 ---
 
-# GJ Close Loop
+# GJ 闭环收尾
 
-## Workflow
+## 工作流程
 
-1. Read the completed work item, MR, pipeline and test evidence, release notes,
-   bugs, follow-ups, `.gj/context.yml`, and relevant current project documents.
-2. Scale closure to the flow:
-   - Fast: record the result and update durable docs only if behavior changed.
-   - Standard: summarize delivery, decisions, tests, friction, and durable
-     context updates.
-   - Hotfix: require root cause, regression coverage, documentation repair,
-     risk follow-ups, and a short retro after the immediate fix.
-3. Separate current durable facts from history, hypotheses, and superseded
-   decisions.
-4. Re-run the durable-impact classification across product, interaction,
-   API/event, database, architecture/ADR, module rule, test baseline, release,
-   and runtime state. Update the smallest applicable set of current documents
-   and `.gj/context.yml`. Only update `current-state.md` for cross-project or
-   deployed-environment facts. Keep process history in GitLab and change
-   history in Git instead of copying either into repository archives.
-5. After a release or deployment, distinguish planned from actual state. Update
-   the release note and `docs/context/current-state.md` with the released Tag,
-   commit SHA, Pipeline, environment, deployment time, post-release validation,
-   and rollback result. Never claim a Milestone or untagged commit is released.
-6. Preserve conflicts and ask for human confirmation instead of inventing a
-   single truth.
-7. Remove superseded current facts instead of retaining deprecation sections;
-   Git and frozen evidence provide history.
-8. Output a documentation decision table with path, action, triggering fact,
-   stage/status, and confirmer/follow-up. Every follow-up includes an Issue,
-   owner, and due date.
-9. Create tracked improvement items for unresolved defects or process changes.
+1. 读取已完成工作项、MR、Pipeline 和测试证据、发布说明、缺陷、跟进项、
+   `.gj/context.yml` 以及相关当前项目文档。
+2. 按 flow 调整收尾深度：
+   - Fast：记录结果；只有行为变化时才更新长期文档。
+   - Standard：总结交付、决策、测试、阻碍和长期上下文更新。
+   - Hotfix：在紧急修复后补齐根因、回归覆盖、文档修复、风险跟进和简短复盘。
+3. 区分当前长期事实、历史、假设和已被替代的决策。
+4. 重新判断产品、交互、API/事件、数据库、架构/ADR、模块规则、测试基线、发布和运行
+   状态影响。只更新最小适用的当前文档集合和 `.gj/context.yml`。仅当跨项目或已部署
+   环境事实变化时更新 `current-state.md`。过程历史留在 GitLab，变更历史留在 Git，
+   不复制为仓库归档。
+5. 发布或部署后区分计划和实际状态。在发布说明及 `docs/context/current-state.md` 回写
+   实际 Tag、commit SHA、Pipeline、环境、部署时间、发布后验证和回滚结果。不得把
+   Milestone 或无 Tag 提交描述为已发布。
+6. 保留冲突并要求人工确认，不得编造单一事实。
+7. 删除已被替代的当前事实，不保留“已废弃”章节；Git 和冻结证据负责历史。
+8. 输出文档决策表，包含路径、动作、触发事实、阶段/状态和确认人/跟进项。每个
+   `follow-up` 都要有 Issue、负责人和期限。
+9. 为未解决缺陷或流程变化创建可跟踪的改进工作项。
 
-## Output
+## 输出格式
 
 ```markdown
-## Close Loop
+## 闭环结果
 
-Completed scope:
-Evidence:
-Released Tag / SHA / Pipeline / deployed environments:
-What worked or failed:
-Durable facts:
-Historical-only notes:
-Files updated:
-Documentation impact:
-Documentation decisions (path / action / triggering fact / stage and status / confirmer or follow-up):
-Follow-up Issues:
-Human confirmation needed:
-Closure status:
+完成范围：
+证据：
+已发布 Tag/SHA/Pipeline/部署环境：
+有效做法或失败点：
+长期事实：
+仅属历史的记录：
+已更新文件：
+文档影响：
+文档决策（路径/动作/触发事实/阶段和状态/确认人或跟进项）：
+后续 Issue：
+需要人工确认：
+闭环状态：
 ```
 
-## References
+## 参考资料
 
-- Read `references/retro-example.md` for milestone learning extraction.
-- Read `references/context-example.md` for durable-versus-historical context.
+- 提取里程碑经验时读取 `references/retro-example.md`。
+- 区分长期事实和历史上下文时读取 `references/context-example.md`。

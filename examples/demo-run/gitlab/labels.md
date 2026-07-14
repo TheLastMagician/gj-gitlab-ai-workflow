@@ -1,6 +1,6 @@
-# GitLab Labels Created
+# 已创建的 GitLab 标签
 
-## Type
+## 类型
 
 - `type-project`
 - `type-requirement`
@@ -12,7 +12,7 @@
 - `type-release`
 - `type-retro`
 
-## Status
+## 状态
 
 - `status-需求池`
 - `status-需求待分析`
@@ -30,13 +30,13 @@
 - `status-已关闭`
 - `status-阻塞`
 
-## Workflow Flow
+## 工作流通道
 
 - `flow::fast`
 - `flow::standard`
 - `flow::hotfix`
 
-## Priority / Risk / AI
+## 优先级/风险/AI
 
 - `priority-P1`
 - `priority-P2`
@@ -47,7 +47,7 @@
 - `ai-已分析`
 - `ai-需人工确认`
 
-## Friction
+## 阻碍
 
 The first API helper configuration pointed at a project that did not match
 `git remote -v`. The safe bootstrap action is to call `GET /projects/:project`

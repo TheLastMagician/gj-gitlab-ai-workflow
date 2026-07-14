@@ -1,21 +1,21 @@
-# Merge Request
+# 合并请求
 
 ## 关联 Issue
 
 Closes #4
 
-Related: #1 #2 #3 #5 #6 #7 #8
+关联：#1 #2 #3 #5 #6 #7 #8
 
 ## 变更内容
 
-- Add open-source workflow skeleton docs.
-- Add GitLab issue and MR templates.
-- Add `.gj` config and reusable templates.
-- Add CI policy and smoke check scripts.
-- Add Orchestrator routing skeleton.
-- Add order approval demo project.
-- Add first demo-run artifacts.
-- Add first-batch draft skills.
+- 添加开源工作流骨架文档。
+- 添加 GitLab Issue 和 MR 模板。
+- 添加 `.gj` 配置和可复用模板。
+- 添加 CI 策略和冒烟检查脚本。
+- 添加 Orchestrator 路由骨架。
+- 添加订单审批示例项目。
+- 添加首次示例演练产物。
+- 添加首批草稿 Skill。
 
 ## 自测结果
 
@@ -24,19 +24,17 @@ Related: #1 #2 #3 #5 #6 #7 #8
 
 ## 风险点
 
-- Workflow policy files affect future merge gates.
-- Orchestrator skeleton is not production-ready.
-- Local GitLab API helper must stay untracked because it can contain credentials.
+- 工作流策略文件会影响后续合并门禁。
+- Orchestrator 骨架尚不能用于生产。
+- 本地 GitLab API helper 可能包含凭据，必须保持未跟踪。
 
 ## 回滚方案
 
-Revert this MR. No database, external API, or production configuration changes
-are included.
+回退本 MR。本次不包含数据库、外部 API 或生产配置变化。
 
 ## 数据库 / 配置变更
 
-No database changes. GitLab labels, milestone, issues, and notes were created in
-the demo project as part of the first run.
+无数据库变化。首次演练已在示例项目中创建 GitLab 标签、Milestone、Issue 和评论。
 
 ## 文档影响
 
@@ -46,11 +44,10 @@ the demo project as part of the first run.
 
 ## AI 使用范围
 
-Codex generated the skeleton, demo artifacts, issue notes, and draft skills from
-the supplied workflow document and the first end-to-end run.
+Codex 根据提供的工作流文档和首次端到端演练生成骨架、示例产物、Issue 评论和草稿 Skill。
 
-## Reviewer 重点关注
+## 代码审阅重点
 
-- Ensure `gitlab-api.ps1` and tokens are not committed.
-- Check `policy_check.py` secret scanning and minimum-flow behavior.
-- Confirm skill drafts are not overclaiming maturity.
+- 确认 `gitlab-api.ps1` 和 Token 未提交。
+- 检查 `policy_check.py` 秘密扫描和最低 flow 行为。
+- 确认 Skill 草稿没有夸大成熟度。

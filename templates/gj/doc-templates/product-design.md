@@ -1,36 +1,36 @@
-# Product Design: <Capability>
+# 产品设计：<能力名称>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Source Issue:
-- Target release:
-- Effective from: pending
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 
-## Design Goals
+## 设计目标
 
-## User Flow
+## 用户流程
 
-## Screens And States
+## 页面和状态
 
-| Screen/state | Entry condition | Behavior | Exit condition |
+| 页面/状态 | 进入条件 | 行为 | 退出条件 |
 | --- | --- | --- | --- |
 | | | | |
 
-## Interaction And Permission Differences
+## 交互和权限差异
 
-## Error, Empty And Loading States
+## 错误、空白和加载状态
 
-## Copy And Messaging
+## 文案和提示
 
-## Accessibility And Responsiveness
+## 无障碍和响应式要求
 
-## Confirmation
+## 确认记录
 
-- Product/design owner:
-- Date:
-- Decision:
+- 产品/设计负责人：
+- 日期：
+- 结论：

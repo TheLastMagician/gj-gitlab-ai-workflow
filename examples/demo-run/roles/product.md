@@ -1,10 +1,10 @@
-# Product Role
+# 产品角色
 
-## Input
+## 输入
 
 订单在进入履约前需要审批，审批人可以通过或驳回，申请人不能审批自己的订单。
 
-## AI Output
+## AI 输出
 
 ```markdown
 推荐路径：标准需求
@@ -18,14 +18,14 @@
 4. 是否需要审计日志？
 ```
 
-## Human Confirmation
+## 人工确认
 
-Product confirms:
+产品确认：
 
-- v1.0 only covers the minimal approval state machine.
-- Amount threshold, audit log, notification, and external integration are non-goals.
-- Self-approval prevention is required for v1.0.
+- v1.0 只覆盖最小审批状态机。
+- 金额阈值、审计日志、通知和外部集成是非目标。
+- v1.0 必须阻止自审批。
 
-## Output
+## 输出
 
-Requirement Issue #2 with explicit acceptance criteria.
+带明确验收标准的 Requirement Issue #2。

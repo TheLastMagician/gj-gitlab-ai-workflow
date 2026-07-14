@@ -1,26 +1,25 @@
-# Tech Lead Role
+# 开发经理角色
 
-## Input
+## 输入
 
 - Requirement Issue #2
-- AI clarification comment
-- Current module context from `docs/modules/order.md`
+- AI 澄清评论
+- `docs/modules/order.md` 中的当前模块上下文
 
-## Output
+## 输出
 
-Solution Issue #3:
+Solution Issue #3：
 
-- Use an in-memory domain model for the demo.
-- Model state as `draft -> pending -> approved/rejected`.
-- Keep API, DB, audit log, and notifications out of scope.
-- Add tests for submit, approve, reject, self-approval, and repeated approval.
+- 示例使用内存领域模型。
+- 状态建模为 `draft -> pending -> approved/rejected`。
+- API、数据库、审计日志和通知保持范围外。
+- 为提交、通过、驳回、自审批和重复审批添加测试。
 
-## Risk Notes
+## 风险说明
 
-- `risk-permission` is valid because self-approval is a business permission rule.
-- Real systems must not rely on plain usernames for authorization.
+- `risk-permission` 有效，因为自审批是业务权限规则。
+- 真实系统不能依赖纯用户名进行授权。
 
-## Human Confirmation
+## 人工确认
 
-Tech Lead confirms the solution is enough for a demo and does not set a precedent
-for production authorization design.
+开发经理确认方案足以用于示例，但不作为生产授权设计的先例。

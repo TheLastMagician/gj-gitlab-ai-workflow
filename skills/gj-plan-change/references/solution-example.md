@@ -1,19 +1,17 @@
-# Demo Run Reference
+# 示例演练参考
 
-Main work item: Requirement Issue #2
+主工作项：Requirement Issue #2
 
-Durable solution: `docs/technical/solutions/order-approval.md`
+长期方案：`docs/technical/solutions/order-approval.md`
 
-The historical demo also created Solution Issue #3 for a separately tracked
-review. Do not repeat that split unless independent ownership, scheduling, or
-tracking makes it useful.
+历史示例还创建了 Solution Issue #3 单独跟踪评审。只有独立负责人、排期或跟踪确实有
+价值时才重复这种拆分。
 
-The accepted demo solution:
+已接受的示例方案：
 
-- Use an in-memory domain model.
-- Model state as `draft -> pending -> approved/rejected`.
-- Keep API, DB, audit log, and notifications out of scope.
-- Treat self-approval as a permission risk.
+- 使用内存领域模型。
+- 状态建模为 `draft -> pending -> approved/rejected`。
+- API、数据库、审计日志和通知不在范围内。
+- 把自审批视为权限风险。
 
-The solution document must explicitly list non-goals so implementation does
-not grow beyond the accepted scope. Review discussion remains on the main Issue.
+方案文档必须明确列出非目标，避免实现超出已接受范围。评审讨论保留在主 Issue。

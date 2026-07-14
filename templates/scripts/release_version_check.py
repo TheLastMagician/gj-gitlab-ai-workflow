@@ -67,7 +67,7 @@ def resolve_version(tag: str, policy: VersioningPolicy) -> str | None:
 
 
 def metadata(text: str, key: str) -> str:
-    match = re.search(rf"(?mi)^-\s*{re.escape(key)}:\s*(.*?)\s*$", text)
+    match = re.search(rf"(?mi)^-\s*{re.escape(key)}[:：]\s*(.*?)\s*$", text)
     return match.group(1).strip() if match else ""
 
 
@@ -91,16 +91,16 @@ def release_version_errors(root: Path, tag: str, policy: VersioningPolicy) -> li
         return [f"发布 Tag {tag} 缺少发布说明：{relative}"]
 
     text = note.read_text(encoding="utf-8")
-    declared = metadata(text, "Version")
+    declared = metadata(text, "版本")
     if declared != tag:
-        errors.append(f"{relative} 的 Version 必须是 {tag}，当前为 {declared or '空'}")
+        errors.append(f"{relative} 的版本必须是 {tag}，当前为 {declared or '空'}")
     declared_tag = metadata(text, "Tag")
     if declared_tag != tag:
         errors.append(f"{relative} 的 Tag 必须是 {tag}，当前为 {declared_tag or '空'}")
-    status = metadata(text, "Status").lower()
+    status = metadata(text, "状态").lower()
     if status not in {"ready", "released"}:
-        errors.append(f"{relative} 的 Status 必须是 ready 或 released，当前为 {status or '空'}")
-    for heading in ["Included Issues And MRs", "Validation", "Rollback Plan"]:
+        errors.append(f"{relative} 的状态必须是 ready 或 released，当前为 {status or '空'}")
+    for heading in ["范围和包含的 Issue/MR", "验证和测试报告", "发布、监控和回滚"]:
         if not re.search(rf"(?m)^##\s+{re.escape(heading)}\s*$", text):
             errors.append(f"{relative} 缺少章节：{heading}")
     return errors

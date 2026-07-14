@@ -1,20 +1,20 @@
-# Demo Run Reference
+# 示例演练参考
 
-Bug Issue: #6 `[订单审批流 v1.0] Bug：申请人可以审批自己的订单`
+缺陷 Issue：#6 `[订单审批流 v1.0] Bug：申请人可以审批自己的订单`
 
-Facts:
+事实：
 
-- Alice submitted an order.
-- Alice approved the same order.
-- The first implementation allowed it.
+- Alice 提交了订单。
+- Alice 审批了同一订单。
+- 首版实现允许该操作。
 
-Root cause:
+根因：
 
-- The service checked only `pending` status.
-- It did not compare `order.applicant` with `approver`.
+- 服务只检查了 `pending` 状态。
+- 没有比较 `order.applicant` 和 `approver`。
 
-Fix:
+修复：
 
-- Add `_ensure_not_self_approval`.
-- Call it from both `approve` and `reject`.
-- Add regression test `test_applicant_cannot_approve_own_order`.
+- 新增 `_ensure_not_self_approval`。
+- 在 `approve` 和 `reject` 中调用。
+- 新增回归测试 `test_applicant_cannot_approve_own_order`。

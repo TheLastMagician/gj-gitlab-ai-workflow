@@ -26,16 +26,16 @@ class ValidateSkillsTest(unittest.TestCase):
         ]:
             text = (ROOT / "skills" / name / "SKILL.md").read_text(encoding="utf-8")
             with self.subTest(skill=name):
-                self.assertIn("documentation decision", text.lower())
+                self.assertIn("文档决策", text)
 
     def test_delivery_skills_define_version_lifecycle(self) -> None:
         expected = {
-            "gj-workflow-next": "Target release",
-            "gj-plan-change": "Target release",
-            "gj-develop-change": "do not bump",
-            "gj-mr-review": "version traceability",
-            "gj-release-readiness": "final SemVer",
-            "gj-close-loop": "released Tag",
+            "gj-workflow-next": "目标版本",
+            "gj-plan-change": "目标版本",
+            "gj-develop-change": "不提升仓库版本",
+            "gj-mr-review": "版本追溯",
+            "gj-release-readiness": "最终 SemVer",
+            "gj-close-loop": "已发布 Tag",
         }
         for name, phrase in expected.items():
             text = (ROOT / "skills" / name / "SKILL.md").read_text(encoding="utf-8")

@@ -30,7 +30,7 @@
 
 ## 目标版本
 
-- Target release：
+- 目标版本：
 - GitLab Milestone：
 
 <!-- 这里只是计划版本，可在发布准备前调整；Git Tag 创建后才是正式发布版本。 -->

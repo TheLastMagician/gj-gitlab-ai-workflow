@@ -1,38 +1,38 @@
-# API Contract: <Domain>
+# API 契约：<领域名称>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Source Issue:
-- Target release:
-- Effective from: pending
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 
-## Contract Source
+## 契约事实源
 
-- OpenAPI/AsyncAPI/schema path:
-- Base path or topic:
-- Compatibility policy:
+- OpenAPI/AsyncAPI/schema 路径：
+- 基础路径或主题：
+- 兼容策略：
 
-## Operations
+## 操作
 
-| Operation | Request/event | Response/result | Permission | Idempotency |
+| 操作 | 请求/事件 | 响应/结果 | 权限 | 幂等性 |
 | --- | --- | --- | --- | --- |
 | | | | | |
 
-## Errors And Failure Semantics
+## 错误和失败语义
 
-## Versioning And Compatibility
+## 版本和兼容性
 
-## Security And Data Classification
+## 安全和数据分级
 
-## Regression Requirements
+## 回归要求
 
-## Confirmation
+## 确认记录
 
-- API owner / Dev Lead:
-- Date:
-- Decision:
+- API 负责人/开发经理：
+- 日期：
+- 结论：

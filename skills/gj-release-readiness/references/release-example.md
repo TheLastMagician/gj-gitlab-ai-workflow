@@ -1,15 +1,15 @@
-# Demo Run Reference
+# 示例演练参考
 
-Release Issue #7 covered:
+Release Issue #7 包含：
 
-- Workflow skeleton.
-- GitLab templates.
-- AI config.
-- CI/CD pipeline.
-- Demo project.
-- Draft skills.
+- 工作流骨架。
+- GitLab 模板。
+- AI 配置。
+- CI/CD Pipeline。
+- 示例项目。
+- 草稿 Skill。
 
-Release validation eventually succeeded in Pipeline #19842:
+发布验证最终在 Pipeline #19842 成功：
 
 - policy.
 - validate.
@@ -17,8 +17,8 @@ Release validation eventually succeeded in Pipeline #19842:
 - package.
 - release.
 
-Runner lesson:
+Runner 经验：
 
-- Prefer Docker executor.
-- Use `pull_policy = "if-not-present"` when the Python image is already local
-  and Docker Hub access is blocked.
+- 优先使用 Docker executor。
+- 本地已有 Python 镜像且 Docker Hub 访问受阻时，使用
+  `pull_policy = "if-not-present"`。

@@ -1,20 +1,19 @@
-# QA Failure
+# QA 失败记录
 
-## Failure
+## 失败现象
 
-Applicant could approve their own submitted order.
+申请人可以审批自己提交的订单。
 
-## Why It Matters
+## 影响
 
-The requirement explicitly says the applicant cannot approve their own order.
-This is a permission rule, not a cosmetic defect.
+需求明确规定申请人不能审批自己的订单。这是权限规则，不是表面缺陷。
 
-## Bug Issue
+## 缺陷 Issue
 
-Created: #6 `[订单审批流 v1.0] Bug：申请人可以审批自己的订单`
+已创建：#6 `[订单审批流 v1.0] Bug：申请人可以审批自己的订单`
 
-## Fix Requirement
+## 修复要求
 
-- Block self-approval in `approve`.
-- Block self-rejection in `reject`.
-- Add regression tests.
+- 在 `approve` 中阻止自审批。
+- 在 `reject` 中阻止自驳回。
+- 添加回归测试。

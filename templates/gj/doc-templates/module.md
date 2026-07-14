@@ -1,26 +1,26 @@
-# Module: <Module>
+# 模块：<模块名称>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Source Issue:
-- Target release:
-- Effective from: pending
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 
-## Responsibilities And Boundaries
+## 职责和边界
 
-## Current Business Rules
+## 当前业务规则
 
-## States And Failure Behavior
+## 状态和失败行为
 
-## API And Data Contracts
+## API 和数据契约
 
-## Dependencies
+## 依赖
 
-## Test Entry Points
+## 测试入口
 
-## Known Limitations
+## 已知限制

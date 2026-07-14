@@ -1,54 +1,54 @@
-# Product Requirement: <Capability>
+# 产品需求：<能力名称>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Source Issue:
-- Target release:
-- Effective from: pending
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 
-## Background
+## 背景
 
-## Goals
+## 目标
 
-## Non-goals
+## 非目标
 
-## Users And Scenarios
+## 用户和场景
 
-| User | Scenario | Expected outcome |
+| 用户 | 场景 | 预期结果 |
 | --- | --- | --- |
 | | | |
 
-## Requirements And Rules
+## 需求和规则
 
-| ID | Requirement or rule | Priority | Notes |
+| 编号 | 需求或规则 | 优先级 | 说明 |
 | --- | --- | --- | --- |
 | R1 | | P2 | |
 
-## Acceptance Criteria
+## 验收标准
 
 - [ ]
 
-## Rejection And Counterexamples
+## 拒绝条件和反例
 
-| ID | Invalid or edge scenario | Expected rejection, error, or unchanged result |
+| 编号 | 无效或边界场景 | 预期拒绝、错误或保持不变的结果 |
 | --- | --- | --- |
 | E1 | | |
 
-## Dependencies
+## 依赖
 
-## Open Questions
+## 待确认问题
 
-| Question | Owner | Due date | Resolution |
+| 问题 | 负责人 | 截止日期 | 结论 |
 | --- | --- | --- | --- |
 | | | | |
 
-## Confirmation
+## 确认记录
 
-- Product owner:
-- Date:
-- Decision:
+- 产品负责人：
+- 日期：
+- 结论：

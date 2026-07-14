@@ -1,9 +1,11 @@
-# Environment Standard
+# 环境规范
 
-- Dev/review environments may be automatic when isolated per branch or MR.
-- Shared test/staging environments must not be overwritten automatically by MR branches.
-- Shared test/staging deployment requires human confirmation.
-- Shared environments must use an environment lock such as GitLab `resource_group`.
-- Record branch, MR, commit SHA, pipeline, deployer, previous version, rollback target, and QA owner for every shared environment deployment.
-- Use `develop`, `integration`, `release/*`, or tag-based rules for shared test deployment.
-- AI may assist with checks, deployment notes, and project-approved commands, but must not autonomously overwrite shared test/staging or production.
+- 按分支或 MR 隔离的开发/评审环境可以自动部署。
+- MR 分支不得自动覆盖共享测试/预发布环境。
+- 共享测试/预发布环境部署需要人工确认。
+- 共享环境必须使用 GitLab `resource_group` 等环境锁。
+- 每次共享环境部署都要记录分支、MR、commit SHA、Pipeline、部署人、上一版本、回滚目标
+  和 QA 负责人。
+- 共享测试环境使用 `develop`、`integration`、`release/*` 或基于 Tag 的规则部署。
+- AI 可以协助检查、部署说明和执行项目已批准的命令，但不得自主覆盖共享测试、预发布
+  或生产环境。

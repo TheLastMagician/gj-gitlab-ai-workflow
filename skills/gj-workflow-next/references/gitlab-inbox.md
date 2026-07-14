@@ -1,68 +1,65 @@
-# GitLab Inbox API Reference
+# GitLab 待办 API 参考
 
-Use this reference when `gj-workflow-next` needs live GitLab state. Prefer the
-installed `scripts/gitlab_api.py` helper so Codex, Claude Code, and OpenCode use
-the same guarded API behavior. Never print tokens.
+`gj-workflow-next` 需要真实 GitLab 状态时使用本参考资料。优先使用已安装的
+`scripts/gitlab_api.py` helper，让 Codex、Claude Code 和 OpenCode 使用同一套受保护
+API 行为。绝不输出 Token。
 
-## Authentication
+## 认证
 
-Installing the Skill does not require a token. For live access, configure once:
+安装 Skill 不需要 Token。需要真实访问时配置一次：
 
 ```powershell
 python scripts/gitlab_api.py configure --url https://gitlab.example.com --project-id group/project
 python scripts/gitlab_api.py doctor
 ```
 
-The helper reads ignored `.gj/gitlab.local.json`; CI environment variables may
-override it. Do not open, print, stage, or send the local config to an Agent.
+helper 读取被忽略的 `.gj/gitlab.local.json`；CI 环境变量可以覆盖。不要打开、输出、
+暂存本地配置或把它发送给 Agent。
 
-Use a current-user Personal Access Token with `read_api` when personal Todos are
-required. Use `api` only for human-confirmed writes such as creating an Issue,
-setting labels or assignees, and posting notes. A Project Access Token represents
-a bot account and therefore cannot stand in for a person's Todo inbox. See
-the public [GitLab access guide](https://github.com/TheLastMagician/gj-gitlab-ai-workflow/blob/main/docs/gitlab-access.md)
-for setup and storage rules.
+读取个人 Todo 时使用当前用户且带 `read_api` 的 Personal Access Token。只有创建 Issue、
+设置标签/负责人、发布评论等经人确认的写操作才使用 `api`。Project Access Token 代表
+机器人账号，不能代替人的 Todo 待办。设置和存储规则见公开
+[GitLab 访问指南](https://github.com/TheLastMagician/gj-gitlab-ai-workflow/blob/main/docs/gitlab-access.md)。
 
-## Core sources
+## 核心数据源
 
-- Current user: `GET /user`
-- User lookup: `GET /users?username=<username>`
-- Todos: `GET /todos`
-- Project Issues assigned to a user:
+- 当前用户：`GET /user`
+- 用户查询：`GET /users?username=<username>`
+- Todo：`GET /todos`
+- 分配给用户的项目 Issue：
   `GET /projects/:project/issues?state=opened&assignee_username=<username>`
-- Project MRs assigned to a user:
+- 分配给用户的项目 MR：
   `GET /projects/:project/merge_requests?state=opened&assignee_username=<username>`
-- Project MRs requiring review from a user:
+- 需要用户审阅的项目 MR：
   `GET /projects/:project/merge_requests?state=opened&reviewer_username=<username>`
-- MR discussions:
+- MR 讨论：
   `GET /projects/:project/merge_requests/:iid/discussions`
-- MR pipelines:
+- MR Pipeline：
   `GET /projects/:project/merge_requests/:iid/pipelines`
-- Project failed pipelines:
+- 项目失败 Pipeline：
   `GET /projects/:project/pipelines?status=failed`
-- Notes for an Issue:
+- Issue 评论：
   `GET /projects/:project/issues/:iid/notes`
-- Notes for an MR:
+- MR 评论：
   `GET /projects/:project/merge_requests/:iid/notes`
 
-## Optional write actions
+## 可选写操作
 
-Use write actions only when the human asks for assignment, reviewer setup, or a
-handoff comment. These actions create accountability and notification events;
-they do not approve or complete work.
+只有人要求指派、设置 Reviewer 或发布交接评论时才使用写操作。这些动作建立责任和通知
+事件，不代表批准或完成工作。
 
-- Assign Issue:
+- 指派 Issue：
   `PUT /projects/:project/issues/:iid` with `assignee_ids`
-- Assign MR:
+- 指派 MR：
   `PUT /projects/:project/merge_requests/:iid` with `assignee_ids`
-- Set MR reviewer:
+- 设置 MR Reviewer：
   `PUT /projects/:project/merge_requests/:iid` with `reviewer_ids`
-- Add Issue note:
+- 添加 Issue 评论：
   `POST /projects/:project/issues/:iid/notes`
-- Add MR note:
+- 添加 MR 评论：
   `POST /projects/:project/merge_requests/:iid/notes`
 
-## Helper commands
+## Helper 命令
 
 ```powershell
 python scripts/gitlab_api.py request --path "todos"
@@ -72,14 +69,12 @@ python scripts/gitlab_api.py request --method PUT --path "projects/:project/issu
 python scripts/gitlab_api.py request --method POST --path "projects/:project/issues/12/notes" --body-json '{"body":"@zengqinglin please handle QA verification."}' --confirm-write
 ```
 
-Writes fail unless `--confirm-write` is present, the path uses `:project`, and
-the configured GitLab project matches `git remote origin`. The helper rejects
-credential, runner, webhook, and CI-variable endpoints.
+只有带 `--confirm-write`、路径使用 `:project` 且配置的 GitLab 项目与
+`git remote origin` 匹配时，写操作才会成功。helper 拒绝凭据、Runner、webhook 和 CI
+变量端点。
 
-## Notification model
+## 通知模型
 
-GitLab is the source of truth. Enterprise WeCom, email, or other company
-messaging systems may deliver GitLab notifications, but this skill should not
-read those channels. If a person did not receive a notification, verify the
-GitLab item has an assignee/reviewer and an `@username` handoff comment, then
-ask the human to check GitLab notification settings.
+GitLab 是事实源。企业微信、邮件或其他公司消息系统可以投递 GitLab 通知，但本 Skill
+不读取这些渠道。某人未收到通知时，先确认 GitLab 工作项有 assignee/reviewer 和
+`@username` 交接评论，再让人检查 GitLab 通知设置。

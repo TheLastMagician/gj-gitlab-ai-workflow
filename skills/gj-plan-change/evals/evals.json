@@ -10,7 +10,8 @@
         "The plan keeps flow::fast and does not recommend extra Solution, Task, or Test Issues.",
         "The documentation decision uses semantic paths or document categories and marks durable documents no-change with a concrete reason.",
         "The documentation decision includes triggering fact, stage/status, and confirmer or follow-up columns.",
-        "The plan includes a focused self-test and does not create a Tag or bump a version."
+        "The plan includes a focused self-test and does not create a Tag or bump a version.",
+        "All human-facing output headings and field labels are Chinese."
       ]
     },
     {
@@ -22,7 +23,8 @@
         "Requirement remains the main Issue and no Solution, Task, or Test Issue is created by default for the single-team change.",
         "The plan includes semantic PRD, technical solution, API contract, database design, module, and test-plan paths as create or update decisions.",
         "The plan identifies the machine-readable API schema and schema/migration code as executable facts paired with explanatory Markdown.",
-        "The documentation decision includes triggering fact, stage/status, and confirmer or follow-up columns."
+        "The documentation decision includes triggering fact, stage/status, and confirmer or follow-up columns.",
+        "All human-facing output headings and field labels are Chinese."
       ]
     },
     {
@@ -34,7 +36,8 @@
         "The hotfix plan prioritizes impact containment, minimum safe fix, validation, rollback, and human release confirmation.",
         "Deferred API and test documentation decisions use follow-up rather than no-change.",
         "Every follow-up includes a GitLab Issue, owner, and due date.",
-        "The plan requires post-release regression evidence and durable-fact repair."
+        "The plan requires post-release regression evidence and durable-fact repair.",
+        "All human-facing output headings and field labels are Chinese."
       ]
     }
   ]

@@ -1,36 +1,36 @@
-# Technical Solution: <Capability>
+# 技术方案：<能力名称>
 
-## Metadata
+## 元数据
 
-- Owner:
-- Status: draft
-- Source Issue:
-- Target release:
-- Effective from: pending
-- Implemented by:
-- Related documents:
-- Last verified:
+- 负责人：
+- 状态：draft
+- 来源 Issue：
+- 目标版本：
+- 生效范围：pending
+- 实现 MR：
+- 相关文档：
+- 最后核验日期：
 
-## Summary And Impact Scope
+## 摘要和影响范围
 
-## Proposed Design
+## 方案设计
 
-## Alternatives And Trade-offs
+## 备选方案和取舍
 
-| Alternative | Benefit | Why not selected |
+| 备选方案 | 收益 | 未采用原因 |
 | --- | --- | --- |
 | | | |
 
-## API, Data, Permission And Configuration Impact
+## API、数据、权限和配置影响
 
-## Risk And Security
+## 风险和安全
 
-## Test Strategy
+## 测试策略
 
-## Rollout, Monitoring And Rollback
+## 发布、监控和回滚
 
-## Confirmation
+## 确认记录
 
-- Dev Lead:
-- Date:
-- Decision:
+- 开发经理：
+- 日期：
+- 结论：

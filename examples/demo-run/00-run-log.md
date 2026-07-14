@@ -1,54 +1,52 @@
-# Demo Run Log: 订单审批流 v1.0
+# 示例演练记录：订单审批流 v1.0
 
-Run date: 2026-07-03
+演练日期：2026-07-03
 
-GitLab project: `zengqinglin/gj-workflow-demo`
+GitLab 项目：`zengqinglin/gj-workflow-demo`
 
-Milestone: [订单审批流 v1.0](https://gitlab.example.com/acme/gj-workflow-demo/-/milestones/1)
+Milestone：[订单审批流 v1.0](https://gitlab.example.com/acme/gj-workflow-demo/-/milestones/1)
 
-Merge request: [!1 feat(workflow): 初始化 GitLab AI 工作流骨架](https://gitlab.example.com/acme/gj-workflow-demo/-/merge_requests/1)
+合并请求：[!1 feat(workflow): 初始化 GitLab AI 工作流骨架](https://gitlab.example.com/acme/gj-workflow-demo/-/merge_requests/1)
 
-## End-to-End Trace
+## 端到端轨迹
 
-| Step | Role | Input | Output | Failure / Friction | Human Confirmation |
+| 步骤 | 角色 | 输入 | 输出 | 失败/阻碍 | 人工确认 |
 | --- | --- | --- | --- | --- | --- |
-| 1 | DevOps / Codex | Local repo and workflow doc | Labels, templates, `.gj`, CI files | API helper originally pointed at a different project before user fixed it | Confirm API ProjectId matches `origin` before writes |
-| 2 | Product | Rough need: order approval | Requirement Issue #2 and AI clarification comment | Approval owner source and amount threshold unclear | Product confirms v1.0 excludes amount threshold |
-| 3 | Tech Lead | Requirement Issue #2 | Solution Issue #3 | Permission risk needs owner attention | Tech Lead accepts minimal state machine for demo |
-| 4 | Tech Lead | Requirement + solution | Task Issue #4, Test Issue #5, Release Issue #7 | Task split is easy to overdo for a tiny demo | Keep Web API, DB, notification out of scope |
-| 5 | Developer | Task Issue #4 | Demo service and tests | Initial implementation missed self-approval rule | Developer adds regression test and fix |
-| 6 | Reviewer | MR description and changed files | AI review notes | Policy checks the minimum flow for changed paths | Reviewer checks risk, test, rollback, and merge readiness |
-| 7 | QA | Acceptance criteria | QA failure and Bug Issue #6 | Failure must not be hidden in test report | QA upgrades failure to Bug Issue |
-| 8 | Developer | Bug Issue #6 | `_ensure_not_self_approval` and regression test | Need same rule in approve and reject | Reviewer confirms both paths |
-| 9 | DevOps | Release Issue #7 | Release and rollback checklist | Protected branch settings require GitLab UI/admin confirmation | DevOps confirms before merge |
-| 10 | PM | All Issues and MR notes | Retro Issue #8 and durable context updates | Skill drafts should not be written before examples exist | PM approves first-batch draft extraction only |
+| 1 | DevOps / Codex | 本地仓库和工作流文档 | 标签、模板、`.gj`、CI 文件 | API helper 最初指向错误项目，用户随后修正 | 写操作前确认 API ProjectId 与 `origin` 匹配 |
+| 2 | 产品 | 粗略需求：订单审批 | Requirement Issue #2 和 AI 澄清评论 | 审批人来源和金额阈值不清晰 | 产品确认 v1.0 不包含金额阈值 |
+| 3 | 开发经理 | Requirement Issue #2 | Solution Issue #3 | 权限风险需要负责人关注 | 开发经理接受示例的最小状态机 |
+| 4 | 开发经理 | 需求和方案 | Task Issue #4、Test Issue #5、Release Issue #7 | 小型示例容易过度拆分任务 | Web API、数据库、通知保持范围外 |
+| 5 | 开发 | Task Issue #4 | 示例服务和测试 | 首版遗漏自审批规则 | 开发添加回归测试和修复 |
+| 6 | Reviewer | MR 描述和变更文件 | AI 审阅意见 | policy 根据变更路径检查最低 flow | Reviewer 检查风险、测试、回滚和合并就绪度 |
+| 7 | QA | 验收标准 | QA 失败和 Bug Issue #6 | 失败不能隐藏在测试报告中 | QA 把失败升级为 Bug Issue |
+| 8 | 开发 | Bug Issue #6 | `_ensure_not_self_approval` 和回归测试 | approve 和 reject 都需要相同规则 | Reviewer 确认两条路径 |
+| 9 | DevOps | Release Issue #7 | 发布和回滚清单 | 保护分支设置需要 GitLab UI/管理员确认 | DevOps 在合并前确认 |
+| 10 | PM | 所有 Issue 和 MR 评论 | Retro Issue #8 和长期上下文更新 | 示例存在前不应编写 Skill 草稿 | PM 只批准提取首批草稿 |
 
-## Exposed Friction
+## 暴露的问题
 
-1. GitLab API helper configuration can drift from `git remote`.
-2. Local token helper files need explicit ignore rules before opening source.
-3. GitLab label and Issue creation needs idempotency to avoid duplicate demo runs.
-4. Skill initialization metadata has strict length constraints.
-5. QA failures must become Bug Issues, not prose hidden in test reports.
-6. CI policy checks cannot see untracked local secret files; commit hygiene still matters.
-7. On Windows, the skill metadata generator can fail on UTF-8 Chinese SKILL.md
-   files unless `--name` is passed or the script reads with UTF-8 explicitly.
-8. Python dataclasses fail under dynamic import unless the imported module is
-   registered in `sys.modules` before `exec_module`.
-9. GitLab pipeline can remain pending when no project/shared runner is active.
-   A temporary shell runner picked up the job but failed under Windows
-   PowerShell working-directory handling. The stable path for this demo is a
-   Docker executor runner with `python:3.12-slim`.
+1. GitLab API helper 配置可能与 `git remote` 漂移。
+2. 开源前，本地 Token helper 文件需要明确忽略规则。
+3. GitLab 标签和 Issue 创建需要幂等，避免重复演练。
+4. Skill 初始化元数据有严格长度限制。
+5. QA 失败必须转为 Bug Issue，不能藏在测试报告文字里。
+6. CI policy 检查看不到未跟踪的本地秘密文件，提交卫生仍然重要。
+7. Windows 上，Skill 元数据生成器可能无法读取 UTF-8 中文 `SKILL.md`，除非传入
+   `--name` 或脚本明确使用 UTF-8。
+8. Python dataclass 动态导入时，必须在 `exec_module` 前把模块注册到 `sys.modules`。
+9. 没有活跃项目/共享 Runner 时，GitLab Pipeline 会保持 pending。临时 shell Runner
+   接收了 Job，但受 Windows PowerShell 工作目录处理影响而失败。本示例稳定方案是使用
+   `python:3.12-slim` 的 Docker executor Runner。
 
-## CI/CD Pipeline
+## CI/CD 流水线
 
-The demo pipeline was expanded to show the whole delivery flow:
+示例 Pipeline 扩展为完整交付流程：
 
 ```text
 policy -> workflow -> test -> package -> release
 ```
 
-Expected jobs:
+预期 Job：
 
 - `policy_check`
 - `workflow_contract`
@@ -56,26 +54,23 @@ Expected jobs:
 - `package_open_source`
 - `release_dry_run`
 
-Skill validation runs inside `package_open_source`, because skills are part of
-the reusable open-source package rather than a standalone business workflow
-stage.
+Skill 校验在 `package_open_source` 中运行，因为 Skill 属于可复用开源包，不是独立业务
+流程阶段。
 
-Validation result:
+校验结果：
 
-- Pipeline: https://gitlab.example.com/acme/gj-workflow-demo/-/pipelines/19841
-- Status: success
-- Note: initial `policy_check` job failed because Docker Runner tried to pull
-  `python:3.12-slim` from Docker Hub with `pull_policy=always`. After setting
-  the temporary runner to `pull_policy=if-not-present`, the retried job and all
-  downstream jobs succeeded.
+- Pipeline：https://gitlab.example.com/acme/gj-workflow-demo/-/pipelines/19841
+- 状态：success
+- 说明：首次 `policy_check` Job 失败，是因为 Docker Runner 使用
+  `pull_policy=always` 从 Docker Hub 拉取 `python:3.12-slim`。把临时 Runner 改为
+  `pull_policy=if-not-present` 后，重试 Job 和所有下游 Job 成功。
 
-## Stable Actions Worth Extracting
+## 值得固化的稳定动作
 
-- Validate GitLab project identity before any write.
-- Bootstrap labels, templates, `.gj`, docs, CI, and CODEOWNERS.
-- Use triage to recommend one `flow::fast`, `flow::standard`, or
-  `flow::hotfix` label for human confirmation.
-- Convert rough requirements into missing questions and acceptance criteria.
-- Review MR descriptions against workflow policy.
-- Convert QA failures into Bug Issues with root cause and regression scope.
-- Close completed work by updating durable current-fact documents when needed.
+- 任何写操作前校验 GitLab 项目标识。
+- 初始化标签、模板、`.gj`、文档、CI 和 CODEOWNERS。
+- 使用分流推荐一个 `flow::fast`、`flow::standard` 或 `flow::hotfix` 标签供人确认。
+- 把粗略需求转为待确认问题和验收标准。
+- 根据工作流策略审阅 MR 描述。
+- 把 QA 失败转为包含根因和回归范围的 Bug Issue。
+- 工作完成后按需更新长期当前事实文档并闭环。

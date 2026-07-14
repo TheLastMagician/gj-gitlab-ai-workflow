@@ -1,4 +1,4 @@
-# Release Standard
+# 发布规范
 
 本文只定义发布准备和迭代关闭。需求到收尾每个阶段的文档产物、文件规范和更新方式见
 `12-context-governance.md`;目标版本、Tag、构建和部署版本见

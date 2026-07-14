@@ -1,4 +1,4 @@
-# Standards Index
+# 团队规范索引
 
 - `01-development-standard.md`
 - `02-requirement-standard.md`
