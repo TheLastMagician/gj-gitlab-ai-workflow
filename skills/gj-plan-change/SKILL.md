@@ -7,8 +7,10 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
 
 ## 工作流程
 
-1. 读取工作项、当前标签、`.gj/context.yml` 和已知约束。只加载 `always_load`、预计路径
-   匹配的模块和工作项直接关联的功能文档。存在时，以
+1. 读取工作项、当前标签、`.gj/context.yml` 和已知约束。涉及代码时读取
+   `docs/standards/01-development-standard.md` 和 `07-test-standard.md`，再按预计路径
+   加载相关 API、数据库、安全或环境标准；其余上下文只加载 `always_load`、路径匹配的
+   模块和工作项直接关联的功能文档。存在时，以
    `docs/standards/12-context-governance.md` 作为文档生命周期和内容规范。
 2. 确定且仅确定一个 flow 标签。缺失时提出建议，但在人工确认前不视为已选择。
 3. 按已选 flow 调整计划深度：
@@ -29,6 +31,9 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
 7. 按风险覆盖成功、失败、权限、回归和发布验证路径。失败检查要创建 Bug Issue，不能
    藏在备注里。
 8. 先按影响决定文档，再应用已选 flow 深度：
+   - 语言、框架、运行时、依赖、构建命令、架构/目录边界或前后端开发约定变化时，
+     更新 `01-development-standard.md`、模块地图、模块文档或 ADR；
+   - 测试框架、目录、命令、覆盖或 CI 测试策略变化时更新 `07-test-standard.md`；
    - 产品行为、规则、权限或验收标准变化时创建或更新 PRD；
    - 只有交互或 UI 状态变化时才创建或更新产品设计/原型记录；
    - 架构、兼容、发布、监控或回滚需要决策时创建或更新技术方案；

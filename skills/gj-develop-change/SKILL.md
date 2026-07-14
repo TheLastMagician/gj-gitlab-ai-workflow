@@ -8,7 +8,8 @@ description: Implement GitLab features, small changes, bugs, and hotfixes using 
 ## 工作流程
 
 1. 读取当前 Issue 或 MR、已确认 flow、必要时已接受的计划、`.gj/context.yml`、
-   `.gj/workflow.yml`，以及相关模块文档、规范和 ADR。存在时，以
+   `.gj/workflow.yml`、`docs/standards/01-development-standard.md`、
+   `07-test-standard.md`，以及 changed paths 命中的模块文档、专项规范和 ADR。存在时，以
    `docs/standards/12-context-governance.md` 作为文档生命周期依据。
 2. 确认开发就绪：
    - Fast 需要边界明确的改动、自测和文档影响结论。
@@ -20,11 +21,13 @@ description: Implement GitLab features, small changes, bugs, and hotfixes using 
    - Hotfix：应用最小安全修复，把非关键清理放入可跟踪的后续项。
 4. 编辑前检查代码库，保持在已确认范围内。
 5. 按需为验收标准、失败路径、权限和已报告回归新增或更新测试。
-6. 根据实际变更路径重新判断产品行为、交互、API/事件契约、数据库含义、架构/ADR、
-   模块规则、测试基线和运维影响。在同一 MR 更新所有受影响的当前事实文档。机器 API
+6. 根据实际变更路径重新判断技术栈、构建工具、架构/目录边界、前后端工程约定、测试
+   工具链、产品行为、交互、API/事件契约、数据库含义、架构/ADR、模块规则、测试基线和
+   运维影响。在同一 MR 更新所有受影响的当前事实文档。机器 API
    schema 和数据库 migration 必须与说明文档一致；实现结果同时列出可执行和说明路径。
    新边界从 `.gj/doc-templates/` 创建并使用语义文件名，已有边界原地更新；否则说明每个
-   可能相关文档类型为何是 `no-change`。
+   可能相关文档类型为何是 `no-change`。项目工程基线和测试工具链分别原地更新
+   `01-development-standard.md` 和 `07-test-standard.md`，不创建扫描报告。
 7. Issue、MR 和功能文档关联同一已确认目标版本/Milestone。普通功能、缺陷和 Fast MR
    不提升仓库版本或创建 Tag；项目 manifest 版本只在明确的发布准备工作中修改。
 8. 先运行聚焦测试，再运行仓库要求的更广检查。

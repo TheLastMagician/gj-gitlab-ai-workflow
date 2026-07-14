@@ -5,7 +5,7 @@
 在目标项目根目录运行以下命令，为 Codex、Claude Code 和 OpenCode 安装同一份 Skill：
 
 ```powershell
-npx --yes skills@1.5.15 add https://github.com/TheLastMagician/gj-gitlab-ai-workflow --skill '*' -a codex -a claude-code -a opencode --copy -y
+npx --yes skills@1.5.17 add https://github.com/TheLastMagician/gj-gitlab-ai-workflow --skill '*' -a codex -a claude-code -a opencode --copy -y
 ```
 
 安装器为 Codex 和 OpenCode 写入项目内 `.agents/skills`，为 Claude Code 写入
@@ -49,6 +49,16 @@ python scripts/install_workflow.py --target C:\path\to\your-project
 
 更新 `.gj/workflow.yml`、`.gj/context.yml` 和 `CODEOWNERS`。只有对应能力或领域存在时，
 才从 `.gj/doc-templates/` 创建长期文档，并写入使用语义名的项目路径。
+
+已有代码项目随后运行：
+
+```text
+使用 gj-codebase-map 扫描当前项目并起草工程规范和模块上下文。
+```
+
+它直接更新 `docs/standards/01-development-standard.md`、`07-test-standard.md`、
+`docs/context/`、`docs/modules/` 和 `.gj/context.yml` 草稿，并把可执行风险整理成 GitLab
+Issue 草稿；不会创建中间扫描报告。Dev Lead、QA 和模块负责人确认后这些内容才生效。
 
 保持 AI 上下文精简：`always_load` 最多包含三个小型当前事实文件，模块文档只在路径匹配
 时加载。职责拆分和加载模型见 `docs/documentation-governance.md`。

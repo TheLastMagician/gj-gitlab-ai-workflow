@@ -41,6 +41,7 @@ class InstallerTests(unittest.TestCase):
             self.assertTrue((target / ".gj" / "workflow.yml").exists())
             self.assertTrue((target / ".gj" / "context.yml").exists())
             self.assertFalse((target / "docs" / "iterations").exists())
+            self.assertFalse((target / "docs" / "codebase").exists())
             context_config = (target / ".gj" / "context.yml").read_text(
                 encoding="utf-8"
             )
@@ -75,6 +76,16 @@ class InstallerTests(unittest.TestCase):
             self.assertIn("阶段、产物和完成门", governance)
             self.assertIn("变更影响决定文档类型", governance)
             self.assertIn("Skill 的文档决策输出", governance)
+            development_standard = (
+                target / "docs" / "standards" / "01-development-standard.md"
+            ).read_text(encoding="utf-8")
+            self.assertIn("## 项目技术基线", development_standard)
+            self.assertIn("### 前端", development_standard)
+            self.assertIn("### 后端", development_standard)
+            test_standard = (
+                target / "docs" / "standards" / "07-test-standard.md"
+            ).read_text(encoding="utf-8")
+            self.assertIn("## 项目测试基线", test_standard)
             prd = (
                 target / ".gj" / "doc-templates" / "product-requirement.md"
             ).read_text(encoding="utf-8")

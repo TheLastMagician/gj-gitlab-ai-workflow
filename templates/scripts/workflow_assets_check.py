@@ -16,6 +16,8 @@ CORE_REQUIRED = [
     ".gitlab/merge_request_templates/Default.md",
     "docs/context/current-state.md",
     "docs/context/module-map.md",
+    "docs/standards/01-development-standard.md",
+    "docs/standards/07-test-standard.md",
     "scripts/policy_check.py",
     "scripts/smoke_check.py",
     "scripts/workflow_assets_check.py",

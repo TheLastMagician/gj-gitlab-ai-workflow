@@ -10,15 +10,17 @@ description: Review GitLab merge requests for workflow compliance, code risks, t
 1. 读取 MR 标题、描述、关联 Issue、diff、Pipeline 结果和评论。
 2. 检查 MR 必填章节：关联 Issue、变更摘要、自测、风险、回滚、数据库/配置变化、AI 使用。
 3. 根据 `.gj/workflow.yml` 匹配变更路径。
-4. 从 `.gj/context.yml` 加载相关模块上下文。
+4. 从 `.gj/context.yml` 加载相关模块上下文；代码变更同时读取
+   `docs/standards/01-development-standard.md`、`07-test-standard.md` 和 changed paths
+   命中的专项规范。
 5. 检查文档影响：
    - MR 描述或 Skill 结果包含文档决策表，含路径、动作、触发事实、阶段/状态和确认人/
      跟进项；
    - 动作是 `create`、`update`、`no-change` 或 `follow-up`，且每个 `follow-up` 都有
      Issue、负责人和期限；
    - 决策表与实际 diff 和行为变化一致；
-   - 已考虑产品、交互、API/事件、数据库、架构/ADR、模块规则、测试基线、发布和运行
-     状态影响；
+   - 已考虑技术栈、架构/目录边界、开发约定、测试工具链、产品、交互、API/事件、
+     数据库、架构/ADR、模块规则、测试基线、发布和运行状态影响；
    - 机器契约/migration、说明文档、实现和测试一致，并列出可执行与说明路径；
    - 新当前事实文档使用语义文件名和必填元数据，不使用模板名；
    - GitLab Solution/Task/Test Issue 没有被当成仓库长期文档的替代品。

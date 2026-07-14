@@ -26,11 +26,13 @@ description: Install and verify the GitLab AI workflow skeleton in a repository.
    `docs/standards/06-release-standard.md`。确认 `.gj/workflow.yml` 版本策略、Tag 格式、
    发布说明路径和 `docs/standards/13-versioning-standard.md`，不要添加通用 `VERSION`
    文件。确认 `.gj/doc-templates/` 作为工作流模板安装，项目事实目录没有通用模板文件。
-4. 通过已配置 helper 或获准 GitLab connector 幂等创建标签、Milestone 和起始 Issue。
-5. 按需根据 `.gj/workflow.yml` 指派由人负责的起始 Issue/MR；需要通知时添加
+4. 既有代码项目继续运行 `gj-codebase-map`，由它起草项目技术/测试规范、当前上下文、
+   模块文档和 `.gj/context.yml`；不要创建 `docs/codebase/` 中间扫描目录。
+5. 通过已配置 helper 或获准 GitLab connector 幂等创建标签、Milestone 和起始 Issue。
+6. 按需根据 `.gj/workflow.yml` 指派由人负责的起始 Issue/MR；需要通知时添加
    `@username` 交接评论。
-6. 运行本地校验。
-7. 输出初始化摘要，列出已创建、已跳过、失败和需人工确认的项目。
+7. 运行本地校验。
+8. 输出初始化摘要，列出已创建、已跳过、失败和需人工确认的项目。
 
 ## 输出格式
 

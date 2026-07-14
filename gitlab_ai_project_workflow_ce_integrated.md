@@ -471,14 +471,6 @@ docs/
     current-state.md
     module-map.md
     glossary.md
-  codebase/
-    STACK.md
-    INTEGRATIONS.md
-    ARCHITECTURE.md
-    STRUCTURE.md
-    CONVENTIONS.md
-    TESTING.md
-    CONCERNS.md
   modules/
     order.md
     auth.md
@@ -560,126 +552,64 @@ docs/context/current-state.md
 
 # 13. 既有项目接入：Codebase Map
 
-如果是已有项目，不要直接让 AI 根据零散代码开始开发。应先做一次 codebase map，把现有项目梳理成可审查、可追溯、可被后续 AI 读取的基础上下文。
-
-这个过程借鉴 GSD 的 codebase mapper 思路：按不同关注面扫描代码库，分别产出结构化文档，最后再汇总成当前项目上下文。
-
-推荐输出：
-
-```text
-docs/codebase/
-  STACK.md          技术栈、语言、框架、依赖、运行时
-  INTEGRATIONS.md   外部系统、数据库、消息队列、第三方 API、Webhook
-  ARCHITECTURE.md   架构模式、分层、数据流、入口点、核心抽象
-  STRUCTURE.md      目录结构、关键路径、模块边界、命名约定
-  CONVENTIONS.md    代码风格、错误处理、日志、配置、常见模式
-  TESTING.md        测试框架、测试目录、mock、覆盖策略、CI 测试方式
-  CONCERNS.md       技术债、脆弱点、安全风险、性能风险、待确认问题
-```
+已有项目不要让 AI 在缺少工程基线和模块上下文时直接开发。先使用
+`gj-codebase-map` 扫描技术、架构、质量和风险四个视角，再把结果直接写入后续流程会
+读取的长期文档，不保留中间扫描报告。
 
 推荐流程：
 
 ```text
-扫描项目文件结构
+扫描项目文件结构和真实配置
   ↓
-按 tech / arch / quality / concerns 四个视角分析
+分析技术栈、架构/目录、开发约定、测试、集成和风险
   ↓
-生成 docs/codebase/*.md
+起草 docs/standards/01-development-standard.md
   ↓
-扫描输出中是否误带 secret / token / password
+起草 docs/standards/07-test-standard.md 和命中的专项规范
   ↓
-人工快速审查 codebase map
+更新 docs/context/current-state.md / module-map.md / glossary.md
   ↓
-提炼 docs/context/current-state.md
+生成 docs/modules/*.md 和 .gj/context.yml 草案
   ↓
-提炼 docs/context/module-map.md
+把可执行技术债、缺陷和风险整理成 GitLab Issue 草稿
   ↓
-提炼 docs/context/glossary.md
+扫描输出中的 secret / token / password
   ↓
-生成 docs/modules/*.md 草案
-  ↓
-生成 .gj/context.yml 草案
+Dev Lead、QA 和模块负责人确认
   ↓
 创建“既有项目接入”MR
 ```
 
-全量扫描适合首次接入；后续大改或重构后可以增量刷新：
+内容路由：
 
-```text
-gj-codebase-map --paths src/order,db/migration
-```
-
-增量刷新只更新命中路径相关的 codebase 文档、模块文档和 `.gj/context.yml`，避免每次重新扫描整个项目。
-
-Codebase map 的定位：
-
-| 文档 | 定位 |
+| 扫描结果 | 长期目标 |
 |---|---|
-| `docs/codebase/*.md` | 从代码中观察到的现状，偏工程事实。 |
-| `docs/context/*.md` | 当前项目对外稳定事实，偏 AI 默认上下文。 |
-| `docs/modules/*.md` | 模块级长期知识，偏后续开发参考。 |
-| ADR | 人工确认过的长期技术决策。 |
+| 技术栈、构建命令、架构/目录边界、前后端约定 | `docs/standards/01-development-standard.md` |
+| 测试框架、目录、命令、覆盖和 CI 测试策略 | `docs/standards/07-test-standard.md` |
+| API、数据库、安全和环境专项事实 | 对应 `03`、`04`、`08`、`10` 标准及技术文档 |
+| 模块结构、依赖和外部集成 | `module-map.md`、`docs/modules/*.md`、按需的 API/技术方案 |
+| 项目级长期限制 | `docs/context/current-state.md` |
+| 可执行技术债、缺陷和风险 | GitLab Issue 草稿，包含负责人和期限 |
 
-重要规则：
+全量扫描适合首次接入；重大重构后可以限定 changed paths 增量刷新。现有代码习惯只是
+观察结果，不能自动认定为正确规范或业务规则；标准草稿必须由对应负责人确认。发现疑似
+密钥、账号或连接串时必须停止提交并要求人工处理。
 
-1. `docs/codebase/*.md` 是 AI 观察结果，必须经过人工确认后才能沉淀为当前事实。
-2. 不要把扫描出的历史代码行为直接等同于正确业务规则。
-3. 发现疑似密钥、账号、连接串时必须停止提交并要求人工确认。
-4. 既有项目第一次接入时，`docs/context/` 和 `.gj/context.yml` 应从 codebase map 派生，而不是凭空编写。
-5. 每次重大重构后，应刷新相关 codebase map，并同步更新模块文档和上下文索引。
+## 13.1 `gj-codebase-map` Skill 设计
 
-## 13.1 `gj-codebase-map` skill 设计
+用途：接入既有项目、重构前理解现状、重大变更后刷新工程规范和 AI 上下文。
 
-用途：接入既有项目、刷新项目地图、重构前理解现状、重大变更后更新 AI 上下文。
-
-触发示例：
-
-```text
-使用 gj-codebase-map 梳理这个已有项目，并生成 docs/codebase、docs/context、docs/modules 和 `.gj/context.yml` 草案。
-
-使用 gj-codebase-map --paths src/order,db/migration 增量刷新订单模块上下文。
-```
-
-输入：
-
-1. 当前仓库文件。
-2. 可选路径范围：`--paths <path1,path2>`。
-3. 已有 `docs/codebase/`、`docs/context/`、`docs/modules/`、ADR 和 `.gj/context.yml`。
-4. GitLab 最近 Milestone、Issue、MR 信息，如 API 可用。
-
-输出：
-
-1. `docs/codebase/STACK.md`
-2. `docs/codebase/INTEGRATIONS.md`
-3. `docs/codebase/ARCHITECTURE.md`
-4. `docs/codebase/STRUCTURE.md`
-5. `docs/codebase/CONVENTIONS.md`
-6. `docs/codebase/TESTING.md`
-7. `docs/codebase/CONCERNS.md`
-8. `docs/context/current-state.md` 草案或更新建议
-9. `docs/context/module-map.md` 草案或更新建议
-10. `docs/modules/*.md` 草案或更新建议
-11. `.gj/context.yml` 草案或更新建议
-
-推荐执行策略：
-
-| 分析视角 | 产物 |
-|---|---|
-| tech | `STACK.md`、`INTEGRATIONS.md` |
-| arch | `ARCHITECTURE.md`、`STRUCTURE.md` |
-| quality | `CONVENTIONS.md`、`TESTING.md` |
-| concerns | `CONCERNS.md` |
-
-如果运行环境支持子任务，可以并行分析四个视角；如果不支持，就在当前会话中按四个 pass 顺序执行。无论哪种方式，最终都必须扫描输出中是否包含疑似密钥。
+输入包括当前仓库、可选路径范围、已有标准/上下文/模块文档/ADR，以及可用的 GitLab
+Milestone、Issue 和 MR。输出包括开发和测试规范草稿、当前上下文、模块文档、
+`.gj/context.yml`、风险 Issue 草稿、待确认推断和秘密扫描结论。
 
 验收标准：
 
-1. `docs/codebase/` 下 7 个文档存在且非空。
-2. 文档包含真实文件路径，例如 `src/order/service/OrderService.java`。
-3. 不提交任何 secret、token、password、连接串。
-4. 已明确标记“观察到的事实”和“需要人工确认的推断”。
-5. 已给出 `docs/context/`、`docs/modules/` 和 `.gj/context.yml` 的更新建议。
-6. 既有项目接入 MR 中说明哪些内容需要人工确认后才能作为当前事实。
+1. 标准和上下文引用真实文件路径、命令和配置。
+2. 已区分观察事实、待确认推断和人工确认后的规范。
+3. 没有创建中间扫描目录或重复当前事实。
+4. 不提交任何 secret、token、password 或连接串。
+5. 可执行风险均有 GitLab Issue 草稿、负责人和期限。
 
 # 14. GJ 工作流配置
 
@@ -758,7 +688,7 @@ modules:
 | Skill | 用途 |
 |---|---|
 | `gj-workflow-bootstrap` | 给项目安装整套工作流。 |
-| `gj-codebase-map` | 梳理既有项目，生成 codebase map、当前上下文、模块文档和 `.gj/context.yml` 草案。 |
+| `gj-codebase-map` | 梳理既有项目，起草工程规范、当前上下文、模块文档、`.gj/context.yml` 和风险 Issue。 |
 | `gj-workflow-next` | 读取待办和当前状态，推荐 flow，并判断下一步。 |
 | `gj-plan-change` | 按 flow 完成需求、方案、任务边界、测试和回滚计划。 |
 | `gj-develop-change` | 实现功能、Fast 改动、Bug 修复和 Hotfix。 |
@@ -965,13 +895,12 @@ AI Gateway 至少要做：
 
 ## 21.2 第二阶段：项目上下文
 
-1. 既有项目先运行 `gj-codebase-map`，生成 `docs/codebase/`。
-2. 建立或更新 `docs/context/`。
-3. 建立或更新 `docs/modules/`。
+1. 既有项目先运行 `gj-codebase-map`，起草项目开发/测试规范和上下文。
+2. 由 Dev Lead/QA 确认 `docs/standards/01-development-standard.md` 和
+   `07-test-standard.md` 中的项目规则。
+3. 建立或更新 `docs/context/` 和 `docs/modules/`。
 4. 按需建立 `docs/technical/decisions/`。
-5. 配置 `.gj/workflow.yml`。
-6. 配置 `.gj/workflow.yml`。
-7. 配置 `.gj/context.yml`。
+5. 配置 `.gj/workflow.yml` 和 `.gj/context.yml`。
 
 ## 21.3 第三阶段：AI 接入
 
@@ -998,24 +927,24 @@ AI Gateway 至少要做：
 | 2 | 标签和 Board | PM / DevOps |
 | 3 | Issue / MR 模板 | PM / Tech Lead |
 | 4 | `docs/standards/` | Tech Lead / QA / DevOps |
-| 5 | `docs/codebase/`，既有项目由 `gj-codebase-map` 生成 | Tech Lead / AI 平台 |
+| 5 | `01-development-standard.md`、`07-test-standard.md` 项目规则 | Tech Lead / QA |
 | 6 | `docs/context/` | 产品 / Tech Lead |
 | 7 | `docs/modules/` | 模块负责人 |
 | 8 | `.gj/workflow.yml` | Tech Lead / AI 平台负责人 |
-| 9 | `.gj/workflow.yml` | Tech Lead / 安全 / DevOps |
-| 10 | `.gj/context.yml` | Tech Lead / 架构师 |
-| 11 | `.gitlab-ci.yml` 和 `policy_check.py` | DevOps |
-| 12 | 项目总控 Issue | PM / Tech Lead |
-| 13 | Milestone | PM |
-| 15 | AI Orchestrator / Webhook | AI 平台 / DevOps |
-| 16 | 首批 skills | AI 平台 / 各角色负责人 |
+| 9 | `.gj/context.yml` | Tech Lead / 架构师 |
+| 10 | `.gitlab-ci.yml` 和 `policy_check.py` | DevOps |
+| 11 | 项目总控 Issue | PM / Tech Lead |
+| 12 | Milestone | PM |
+| 13 | AI Orchestrator / Webhook | AI 平台 / DevOps |
+| 14 | 首批 Skills | AI 平台 / 各角色负责人 |
 
 # 23. 团队使用方式
 
 既有项目接入：
 
 ```text
-使用 gj-codebase-map 梳理当前项目，生成 docs/codebase、docs/context、docs/modules 和 .gj/context.yml 草案。
+使用 gj-codebase-map 梳理当前项目，起草开发/测试规范、docs/context、docs/modules、
+.gj/context.yml 和需要跟踪的风险 Issue。
 ```
 
 流程分流：
@@ -1079,7 +1008,7 @@ QA：
 1. 标签、模板、Board。
 2. Protected Branch 和 CI 门禁。
 3. `policy_check.py`。
-4. 既有项目用 `gj-codebase-map` 生成 `docs/codebase/` 和上下文草案。
+4. 既有项目用 `gj-codebase-map` 起草开发/测试规范、模块上下文和风险 Issue。
 5. `gj-workflow-next` 能判断标准需求、小改动、Bug 修复、Hotfix。
 6. 需求分析 AI 评论。
 7. Bug 修复 AI 建议。

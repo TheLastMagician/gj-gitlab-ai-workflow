@@ -42,6 +42,15 @@ class ValidateSkillsTest(unittest.TestCase):
             with self.subTest(skill=name):
                 self.assertIn(phrase.lower(), text.lower())
 
+    def test_codebase_map_routes_scan_results_to_durable_docs(self) -> None:
+        text = (ROOT / "skills" / "gj-codebase-map" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("01-development-standard.md", text)
+        self.assertIn("07-test-standard.md", text)
+        self.assertIn("GitLab Issue 草稿", text)
+        self.assertNotIn("docs/" + "codebase/STACK.md", text)
+
     def test_skill_name_requires_gj_prefix(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             skill = Path(temp) / "plan-change"

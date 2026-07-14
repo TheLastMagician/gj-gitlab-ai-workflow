@@ -22,11 +22,13 @@ description: Accept a new requirement or inspect a GitLab inbox or active work i
 5. 独立于 flow 处理版本规划。存在时读取 `.gj/workflow.yml` 的 `versioning`。对将发布的
    新工作，根据兼容影响和最新已发布 Tag 推荐目标版本及匹配的 GitLab Milestone，由人
    确认。不要提升 manifest、创建 Tag 或把 Milestone 描述为已发布。
-6. 判断当前阶段并路由到 `gj-plan-change`、`gj-develop-change`、`gj-mr-review`、
+6. 判断当前阶段。已有代码但 `01-development-standard.md`、`07-test-standard.md`、模块地图
+   或模块上下文仍是占位内容，或者刚完成重大重构时，先路由到 `gj-codebase-map`；其他
+   工作路由到 `gj-plan-change`、`gj-develop-change`、`gj-mr-review`、
    `gj-release-readiness` 或 `gj-close-loop`。
 7. 检查阻塞项：缺失/冲突的 `flow::*` 标签、缺少 Issue 或验收标准、缺少方案评审、
    失败或 pending Pipeline、未解决审阅评论、高风险路径错误使用 `flow::fast`、缺少
-   上下文更新、缺少文档影响结论或必需仓库文档。
+   工程规范仍未确认、上下文更新、缺少文档影响结论或必需仓库文档。
 8. 检查 assignee、reviewer、提及、截止日期、目标版本/Milestone 和文档缺口。
    Requirement/Hotfix 是主工作项；只有工作需要独立负责或跟踪时才推荐 Solution、Task
    或 Test Issue，不能替代仓库文档。

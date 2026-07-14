@@ -10,6 +10,7 @@ GitLab 与仓库各自只有一种职责：
 | 信息 | 唯一事实源 |
 | --- | --- |
 | 本次变更、讨论、状态、分工、审批和过程证据 | GitLab Issue、MR、评论、Pipeline |
+| 项目技术栈、架构边界、开发和测试工具链规范 | `docs/standards/01-development-standard.md`、`07-test-standard.md` |
 | 当前产品、交互、技术、API、数据和模块事实 | `docs/product/`、`docs/technical/`、`docs/modules/` |
 | 可复用测试基线 | `docs/qa/test-plans/` |
 | 按版本冻结的交付证据 | `docs/qa/test-reports/<tag>.md`、`docs/releases/<tag>.md` |
@@ -23,6 +24,7 @@ Requirement 或 Hotfix Issue 是一次变更的主工作项。Solution、Task、
 
 | 阶段 | Skill | 仓库文档动作 | 完成标志 |
 | --- | --- | --- | --- |
+| 既有项目接入/重大重构 | `gj-codebase-map` | 扫描代码后起草开发/测试规范、当前状态、模块地图、模块文档和上下文路由 | Dev Lead/QA 确认规范草稿；不保存中间扫描报告 |
 | 入口 | `gj-workflow-next` | 只列预期文档影响 | 人确认 flow、目标版本和主工作项 |
 | 需求确认 | `gj-plan-change` | 产品变化更新 PRD；交互变化更新设计/原型 | PdM 确认需求事实 |
 | 方案/测试设计 | `gj-plan-change` | 按影响更新方案、API、数据库、ADR 和测试计划 | Dev Lead/QA 确认可实施、可验证 |
@@ -61,11 +63,17 @@ docs/modules/<module>.md
 docs/qa/test-plans/<capability>.md
 docs/qa/test-reports/<tag>.md
 docs/releases/<tag>.md
+docs/standards/01-development-standard.md
+docs/standards/07-test-standard.md
 ```
 
 安装后模板位于 `.gj/doc-templates/`，不属于项目事实。禁止把 `PRD.md`、
 `solution-design.md`、`test-report.md` 等通用模板名留在事实目录，也不要创建
 `v2/final/new` 副本。
+
+`01-development-standard.md` 和 `07-test-standard.md` 随工作流直接安装，不从功能文档
+模板复制。`gj-codebase-map` 根据现有代码起草项目技术基线、开发约定和测试工具链，
+Dev Lead/QA 确认后生效；扫描过程不落成 `docs/codebase/` 或其他中间报告目录。
 
 ## 通用文档契约
 
@@ -90,6 +98,11 @@ AsyncAPI、protobuf 等机器契约为事实源；数据库结构以 schema/mode
 测试报告状态使用 `draft/passed/failed/blocked`，发布说明使用
 `draft/ready/released/rolled-back`。版本证据关闭后冻结；当前事实过时时直接修改或删除，
 历史由 Git 和 GitLab 追溯。
+
+技术栈、框架、构建命令、架构/目录边界或前后端约定变化时更新
+`01-development-standard.md`；测试框架、目录、命令、覆盖或 CI 测试策略变化时更新
+`07-test-standard.md`。明确可执行的技术债和缺陷创建 GitLab Issue，只有后续任务都会
+依赖的项目级限制才写入 `current-state.md`。
 
 ## Skill 文档决策
 

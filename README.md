@@ -155,10 +155,17 @@ python scripts/install_workflow.py --target C:\path\to\your-project
 4. 如果是已有代码项目，继续使用 `gj-codebase-map`：
 
 - 扫描现有模块、入口、关键流程、测试和风险点。
+- 起草 `docs/standards/01-development-standard.md` 中的技术栈、架构边界和前后端开发
+  约定，以及 `07-test-standard.md` 中的测试工具链和执行规则。
 - 生成或更新 `docs/context/current-state.md`。
 - 生成或更新 `docs/context/module-map.md`。
+- 生成或更新 `docs/context/glossary.md`。
 - 生成或更新 `docs/modules/*.md`。
 - 更新 `.gj/context.yml`，让后续 AI 能稳定读取项目背景。
+- 把可执行技术债和缺陷整理成 GitLab Issue 草稿，不创建 `docs/codebase/` 中间扫描目录。
+
+扫描结果只是草稿。Dev Lead、QA 和对应模块负责人确认后，工程约定和上下文才成为后续
+开发必须遵守的当前事实。
 
 5. 配置 GitLab 通知和待办来源：
 
@@ -178,6 +185,8 @@ python scripts/install_workflow.py --target C:\path\to\your-project
 
 | 文档 | 规范路径 | 什么时候创建或更新 | 生命周期 |
 | --- | --- | --- | --- |
+| 项目开发规范 | `docs/standards/01-development-standard.md` | 技术栈、构建方式、架构/目录边界或前后端工程约定变化时 | 安装后由 `gj-codebase-map` 起草，Dev Lead 确认后原地维护 |
+| 项目测试规范 | `docs/standards/07-test-standard.md` | 测试框架、目录、命令、覆盖或 CI 测试策略变化时 | QA/Dev Lead 确认后原地维护 |
 | 产品需求 | `docs/product/requirements/<capability>.md` | 产品行为、业务规则、权限或验收标准变化时 | 按能力原地更新，保留当前完整要求 |
 | 产品设计 | `docs/product/designs/<capability>.md` | 用户流程、页面状态或交互变化时 | 按能力原地更新 |
 | 原型记录 | `docs/product/prototypes/<capability>.md` | 存在原型或需要保存评审结论时 | 记录原型链接、版本和评审结论，不复制原型文件 |
@@ -195,6 +204,10 @@ python scripts/install_workflow.py --target C:\path\to\your-project
 模板统一安装在 `.gj/doc-templates/`。新文档从对应模板创建，但必须换成有业务含义的
 文件名；模板目录是工作流资产，不是项目事实。不是每个需求都要把所有模板填一遍，只有
 触发事实发生变化的文档才创建或更新。
+
+`01-development-standard.md` 和 `07-test-standard.md` 随工作流直接安装，不从功能文档
+模板复制。既有项目由 `gj-codebase-map` 根据代码起草待确认内容；扫描只是分析过程，
+不会在仓库保存另一套代码库报告。
 
 开源仓库中的模板源文件位于 `templates/gj/doc-templates/`，安装到业务项目后按下表使用：
 
@@ -306,7 +319,7 @@ flowchart TD
   G1 -- "flow::standard" --> PS["gj-plan-change<br/>完整需求、方案和测试设计"]
   G1 -- "flow::fast" --> PF["gj-plan-change<br/>极简边界、自测和文档影响"]
   G1 -- "flow::hotfix" --> PH["gj-plan-change<br/>最小修复、验证和回滚"]
-  PS --> O2["计划产出<br/>验收与反例 + 方案与任务边界 + 测试策略<br/>风险与回滚 + 文档决策"]
+  PS --> O2["计划产出<br/>验收与反例 + 方案与任务边界 + 测试策略<br/>风险与回滚 + 工程规范/文档决策"]
   PF --> O2
   PH --> O2
   O2 --> G2{"决策门 2：PdM / Dev Lead / QA<br/>需求、方案和测试基线可执行、可验证？"}
@@ -339,8 +352,8 @@ flowchart TD
 | --- | --- | --- | --- | --- |
 | 入口分流 | 新需求描述或现有 GitLab 待办 | Requirement/Hotfix 主工作项草稿，或准备写入 Fast MR 的极简记录；唯一 flow 建议、目标 Milestone、负责人和预期文档影响 | PdM/PM 确认需求来源、flow、目标版本和主工作项后，才创建或提交工作项 | PdM、Dev Lead |
 | 需求确认 | 已确认的主工作项、flow 和 Milestone | 目标、非目标、用户场景、可测试验收标准、反例；按影响创建或更新 PRD、设计和原型记录 | PdM 确认需求事实，相关文档状态和来源可追溯 | Dev Lead、QA |
-| 方案和测试设计 | 已确认需求及受影响边界 | 技术方案、任务边界、测试策略、风险、发布和回滚计划；按影响更新 API、数据库、ADR、测试计划并输出文档决策 | Dev Lead 确认可实施，QA 确认可验证；复杂需求未经确认不开发 | Dev |
-| 开发 | 已确认的验收、方案、测试基线和文档决策 | 代码、自动化测试、自测证据、风险与回滚说明、受影响长期文档，以及沿用同一 flow/Milestone 的 MR | 分支中的行为、测试和文档一致，MR 信息完整并可交给 CI/Reviewer | Reviewer |
+| 方案和测试设计 | 已确认需求及受影响边界 | 技术方案、任务边界、测试策略、风险、发布和回滚计划；按影响更新开发/测试规范、API、数据库、ADR、测试计划并输出文档决策 | Dev Lead 确认可实施，QA 确认可验证；复杂需求未经确认不开发 | Dev |
+| 开发 | 已确认的验收、方案、工程规范、测试基线和文档决策 | 代码、自动化测试、自测证据、风险与回滚说明、受影响工程规范和长期文档，以及沿用同一 flow/Milestone 的 MR | 分支中的行为、测试和规范一致，MR 信息完整并可交给 CI/Reviewer | Reviewer |
 | MR 审阅 | MR diff、自测证据、文档决策和 Pipeline | `policy` 与项目测试结果、Review findings、修正结果、未解决讨论和合并就绪结论 | 阻塞问题解决；Reviewer 给出结论，Maintainer 明确批准后才能合并 | Maintainer；未通过则回到 Dev |
 | 发布准备 | 已合并 MR、Milestone 范围和目标环境 | 锁定 SemVer、按 Tag 创建的测试报告和发布说明、必要的 manifest 更新，以及发布、监控和回滚清单 | QA 给出测试结论，DevOps/Maintainer 明确批准 Tag、构建和部署 | DevOps、Maintainer |
 | 发布 | 已批准的版本、发布证据和回滚方案 | Git Tag、构建产物、commit SHA、Tag Pipeline、部署环境版本和验证结果 | 人确认构建、部署和验证结果；失败时执行或确认回滚 | PM、Dev Lead |
@@ -400,7 +413,7 @@ flowchart TD
 | Skill 名 | 什么时候用 |
 | --- | --- |
 | `gj-workflow-bootstrap` | 新项目接入，安装并检查标签、模板、上下文和 CI 配置 |
-| `gj-codebase-map` | 旧项目第一次接入或大型重构后刷新代码库上下文 |
+| `gj-codebase-map` | 旧项目第一次接入或大型重构后，根据代码起草工程规范、模块上下文和风险 Issue |
 | `gj-workflow-next` | 每天开始工作、检查待办、推荐 flow 或判断下一步 |
 | `gj-plan-change` | 需求、方案、任务、测试或回滚需要按 flow 规划 |
 | `gj-develop-change` | 实现功能、Fast 改动、Bug 修复或 Hotfix |

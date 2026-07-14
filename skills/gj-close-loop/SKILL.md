@@ -14,8 +14,9 @@ description: Close completed GitLab work by capturing lessons and refreshing dur
    - Standard：总结交付、决策、测试、阻碍和长期上下文更新。
    - Hotfix：在紧急修复后补齐根因、回归覆盖、文档修复、风险跟进和简短复盘。
 3. 区分当前长期事实、历史、假设和已被替代的决策。
-4. 重新判断产品、交互、API/事件、数据库、架构/ADR、模块规则、测试基线、发布和运行
-   状态影响。只更新最小适用的当前文档集合和 `.gj/context.yml`。仅当跨项目或已部署
+4. 重新判断技术栈、架构/目录边界、开发和测试规范、产品、交互、API/事件、数据库、
+   架构/ADR、模块规则、测试基线、发布和运行状态影响。只更新最小适用的当前文档集合和
+   `.gj/context.yml`。仅当跨项目或已部署
    环境事实变化时更新 `current-state.md`。过程历史留在 GitLab，变更历史留在 Git，
    不复制为仓库归档。
 5. 发布或部署后区分计划和实际状态。在发布说明及 `docs/context/current-state.md` 回写

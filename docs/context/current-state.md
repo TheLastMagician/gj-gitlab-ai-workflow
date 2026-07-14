@@ -7,7 +7,6 @@
 
 ## 当前事实
 
-- 当前示例迭代是 `订单审批流 v1.0`。
 - GitLab project 已通过只读 API 校验为 `zengqinglin/gj-workflow-demo`。
 - 跨 Agent GitLab helper 位于 `scripts/gitlab_api.py`;本地凭据保存在被忽略的
   `.gj/gitlab.local.json`。
@@ -27,6 +26,22 @@
   Codex、Claude Code、OpenCode 共用同一份 `SKILL.md` 源码。
 - demo 已用项目本地配置完成 GitLab helper 验证:读取 Issue、MR、Pipeline,
   写入并回读 Issue 评论,缺少写入确认和敏感端点访问均被拒绝。
+- 既有项目接入由 `gj-codebase-map` 直接更新开发/测试规范、当前状态、模块地图、模块文档
+  和 `.gj/context.yml` 草稿，不再保存无人消费的 `docs/codebase/` 中间扫描目录。
+
+## 工程基线
+
+- 工具和检查脚本使用 Python 3，优先只依赖标准库。
+- 本地命令示例面向 Windows PowerShell，CI 使用 GitLab CI。
+- `templates/` 保存安装到业务项目的资产，`skills/` 保存八个跨 Agent Skill，
+  `scripts/` 保存安装、检查、GitLab helper 和发布工具。
+- 本仓库的开发约定和校验命令以 `CONTRIBUTING.md` 为准。
+
+## 当前限制与风险
+
+- `orchestrator/` 仍是路由骨架，没有生产级 webhook 认证和运行时部署方案。
+- AI 网关提供方、生产部署平台和组织级秘密管理方式尚未确定。
+- GitLab Runner 可用性、保护分支和合并设置仍需在具体项目中人工确认。
 
 ## 人工确认点
 
