@@ -39,6 +39,19 @@
         "The plan requires post-release regression evidence and durable-fact repair.",
         "All human-facing output headings and field labels are Chinese."
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "为一个全新的智能公交维修管理平台规划首个版本。需求已确认走 flow::standard，当前范围只明确包含车辆档案、维修工单和基础查询；没有提供审批、金额、历史系统迁移或第三方集成要求。请给出开发前确认项和变更计划。",
+      "expected_output": "确认项只来自当前需求及项目上下文；不引入审批金额、自审批或订单状态等无依据概念，也不把数据迁移和外部接口机械列为开发阻断项。",
+      "files": [],
+      "expectations": [
+        "The plan does not introduce approval amounts, self-approval, order states, or other business concepts absent from the prompt.",
+        "The plan treats historical data migration and third-party integrations as not involved or no-change based on the stated scope, rather than mandatory confirmations or development blockers.",
+        "Every human confirmation or development blocker is grounded in a fact from the prompt or explicitly identified repository context.",
+        "The plan keeps flow::standard and covers acceptance, technical approach, tests, release, rollback, and documentation at an appropriate depth.",
+        "All human-facing output headings and field labels are Chinese."
+      ]
     }
   ]
 }
