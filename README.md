@@ -83,6 +83,10 @@ Access Token，但它代表机器人账号，不能代替当前用户的个人 T
 - 所有 Skill 固定使用 `gj-` 前缀；GJ 是“公交”工作流的简称。
 - `examples/order-demo` 和 `examples/demo-run`，用于查看隔离的业务样例和端到端演练产物。
 
+源码仓库只在 `templates/` 保存可安装资产，不在根目录保留安装后的 `.gj/`、`.gitlab/`、
+`.gitlab-ci.yml` 或 `docs/context/` 实例。安装器和测试会在目标或临时 Git 仓库中生成这些
+路径，避免把工作流源码与某个业务项目的配置混在一起。
+
 `.gj/` 是 GJ 工作流的跨 Agent 机器配置目录，不属于某个 AI 工具。Codex、Claude Code、
 OpenCode 和本地脚本读取同一份配置；面向人的长期事实仍放在 `docs/`。
 

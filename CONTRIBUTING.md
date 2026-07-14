@@ -7,9 +7,11 @@
 
 - 用户入口文档只写安装、配置、使用和排错；维护细节留在本文。
 - `skills/` 是公开 Skill 源码，`templates/` 是安装到业务项目的工作流资产。
+- 源码仓库不保留安装后的 `.gj/`、`.gitlab/`、`.gitlab-ci.yml` 或
+  `docs/context/` 实例；需要验证安装结果时使用临时 Git 仓库。
 - 修改脚本或规则时同步检查对应模板，避免源码与安装结果不一致。
 - 不提交 Token、`.gj/gitlab.local.json`、私有 GitLab 地址、生产日志或客户数据。
-- 工作流策略、`.gj/`、CI、模板和标准文档属于高风险路径，使用
+- 工作流策略、安装 CI、模板和标准文档属于高风险路径，使用
   `flow::standard` 或 `flow::hotfix`。
 
 ## 本仓库工程约定
@@ -17,7 +19,7 @@
 - 面向人的工作流文档使用中文；路径、Skill 名和机器枚举可保留英文。
 - 代码和配置路径优先使用小写连字符，Skill 目录固定使用小写连字符。
 - Python 脚本优先使用标准库，保持安装器、检查脚本和示例的可移植性。
-- 本地命令示例优先提供 PowerShell；CI 使用 GitLab CI，业务项目测试由项目自己提供。
+- 本地命令示例优先提供 PowerShell；安装资产使用 GitLab CI，业务项目测试由项目自己提供。
 - 提交信息使用中文并遵循 Angular 规范：`<type>(<scope>): <subject>`。
 - 新增依赖、改变安装资产、CI 门禁或跨 Agent 契约时，必须同步源码、模板和测试。
 
@@ -62,11 +64,13 @@ python scripts/install_workflow.py --target C:\path\to\temporary-project --dry-r
 `scripts/install_workflow.py` 从 `templates/` 安装业务项目资产。修改以下任一内容时，
 检查源码、模板和测试是否需要同步：
 
-- `.gj/*.yml` 与 `templates/gj/*.yml`
-- `.gitlab-ci.yml`、`.gitlab/gj-workflow-ci.yml` 与对应 `templates/gitlab/` 文件
-- `.gitlab/` 与 `templates/gitlab/.gitlab/`
+- `templates/gj/*.yml`
+- `templates/gitlab/.gitlab-ci.yml` 与 `templates/gitlab/.gitlab/`
 - `scripts/` 与 `templates/scripts/`
-- 长效文档和 `templates/docs/`
+- 面向使用者的 `docs/*.md` 与安装到目标项目的 `templates/docs/`
+
+`templates/` 是安装资产的唯一源。不要为了演示或测试，把安装结果复制回源码根目录；
+安装器行为由 `tests/` 创建临时 Git 仓库验证。
 
 安装器必须逐文件处理，禁止删除目标目录。`--force` 只能替换已知冲突文件并自动备份。
 

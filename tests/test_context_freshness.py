@@ -62,8 +62,6 @@ context_budget:
 
     def test_template_context_budget_defaults(self) -> None:
         config = ROOT / "templates/gj/context.yml"
-        if not config.exists():
-            config = ROOT / ".gj/context.yml"
         text = config.read_text(encoding="utf-8")
         budget = context_check.parse_context_budget(text)
 

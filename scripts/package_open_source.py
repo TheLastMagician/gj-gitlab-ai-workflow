@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import subprocess
 import zipfile
 from pathlib import Path
 
@@ -34,6 +35,20 @@ def should_include(path: Path) -> bool:
     return path.is_file()
 
 
+def tracked_files() -> list[Path]:
+    result = subprocess.run(
+        ["git", "ls-files", "-z", "--cached"],
+        cwd=ROOT,
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+    return [
+        ROOT / entry.decode("utf-8", errors="surrogateescape")
+        for entry in result.stdout.split(b"\0")
+        if entry
+    ]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", required=True)
@@ -42,7 +57,7 @@ def main() -> int:
     output = ROOT / args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(ROOT.rglob("*")):
+        for path in sorted(tracked_files()):
             if should_include(path):
                 archive.write(path, path.relative_to(ROOT).as_posix())
 
