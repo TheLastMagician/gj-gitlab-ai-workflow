@@ -29,8 +29,9 @@
 
 ```powershell
 python -m unittest discover -s tests
-python scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt --labels flow::standard
-python scripts/validate_role_map.py --workflow-config templates/gj/workflow.yml --allow-placeholders
+python templates/scripts/policy_check.py --mr-description examples/demo-run/mr/merge-request.md --changed-files examples/demo-run/mr/changed-files.txt --labels flow::standard
+python templates/scripts/validate_role_map.py --workflow-config templates/gj/workflow.yml --allow-placeholders
+python scripts/verify_order_demo.py
 python scripts/validate_skills.py
 python scripts/install_skills.py --dry-run
 python scripts/install_workflow.py --target C:\path\to\temporary-project --dry-run
@@ -66,7 +67,7 @@ python scripts/install_workflow.py --target C:\path\to\temporary-project --dry-r
 
 - `templates/gj/*.yml`
 - `templates/gitlab/.gitlab-ci.yml` 与 `templates/gitlab/.gitlab/`
-- `scripts/` 与 `templates/scripts/`
+- `templates/scripts/`、`templates/orchestrator/` 与 `templates/CODEOWNERS`
 - 面向使用者的 `docs/*.md` 与安装到目标项目的 `templates/docs/`
 
 `templates/` 是安装资产的唯一源。不要为了演示或测试，把安装结果复制回源码根目录；
@@ -78,7 +79,7 @@ python scripts/install_workflow.py --target C:\path\to\temporary-project --dry-r
 
 ```powershell
 python scripts/package_open_source.py --output dist\gj-gitlab-ai-workflow.zip
-python scripts/release_dry_run.py --package dist\gj-gitlab-ai-workflow.zip --output build\release-dry-run.md
+python scripts/validate_release_package.py --package dist\gj-gitlab-ai-workflow.zip --output build\release-package-validation.md
 ```
 
 发布干跑必须通过。发布前还要人工确认许可证、公开 URL、GitLab Runner 说明、保护

@@ -10,7 +10,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("gitlab_api", ROOT / "scripts" / "gitlab_api.py")
+SPEC = importlib.util.spec_from_file_location(
+    "gitlab_api", ROOT / "templates" / "scripts" / "gitlab_api.py"
+)
 assert SPEC and SPEC.loader
 gitlab_api = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = gitlab_api

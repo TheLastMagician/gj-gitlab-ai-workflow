@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location(
-    "orchestrator", ROOT / "orchestrator" / "orchestrator.py"
+    "orchestrator", ROOT / "templates" / "orchestrator" / "orchestrator.py"
 )
 assert SPEC and SPEC.loader
 orchestrator = importlib.util.module_from_spec(SPEC)

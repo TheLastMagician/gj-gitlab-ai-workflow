@@ -8,8 +8,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "templates" / "scripts" / "context_freshness_check.py"
-if not SCRIPT.exists():
-    SCRIPT = ROOT / "scripts" / "context_freshness_check.py"
 SPEC = importlib.util.spec_from_file_location(
     "context_freshness_check",
     SCRIPT,

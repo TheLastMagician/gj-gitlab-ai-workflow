@@ -60,6 +60,8 @@ class InstallerTests(unittest.TestCase):
             self.assertTrue((target / "scripts" / "gitlab_api.py").exists())
             self.assertTrue((target / "scripts" / "release_dry_run.py").exists())
             self.assertTrue((target / "scripts" / "release_version_check.py").exists())
+            self.assertTrue((target / "CODEOWNERS").exists())
+            self.assertTrue((target / "orchestrator" / "orchestrator.py").exists())
             self.assertIn(
                 ".gj/gitlab.local.json",
                 (target / ".gitignore").read_text(encoding="utf-8"),

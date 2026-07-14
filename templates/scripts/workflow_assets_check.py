@@ -13,6 +13,8 @@ CORE_REQUIRED = [
     ".gitlab/gj-workflow-ci.yml",
     ".gj/workflow.yml",
     ".gj/context.yml",
+    "CODEOWNERS",
+    "orchestrator/orchestrator.py",
     ".gitlab/merge_request_templates/Default.md",
     "docs/context/current-state.md",
     "docs/context/module-map.md",

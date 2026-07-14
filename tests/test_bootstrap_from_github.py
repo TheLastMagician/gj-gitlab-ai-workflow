@@ -52,7 +52,6 @@ class BootstrapFromGitHubTest(unittest.TestCase):
                     ROOT / "scripts/install_workflow.py",
                     "repo-main/scripts/install_workflow.py",
                 )
-                archive.write(ROOT / "CODEOWNERS", "repo-main/CODEOWNERS")
                 for path in (ROOT / "templates").rglob("*"):
                     if path.is_file():
                         archive.write(
@@ -80,6 +79,8 @@ class BootstrapFromGitHubTest(unittest.TestCase):
             self.assertEqual(0, result.returncode, result.stdout + result.stderr)
             self.assertTrue((target / ".gj/workflow.yml").exists())
             self.assertTrue((target / ".gitlab/gj-workflow-ci.yml").exists())
+            self.assertTrue((target / "CODEOWNERS").exists())
+            self.assertTrue((target / "orchestrator/orchestrator.py").exists())
             self.assertIn(
                 ".gitlab/gj-workflow-ci.yml",
                 (target / ".gitlab-ci.yml").read_text(encoding="utf-8"),

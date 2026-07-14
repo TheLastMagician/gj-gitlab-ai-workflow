@@ -9,8 +9,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "templates" / "scripts" / "release_version_check.py"
-if not SCRIPT.exists():
-    SCRIPT = ROOT / "scripts" / "release_version_check.py"
 SPEC = importlib.util.spec_from_file_location("release_version_check", SCRIPT)
 assert SPEC and SPEC.loader
 release_version_check = importlib.util.module_from_spec(SPEC)

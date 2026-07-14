@@ -6,7 +6,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("policy_check", ROOT / "scripts" / "policy_check.py")
+SPEC = importlib.util.spec_from_file_location(
+    "policy_check", ROOT / "templates" / "scripts" / "policy_check.py"
+)
 assert SPEC and SPEC.loader
 policy_check = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(policy_check)

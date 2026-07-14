@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate release package and write a release dry-run artifact."""
+"""Validate the distributable source package and write a report."""
 
 from __future__ import annotations
 
@@ -25,6 +25,9 @@ REQUIRED_PACKAGE_PATHS = [
     "templates/gitlab/.gitlab-ci.yml",
     "templates/gitlab/.gitlab/gj-workflow-ci.yml",
     "templates/gitlab/.gitlab/merge_request_templates/Default.md",
+    "templates/CODEOWNERS",
+    "templates/orchestrator/README.md",
+    "templates/orchestrator/orchestrator.py",
     "skills/gj-workflow-bootstrap/SKILL.md",
     "skills/gj-workflow-bootstrap/scripts/bootstrap_from_github.py",
     "skills/gj-workflow-next/SKILL.md",
@@ -48,9 +51,8 @@ REQUIRED_PACKAGE_PATHS = [
     "templates/gj/doc-templates/test-plan.md",
     "templates/gj/doc-templates/test-report.md",
     "templates/gj/doc-templates/release-note.md",
+    "templates/scripts/release_dry_run.py",
     "templates/scripts/release_version_check.py",
-    "scripts/validate_role_map.py",
-    "scripts/gitlab_api.py",
     "templates/scripts/validate_role_map.py",
     "templates/scripts/gitlab_api.py",
     "examples/demo-run/00-run-log.md",

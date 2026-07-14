@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the demo project's smoke tests."""
+"""Run the repository's isolated order-demo tests."""
 
 from __future__ import annotations
 

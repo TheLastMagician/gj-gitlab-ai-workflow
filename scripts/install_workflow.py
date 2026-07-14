@@ -20,9 +20,10 @@ COPY_PATHS = [
     ("templates/docs/context", "docs/context"),
     ("templates/docs/standards", "docs/standards"),
     ("templates/scripts", "scripts"),
+    ("templates/orchestrator", "orchestrator"),
 ]
 
-COPY_FILES = [("CODEOWNERS", "CODEOWNERS")]
+COPY_FILES = [("templates/CODEOWNERS", "CODEOWNERS")]
 ENSURE_DIRS = [
     "docs/product/requirements",
     "docs/product/designs",
