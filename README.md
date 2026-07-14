@@ -290,41 +290,61 @@ python scripts/install_workflow.py --target C:\path\to\your-project
   -> plan-change（Fast 可极简）
   -> develop-change 开发和自测
   -> 创建 MR，并选择同一个 flow 标签
-  -> CI + mr-review
-  -> 人决定合并和发布
-  -> close-loop 更新长期上下文
+  -> CI + mr-review 形成合并就绪结论
+  -> 人决定并执行合并
+  -> release-readiness 形成版本测试和发布准备产出
+  -> 人决定 Tag、构建和部署
+  -> close-loop 回写实际状态并完成交接
 ```
 
 ```mermaid
 flowchart TD
-  A["需求提出人 / PdM<br/>描述新需求或选择 GitLab 待办"] --> B["任意成员 + gj-workflow-next<br/>识别阶段、推荐 flow 和下一步"]
-  B --> C{"需求责任人 / Dev Lead<br/>确认需求、flow 和目标 Milestone"}
-  C -- "flow::standard" --> D["PdM + Dev Lead / gj-plan-change<br/>验收、方案、测试和目标版本"]
-  C -- "flow::fast" --> DF["Dev / gj-plan-change<br/>极简边界、自测和文档影响"]
-  C -- "flow::hotfix" --> DH["Dev Lead + Dev / gj-plan-change<br/>最小修复、验证和回滚"]
-  D --> E["Dev / gj-develop-change<br/>实现、测试并更新随改文档"]
-  DF --> E
-  DH --> E
-  E --> F["Dev<br/>创建 MR，沿用 flow 和 Milestone，不逐 MR bump"]
-  F --> G["CI 硬门禁 policy / test<br/>workflow 检查只提醒"]
-  G --> H["Reviewer / gj-mr-review<br/>代码、测试、文档和合并就绪检查"]
-  H --> I{"Reviewer<br/>存在阻塞问题？"}
-  I -- "是" --> E
-  I -- "否" --> J["Maintainer<br/>决定并执行合并"]
-  J --> K["QA + DevOps / gj-release-readiness<br/>锁定 SemVer，生成测试报告和发布说明"]
-  K --> L["DevOps / Maintainer<br/>决定 Tag、构建和部署"]
-  L --> M["PM + Dev Lead / gj-close-loop<br/>回写实际 Tag/SHA/环境和长期上下文"]
+  A["需求提出人 / PdM<br/>描述新需求或选择 GitLab 待办"] --> B["任意成员 + gj-workflow-next<br/>识别工作并推荐 flow、Milestone 和下一步"]
+  B --> O1["入口产出<br/>主工作项草稿 + 唯一 flow 建议 + 目标 Milestone<br/>负责人 + 预期文档影响"]
+  O1 --> G1{"决策门 1：PdM / PM<br/>确认需求、flow、目标版本和主工作项？"}
+
+  G1 -- "flow::standard" --> PS["gj-plan-change<br/>完整需求、方案和测试设计"]
+  G1 -- "flow::fast" --> PF["gj-plan-change<br/>极简边界、自测和文档影响"]
+  G1 -- "flow::hotfix" --> PH["gj-plan-change<br/>最小修复、验证和回滚"]
+  PS --> O2["计划产出<br/>验收与反例 + 方案与任务边界 + 测试策略<br/>风险与回滚 + 文档决策"]
+  PF --> O2
+  PH --> O2
+  O2 --> G2{"决策门 2：PdM / Dev Lead / QA<br/>需求、方案和测试基线可执行、可验证？"}
+  G2 -- "需修正" --> R1["回到 gj-plan-change 修正"]
+  R1 --> O2
+
+  G2 -- "确认" --> D["Dev / gj-develop-change<br/>实现、自测并准备 MR"]
+  D --> O3["开发产出<br/>代码 + 自动化测试 + 自测证据 + 风险与回滚<br/>受影响长期文档 + MR"]
+  O3 --> C["CI<br/>policy / test 硬门禁；workflow 只提醒"]
+  C --> V["Reviewer / gj-mr-review<br/>审阅代码、测试、文档决策和 Pipeline"]
+  V --> O4["审阅产出<br/>Review findings + 修正结果 + Pipeline 证据<br/>合并就绪结论"]
+  O4 --> G3{"决策门 3：Reviewer / Maintainer<br/>阻塞已解决并批准合并？"}
+  G3 -- "否" --> D
+  G3 -- "是" --> M["Maintainer<br/>执行合并"]
+
+  M --> P["QA + DevOps / gj-release-readiness<br/>锁定 SemVer 并准备发布"]
+  P --> O5["发布准备产出<br/>测试报告 + 发布说明 + 按需更新 manifest 版本<br/>发布、监控和回滚清单"]
+  O5 --> G4{"决策门 4：QA / DevOps / Maintainer<br/>批准 Tag、构建和部署？"}
+  G4 -- "需修正" --> P
+  G4 -- "批准" --> L["人工发布<br/>创建 Tag、构建并部署"]
+  L --> O6["发布产出<br/>Tag + 构建产物 + SHA/Pipeline<br/>部署环境和验证结果"]
+  O6 --> CL["PM + Dev Lead / gj-close-loop<br/>完成收尾和交接"]
+  CL --> O7["闭环产出<br/>current state + 冻结版本证据<br/>按需创建 follow-up Issue + 负责人和期限"]
 ```
 
-| 步骤 | GitLab 动作 | 仓库文档产物 | 人工确认 |
-| --- | --- | --- | --- |
-| 需求进入 | 先整理 Issue 草稿；人确认需求和 flow 后再创建 Requirement/Hotfix Issue，Fast 按规则可只写 MR | 暂不创建文档，只判断受影响的长期事实 | 确认需求来源、唯一 flow 和目标 Milestone |
-| 需求确认 | 在主 Issue 补齐目标、非目标、验收标准和反例 | 产品行为变化时创建或更新 PRD；有交互变化时更新设计和原型记录 | 产品经理确认需求和产品文档 |
-| 方案确认 | 在主 Issue 评审方案；只有独立负责人或排期需要时才拆子 Issue | 按影响创建或更新技术方案、API 契约、数据库设计、ADR 和测试计划 | 开发经理确认方案；QA 确认测试基线 |
-| 开发 | 创建分支并持续回写主 Issue；准备 MR | 实现代码；在同一 MR 更新模块文档以及所有受影响的长期事实文档 | 开发确认实现、自测和文档决策完整 |
-| MR 审阅 | MR 沿用同一 flow 和 Milestone；核对 Pipeline、讨论和差异 | 通常不新建文档；发现实现与文档不一致时在原 MR 修正 | Reviewer 确认代码、测试和文档一致；Maintainer 决定合并 |
-| QA 和发布准备 | Release Issue/Milestone 汇总实际 MR，锁定 Tag 和发布范围 | 按 Tag 创建测试报告；有发布影响时创建发布说明 | QA 确认测试结论；DevOps/Maintainer 决定 Tag 和发布 |
-| 发布和收尾 | 记录 Tag、commit、Pipeline、环境和验证结果；未完成项建后续 Issue | 回写发布说明、`current-state.md`；路径变化时更新 `.gj/context.yml` | 项目经理/开发经理确认长期事实已闭环 |
+图中的“产出”是阶段结束时必须可检查的结果，不一定都是文件。文档仍按实际影响决定
+`create`、`update`、`no-change` 或 `follow-up`，不能为了凑产出机械创建空文档。
+
+| 阶段 | 输入 | 必须产出 | 完成标准 | 下一责任人 |
+| --- | --- | --- | --- | --- |
+| 入口分流 | 新需求描述或现有 GitLab 待办 | Requirement/Hotfix 主工作项草稿，或准备写入 Fast MR 的极简记录；唯一 flow 建议、目标 Milestone、负责人和预期文档影响 | PdM/PM 确认需求来源、flow、目标版本和主工作项后，才创建或提交工作项 | PdM、Dev Lead |
+| 需求确认 | 已确认的主工作项、flow 和 Milestone | 目标、非目标、用户场景、可测试验收标准、反例；按影响创建或更新 PRD、设计和原型记录 | PdM 确认需求事实，相关文档状态和来源可追溯 | Dev Lead、QA |
+| 方案和测试设计 | 已确认需求及受影响边界 | 技术方案、任务边界、测试策略、风险、发布和回滚计划；按影响更新 API、数据库、ADR、测试计划并输出文档决策 | Dev Lead 确认可实施，QA 确认可验证；复杂需求未经确认不开发 | Dev |
+| 开发 | 已确认的验收、方案、测试基线和文档决策 | 代码、自动化测试、自测证据、风险与回滚说明、受影响长期文档，以及沿用同一 flow/Milestone 的 MR | 分支中的行为、测试和文档一致，MR 信息完整并可交给 CI/Reviewer | Reviewer |
+| MR 审阅 | MR diff、自测证据、文档决策和 Pipeline | `policy` 与项目测试结果、Review findings、修正结果、未解决讨论和合并就绪结论 | 阻塞问题解决；Reviewer 给出结论，Maintainer 明确批准后才能合并 | Maintainer；未通过则回到 Dev |
+| 发布准备 | 已合并 MR、Milestone 范围和目标环境 | 锁定 SemVer、按 Tag 创建的测试报告和发布说明、必要的 manifest 更新，以及发布、监控和回滚清单 | QA 给出测试结论，DevOps/Maintainer 明确批准 Tag、构建和部署 | DevOps、Maintainer |
+| 发布 | 已批准的版本、发布证据和回滚方案 | Git Tag、构建产物、commit SHA、Tag Pipeline、部署环境版本和验证结果 | 人确认构建、部署和验证结果；失败时执行或确认回滚 | PM、Dev Lead |
+| 收尾 | 实际 Tag、SHA、Pipeline、环境和遗留问题 | 更新发布说明和 `current-state.md`，冻结版本证据；路径变化时更新 `.gj/context.yml`；遗留项形成有负责人和期限的 Issue | 长期事实与实际运行状态一致，所有未完成项均可跟踪并已完成交接 | 下一 Issue 的 assignee/reviewer，或结束 |
 
 每个节点完成后，都要在 GitLab 上设置下一个处理人的 assignee/reviewer，并用
 `@username` 评论交接。被指派的人可以用 `gj-workflow-next` 查看自己的待办，再进入
