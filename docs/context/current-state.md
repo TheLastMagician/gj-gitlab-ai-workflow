@@ -7,34 +7,25 @@
 
 ## 当前事实
 
-- GitLab project 已通过只读 API 校验为 `zengqinglin/gj-workflow-demo`。
-- 跨 Agent GitLab helper 位于 `scripts/gitlab_api.py`;本地凭据保存在被忽略的
-  `.gj/gitlab.local.json`。
-- 首轮目标是暴露摩擦点，不追求一次性写完全部 skills。
+- 通用安装资产位于 `templates/`，业务示例统一位于 `examples/`，两者不共享业务事实。
+- 跨 Agent 机器配置使用 `.gj/workflow.yml` 和 `.gj/context.yml`；本地凭据只保存在被
+  忽略的 `.gj/gitlab.local.json`。
 - 当前工作流使用唯一 `flow::*` 标签和 changed files 判断最低流程。
-- 跨 Agent 机器配置已收敛为 `.gj/workflow.yml` 和 `.gj/context.yml`；
-  `.gj/gitlab.local.json` 仅保存被忽略的本机凭据。
-- 默认项目按低风险处理，不要求额外审批人数。
-- 默认 CI 只硬拦唯一 flow、Standard/Hotfix Issue 关联、高风险 Fast、
-  本次新增 secret 和项目测试失败；资产、文档和发布清单只提醒。
-- 分发 CI 已收敛为根文件 include `.gitlab/gj-workflow-ci.yml`；硬门禁 Job
-  显式进入 MR Pipeline，并使用自己的 Python 镜像和 `.pre` 阶段。
+- 默认 CI 只硬拦唯一 flow、Standard/Hotfix Issue 关联、高风险 Fast、本次新增 secret
+  和项目测试失败；资产、文档和发布清单只提醒。
 - 工作流安装器逐文件合并且不删除业务目录；Skills-only 场景由
-  `gj-workflow-bootstrap` 自带的 GitHub 引导脚本获取同源资产。
+  `gj-workflow-bootstrap` 自带的引导脚本获取同源资产。
 - GitLab CE 的硬门禁依赖成功 Pipeline、保护分支和受限合并权限。
-- 对外 Skill 接口已收敛为 8 个，按 flow 标签控制计划和交付深度，
-  Codex、Claude Code、OpenCode 共用同一份 `SKILL.md` 源码。
-- demo 已用项目本地配置完成 GitLab helper 验证:读取 Issue、MR、Pipeline,
-  写入并回读 Issue 评论,缺少写入确认和敏感端点访问均被拒绝。
-- 既有项目接入由 `gj-codebase-map` 直接更新开发/测试规范、当前状态、模块地图、模块文档
-  和 `.gj/context.yml` 草稿，不再保存无人消费的 `docs/codebase/` 中间扫描目录。
+- 对外 Skill 接口共 8 个，Codex、Claude Code 和 OpenCode 共用同一份 `SKILL.md` 源码。
+- 既有项目接入由 `gj-codebase-map` 更新开发/测试规范、当前状态、模块地图、模块文档和
+  `.gj/context.yml` 草稿，不保存无人消费的 `docs/codebase/` 中间扫描目录。
 
 ## 工程基线
 
 - 工具和检查脚本使用 Python 3，优先只依赖标准库。
 - 本地命令示例面向 Windows PowerShell，CI 使用 GitLab CI。
 - `templates/` 保存安装到业务项目的资产，`skills/` 保存八个跨 Agent Skill，
-  `scripts/` 保存安装、检查、GitLab helper 和发布工具。
+  `scripts/` 保存安装、检查、GitLab helper 和发布工具，`examples/` 保存隔离样例。
 - 本仓库的开发约定和校验命令以 `CONTRIBUTING.md` 为准。
 
 ## 当前限制与风险

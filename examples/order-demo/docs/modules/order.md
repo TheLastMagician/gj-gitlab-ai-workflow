@@ -9,8 +9,8 @@
 
 ## 示例代码
 
-- `examples/demo-project/src/order_approval.py`
-- `examples/demo-project/tests/test_order_approval.py`
+- `examples/order-demo/src/order_approval.py`
+- `examples/order-demo/tests/test_order_approval.py`
 
 ## 后续扩展
 

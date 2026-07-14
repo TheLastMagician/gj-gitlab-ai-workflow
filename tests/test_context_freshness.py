@@ -89,20 +89,20 @@ context_budget:
     def test_document_contract_accepts_semantic_current_fact(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            path = root / "docs/modules/order.md"
+            path = root / "docs/modules/app.md"
             path.parent.mkdir(parents=True)
             path.write_text(
-                """# 订单模块
+                """# 应用模块
 
 ## 元数据
 
-- 负责人：order-team
+- 负责人：app-team
 - 状态：confirmed
 - 来源 Issue：#9
 - 目标版本：v1.1.0
 - 生效范围：pending
 - 实现 MR：!3
-- 相关文档：docs/product/requirements/order-approval.md
+- 相关文档：docs/product/requirements/member-export.md
 - 最后核验日期：2026-07-13
 """,
                 encoding="utf-8",

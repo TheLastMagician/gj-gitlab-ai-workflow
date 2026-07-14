@@ -10,13 +10,13 @@ CODEOWNERS
 docs/workflow.md
 docs/quickstart.md
 docs/context/current-state.md
-docs/modules/order.md
+examples/order-demo/docs/modules/order.md
 templates/gj/workflow.yml
 templates/gitlab/.gitlab/issue_templates/Requirement.md
 orchestrator/orchestrator.py
 scripts/policy_check.py
 scripts/smoke_check.py
-examples/demo-project/src/order_approval.py
-examples/demo-project/tests/test_order_approval.py
+examples/order-demo/src/order_approval.py
+examples/order-demo/tests/test_order_approval.py
 examples/demo-run/00-run-log.md
 skills/gj-workflow-bootstrap/SKILL.md

@@ -4,7 +4,7 @@
 
 - Requirement Issue #2
 - AI 澄清评论
-- `docs/modules/order.md` 中的当前模块上下文
+- `examples/order-demo/docs/modules/order.md` 中的当前模块上下文
 
 ## 输出
 

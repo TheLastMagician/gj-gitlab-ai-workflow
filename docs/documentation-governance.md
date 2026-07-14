@@ -113,7 +113,7 @@ AsyncAPI、protobuf 等机器契约为事实源；数据库结构以 schema/mode
 
 | 文档 | 动作 | 触发事实 | 阶段/状态 | 确认人或跟进 |
 | --- | --- | --- | --- | --- |
-| docs/modules/order.md | update | 审批规则变化 | develop / confirmed | @owner |
+| docs/modules/<module>.md | update | 模块业务规则变化 | develop / confirmed | @owner |
 ```
 
 动作只能是 `create/update/no-change/follow-up`。`follow-up` 必须包含 GitLab Issue、

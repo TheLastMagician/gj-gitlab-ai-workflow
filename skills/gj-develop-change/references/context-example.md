@@ -3,7 +3,7 @@
 Issue #4 已加载的开发上下文：
 
 - `docs/context/current-state.md`
-- `docs/modules/order.md`
+- `examples/order-demo/docs/modules/order.md`
 - `.gj/context.yml`
 - Requirement #2。
 - Solution #3。

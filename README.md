@@ -81,7 +81,7 @@ Access Token，但它代表机器人账号，不能代替当前用户的个人 T
 - GitLab webhook Orchestrator 骨架。
 - 八个跨 Agent workflow skills。
 - 所有 Skill 固定使用 `gj-` 前缀；GJ 是“公交”工作流的简称。
-- `examples/demo-project` 和 `examples/demo-run`，用于查看一次端到端模拟留下的样例产物。
+- `examples/order-demo` 和 `examples/demo-run`，用于查看隔离的业务样例和端到端演练产物。
 
 `.gj/` 是 GJ 工作流的跨 Agent 机器配置目录，不属于某个 AI 工具。Codex、Claude Code、
 OpenCode 和本地脚本读取同一份配置；面向人的长期事实仍放在 `docs/`。

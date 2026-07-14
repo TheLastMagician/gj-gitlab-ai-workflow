@@ -4,4 +4,4 @@
 docs/standards/ @tech-lead @qa-owner
 templates/ @tech-lead @devops-owner
 orchestrator/ @ai-platform-owner @devops-owner
-examples/demo-project/src/ @order-module-owner
+examples/ @qa-owner

@@ -2,9 +2,9 @@
 
 示例项目刻意保持精简：
 
-- 代码：`examples/demo-project/src/order_approval.py`
-- 测试：`examples/demo-project/tests/test_order_approval.py`
-- 模块文档：`docs/modules/order.md`
+- 代码：`examples/order-demo/src/order_approval.py`
+- 测试：`examples/order-demo/tests/test_order_approval.py`
+- 模块文档：`examples/order-demo/docs/modules/order.md`
 - 上下文索引：`.gj/context.yml`
 
 真实代码库建图时，扫描结果直接更新后续 Skill 会读取的文档：

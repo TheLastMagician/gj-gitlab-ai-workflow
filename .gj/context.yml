@@ -13,15 +13,55 @@ context_budget:
   max_module_context_chars: 40000
 
 modules:
-  order:
-    name: 订单模块
+  workflow-assets:
+    name: 工作流安装资产
     paths:
-      - "examples/demo-project/src/**"
-      - "examples/demo-project/tests/**"
-      - "docs/modules/order.md"
+      - "templates/**"
+      - ".gitlab/**"
+      - ".gj/**"
+      - "CODEOWNERS"
     docs:
-      - "docs/modules/order.md"
+      - "docs/workflow.md"
+      - "docs/documentation-governance.md"
+      - "docs/versioning.md"
     active_decisions: []
     ai_focus:
-      - "申请人不得审批自己的订单"
-      - "审批状态转换必须可追溯"
+      - "安装资产必须保持业务领域无关"
+      - "安装器不能覆盖或删除业务项目已有内容"
+
+  skills:
+    name: 跨 Agent Skills
+    paths:
+      - "skills/**"
+      - "skills.sh.json"
+    docs:
+      - "docs/skills.md"
+      - "docs/workflow.md"
+    active_decisions: []
+    ai_focus:
+      - "AI 起草一切，人确认 flow、合并和发布"
+
+  tooling:
+    name: 工具与自动化
+    paths:
+      - "scripts/**"
+      - "orchestrator/**"
+      - "tests/**"
+      - ".gitlab-ci.yml"
+    docs:
+      - "docs/cicd.md"
+      - "docs/gitlab-access.md"
+    active_decisions: []
+    ai_focus:
+      - "硬门禁与提醒检查必须明确区分"
+
+  examples:
+    name: 隔离示例
+    paths:
+      - "examples/**"
+    docs:
+      - "examples/order-demo/README.md"
+      - "examples/order-demo/docs/modules/order.md"
+    active_decisions: []
+    ai_focus:
+      - "示例事实不能进入通用安装模板"

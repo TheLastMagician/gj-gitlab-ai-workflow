@@ -38,7 +38,7 @@ Closes #4
 
 ## 文档影响
 
-- 已更新：`docs/workflow.md`, `docs/quickstart.md`, `docs/context/current-state.md`, `docs/modules/order.md`, `examples/demo-run/`.
+- 已更新：`docs/workflow.md`, `docs/quickstart.md`, `docs/context/current-state.md`, `examples/order-demo/docs/modules/order.md`, `examples/demo-run/`.
 - 不需要更新，原因：首轮 demo 暂未引入正式 PRD/product-design 模板。
 - 后续文档 Issue：后续由文档治理规范补充 PRD、设计、测试、发布模板。
 

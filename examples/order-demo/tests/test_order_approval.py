@@ -1,13 +1,15 @@
+import sys
 import unittest
+from pathlib import Path
 
-from examples.demo_project_import import import_order_approval
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-
-order_approval = import_order_approval()
-Order = order_approval.Order
-OrderApprovalError = order_approval.OrderApprovalError
-OrderApprovalService = order_approval.OrderApprovalService
-OrderStatus = order_approval.OrderStatus
+from order_approval import (  # noqa: E402
+    Order,
+    OrderApprovalError,
+    OrderApprovalService,
+    OrderStatus,
+)
 
 
 class OrderApprovalServiceTest(unittest.TestCase):

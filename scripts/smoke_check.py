@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> int:
-    test_dir = ROOT / "examples" / "demo-project" / "tests"
+    test_dir = ROOT / "examples" / "order-demo" / "tests"
     result = subprocess.run(
         [sys.executable, "-m", "unittest", "discover", "-s", str(test_dir)],
         cwd=ROOT,

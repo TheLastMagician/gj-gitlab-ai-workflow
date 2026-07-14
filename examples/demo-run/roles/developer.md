@@ -4,12 +4,12 @@
 
 - Task Issue #4
 - Solution Issue #3
-- `docs/modules/order.md`
+- `examples/order-demo/docs/modules/order.md`
 
 ## 输出
 
-- `examples/demo-project/src/order_approval.py`
-- `examples/demo-project/tests/test_order_approval.py`
+- `examples/order-demo/src/order_approval.py`
+- `examples/order-demo/tests/test_order_approval.py`
 
 ## 首轮缺陷
 

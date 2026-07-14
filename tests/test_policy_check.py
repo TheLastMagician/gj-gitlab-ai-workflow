@@ -45,7 +45,7 @@ class PolicyFlowTests(unittest.TestCase):
 | --- | --- | --- | --- |
 | | | | |
 """
-        filled = blank.replace("| | | | |", "| docs/modules/order.md | update | 规则变化 | @owner |")
+        filled = blank.replace("| | | | |", "| docs/modules/app.md | update | 规则变化 | @owner |")
 
         self.assertFalse(policy_check.section_has_content(blank))
         self.assertTrue(policy_check.section_has_content(filled))

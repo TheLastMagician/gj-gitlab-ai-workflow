@@ -472,8 +472,7 @@ docs/
     module-map.md
     glossary.md
   modules/
-    order.md
-    auth.md
+    <module>.md
   standards/
     00-index.md
     01-development-standard.md
@@ -665,18 +664,17 @@ global:
     - "docs/context/glossary.md"
 
 modules:
-  order:
-    name: 订单模块
+  app:
+    name: 应用模块
     paths:
-      - "src/**/order/**"
-      - "db/migration/*order*"
+      - "src/**"
+      - "tests/**"
     docs:
-      - "docs/modules/order.md"
-    active_decisions:
-      - "docs/technical/decisions/ADR-0001-order-state-machine.md"
+      - "docs/modules/app.md"
+    active_decisions: []
     ai_focus:
-      - "订单状态机是否兼容历史状态"
-      - "审批流是否影响查询、导出和权限"
+      - "模块边界是否与当前代码一致"
+      - "行为变化是否同步更新测试和长期文档"
 ```
 
 # 15. Skills 设计

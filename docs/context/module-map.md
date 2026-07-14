@@ -7,6 +7,5 @@
 | workflow-tools | `scripts/` | 安装、校验、GitLab helper、打包和发布工具 | @devops-owner |
 | orchestrator | `orchestrator/` | 可选 Webhook 命令路由骨架，当前不可直接用于生产 | @ai-platform-owner |
 | documentation | `README.md`, `docs/`, `templates/docs/` | 开源说明和安装到业务项目的长期规范模板 | @tech-lead |
-| demo-order | `examples/demo-project/` | 订单审批流示例项目 | @order-module-owner |
-| demo-run | `examples/demo-run/` | 端到端模拟输入、输出和失败点记录 | @pm-owner |
+| examples | `examples/` | 与通用安装资产隔离的业务样例和端到端演练记录 | @qa-owner |
 | skills | `skills/` | 从真实 run 反推的首批 skill 草案 | @ai-platform-owner |
