@@ -15,7 +15,7 @@
 Claude Code 和 OpenCode：
 
 ```powershell
-npx --yes skills@1.5.15 add https://github.com/TheLastMagician/gj-gitlab-ai-workflow --skill '*' -a codex -a claude-code -a opencode --copy -y
+npx --yes skills@1.5.17 add https://github.com/TheLastMagician/gj-gitlab-ai-workflow --skill '*' -a codex -a claude-code -a opencode --copy -y
 ```
 
 安装结果：Codex 和 OpenCode 使用项目内 `.agents/skills`，Claude Code 使用
@@ -69,12 +69,15 @@ Access Token，但它代表机器人账号，不能代替当前用户的个人 T
   `flow::hotfix` 三个流程标签。
 - `.gj/workflow.yml` 集中保存项目、角色交接和风险规则；`.gj/context.yml`
   保存 AI 上下文白名单；本机凭据单独放在被忽略的 `.gj/gitlab.local.json`。
-- `docs/context`、`docs/modules` 和 ADR 等长期上下文目录。
+- `docs/context`、`docs/product`、`docs/technical`、`docs/modules`、`docs/qa`、
+  `docs/releases` 和 `docs/standards` 等长期文档目录。
 - 安装在 `.gj/doc-templates/` 的 PRD、产品设计、技术方案、API、数据库、ADR、
   模块、测试和发布文档模板；项目事实目录不预置空白模板。
-- 目标业务项目 CI：MR 只由 `policy -> test` 硬阻断；工作流资产和发布清单只提醒。
+- 目标业务项目 CI：MR 只由 `policy -> test` 硬阻断，工作流资产检查只提醒；
+  版本检查仅在 Tag 流水线运行，发布清单仅在 Tag 或手工默认分支流水线运行。
 - `policy_check.py`、`workflow_assets_check.py`、`validate_role_map.py` 等检查脚本。
-- SemVer/Milestone/Tag/构建/部署版本治理，以及 Tag-only `release_version_check.py`。
+- SemVer/Milestone/Tag/构建/部署版本治理，以及仅在 Tag Pipeline 运行的
+  `release_version_check.py`。
 - GitLab webhook Orchestrator 骨架。
 - 八个跨 Agent workflow skills。
 - 所有 Skill 固定使用 `gj-` 前缀；GJ 是“公交”工作流的简称。
@@ -362,8 +365,8 @@ Requirement Issue + Milestone v1.3.0
 - GitLab Milestone 是可调整的目标版本；Git Tag 才是仓库已发布版本事实。
 - 默认 SemVer：不兼容改动升 Major，新功能升 Minor，修复升 Patch；flow 不决定版本号。
 - PRD/方案/模块文档原地更新，只记录目标版本；测试报告和发布说明按 Tag 新建。
-- 普通 MR 没有版本硬门禁。只有 Tag Pipeline 硬检查 Tag 格式、发布说明存在且
-  Version/Tag 一致，避免错版进入构建和部署。
+- 普通 MR 没有版本硬门禁。只有 Tag Pipeline 硬检查 Tag 格式、发布说明存在，且
+  发布说明的版本字段和 Tag 与实际 Tag 一致，避免错版进入构建和部署。
 - 项目已有 `package.json`、`pyproject.toml`、`pom.xml` 等 manifest 时只在发布准备阶段
   同步；工作流不强制增加通用 `VERSION` 文件。
 
@@ -375,8 +378,10 @@ Requirement Issue + Milestone v1.3.0
 安装到业务项目里的 GitLab CI 是业务项目流水线：
 
 ```text
-MR 硬门禁: policy -> test
-可选提醒: workflow assets / release dry run
+MR 硬门禁：policy -> test
+MR 提醒：workflow_assets_check
+Tag 硬门禁：release_version_check
+Tag / 手工默认分支提醒：release_dry_run
 ```
 
 各阶段含义：
