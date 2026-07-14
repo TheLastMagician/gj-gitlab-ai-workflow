@@ -508,12 +508,12 @@ Fast MR 默认运行 policy、workflow assets 和 test，但只有 policy 与项
 
 更多细节见：
 
-- `docs/quickstart.md`
-- `docs/workflow.md`
-- `docs/skills.md`
-- `docs/cicd.md`
-- `docs/documentation-governance.md`
-- `docs/versioning.md`
+- [快速开始](docs/quickstart.md)
+- [GitLab AI 项目交付工作流](docs/workflow.md)
+- [工作流 Skills](docs/skills.md)
+- [CI/CD 流程](docs/cicd.md)
+- [可持续项目文档与 AI 上下文治理](docs/documentation-governance.md)
+- [Git 项目版本治理](docs/versioning.md)
 
 ## 参与维护
 
