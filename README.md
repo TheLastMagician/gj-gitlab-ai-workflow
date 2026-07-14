@@ -196,6 +196,25 @@ python scripts/install_workflow.py --target C:\path\to\your-project
 文件名；模板目录是工作流资产，不是项目事实。不是每个需求都要把所有模板填一遍，只有
 触发事实发生变化的文档才创建或更新。
 
+开源仓库中的模板源文件位于 `templates/gj/doc-templates/`，安装到业务项目后按下表使用：
+
+| 安装后的模板 | 创建的真实文档 |
+| --- | --- |
+| `.gj/doc-templates/product-requirement.md` | `docs/product/requirements/<capability>.md` |
+| `.gj/doc-templates/product-design.md` | `docs/product/designs/<capability>.md` |
+| `.gj/doc-templates/prototype-record.md` | `docs/product/prototypes/<capability>.md` |
+| `.gj/doc-templates/technical-solution.md` | `docs/technical/solutions/<capability>.md` |
+| `.gj/doc-templates/api-contract.md` | `docs/technical/apis/<domain>.md` |
+| `.gj/doc-templates/database-design.md` | `docs/technical/database/<domain>.md` |
+| `.gj/doc-templates/adr.md` | `docs/technical/decisions/ADR-<编号>-<主题>.md` |
+| `.gj/doc-templates/module.md` | `docs/modules/<module>.md` |
+| `.gj/doc-templates/test-plan.md` | `docs/qa/test-plans/<capability>.md` |
+| `.gj/doc-templates/test-report.md` | `docs/qa/test-reports/<tag>.md` |
+| `.gj/doc-templates/release-note.md` | `docs/releases/<tag>.md` |
+
+`current-state.md`、`module-map.md` 和 `glossary.md` 是初始化时安装的当前事实文件，事实
+变化时直接更新，不需要每轮从模板重新创建。
+
 ### 按什么规范创建和维护
 
 长期事实文档统一使用中文标题、中文表头和中文元数据字段；路径、Skill 名、GitLab
@@ -226,6 +245,29 @@ python scripts/install_workflow.py --target C:\path\to\your-project
 5. 每个执行 Skill 输出“文档决策”表，动作只能是 `create`、`update`、`no-change`
    或 `follow-up`；`follow-up` 必须给出 Issue、负责人和期限。
 6. `.gj/context.yml` 只列 AI 默认需要读取的当前事实；文档路径或模块边界变化时同步更新。
+
+### 文档怎么跟随版本迭代
+
+假设生产环境当前是 `v1.2.0`，团队计划在 `v1.3.0` 为“成员导出”增加角色限制：
+
+1. Requirement Issue 使用 Milestone `v1.3.0`，已有的 PRD、技术方案、模块文档和测试
+   计划把“目标版本”更新为 `v1.3.0`，并直接写成包含新规则的当前完整事实。
+2. 已有同一能力文档时原地更新，例如继续使用
+   `docs/product/requirements/member-export.md`；不要创建
+   `member-export-v1.3.md`、`member-export-v2.md` 或 `member-export-final.md`。
+3. 只有出现新的稳定能力或独立边界时才从模板新建文档。API、数据库或长期技术取舍没有
+   变化时，在文档决策中写 `no-change`；新的长期技术决策才新建 ADR。
+4. 普通功能 MR 不创建 Tag，也不逐 MR 修改项目版本。代码、测试和所有受影响的长期文档
+   在同一个 MR 更新，历史由 Git 和关联 Issue/MR 保存。
+5. 发布准备时，`gj-release-readiness` 锁定最终 SemVer，并按 Tag 新建
+   `docs/qa/test-reports/v1.3.0.md` 和 `docs/releases/v1.3.0.md`。
+6. 人创建 Tag 并完成部署后，`gj-close-loop` 回写发布说明和
+   `docs/context/current-state.md` 中的实际 Tag、SHA、Pipeline 和环境；这两份版本证据
+   随后冻结，下一版本重新按新 Tag 创建。
+
+因此，PRD、设计、方案、API、数据库、模块和测试计划是“当前事实”，跨版本原地维护；
+测试报告和发布说明是“版本证据”，每个 Tag 单独创建并冻结；ADR 是“决策证据”，确认后
+冻结，后续变化用新 ADR 取代。
 
 完整字段、触发条件和责任人规则见
 [可持续文档与 AI 上下文治理](docs/documentation-governance.md)。安装到业务项目后的团队
