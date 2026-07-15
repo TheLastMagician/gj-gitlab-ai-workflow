@@ -22,7 +22,9 @@ description: Map an existing repository into confirmed engineering standards and
    - 模块结构、集成和依赖：`docs/context/module-map.md`、`docs/modules/*.md` 以及按需的
      API/技术方案；
    - 项目级长期限制：`docs/context/current-state.md`；可执行技术债和缺陷输出为
-     GitLab Issue 草稿，不写入仓库待办清单。
+     GitLab Issue 草稿，不写入仓库待办清单。起草前读取
+     `docs/standards/09-ai-development-boundary.md` 和
+     `docs/standards/11-notification-standard.md`。
 4. 创建或更新当前上下文草稿：
    - `docs/context/current-state.md`
    - `docs/context/module-map.md`

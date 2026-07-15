@@ -22,10 +22,12 @@ description: Install and verify the GitLab AI workflow skeleton in a repository.
      非破坏式安装器。
    - 安装器返回退出码 `2` 时停止，并给出准确的手工 CI include 操作。Fast、Standard
      和 Hotfix 是运行时通道，不是安装版本。
-3. 需要角色路由时，让 Maintainer 替换 `.gj/workflow.yml` 中的占位角色，并审阅
-   `docs/standards/06-release-standard.md`。确认 `.gj/workflow.yml` 版本策略、Tag 格式、
-   发布说明路径和 `docs/standards/13-versioning-standard.md`，不要添加通用 `VERSION`
-   文件。确认 `.gj/doc-templates/` 作为工作流模板安装，项目事实目录没有通用模板文件。
+3. 审阅 `docs/standards/09-ai-development-boundary.md` 和
+   `docs/standards/11-notification-standard.md`。需要角色路由时，让 Maintainer 替换
+   `.gj/workflow.yml` 中的占位角色。审阅 `docs/standards/06-release-standard.md`，确认
+   `.gj/workflow.yml` 版本策略、Tag 格式、发布说明路径和
+   `docs/standards/13-versioning-standard.md`，不要添加通用 `VERSION` 文件。确认
+   `.gj/doc-templates/` 作为工作流模板安装，项目事实目录没有通用模板文件。
 4. 既有代码项目继续运行 `gj-codebase-map`，由它起草项目技术/测试规范、当前上下文、
    模块文档和 `.gj/context.yml`；不要创建 `docs/codebase/` 中间扫描目录。
 5. 通过已配置 helper 或获准 GitLab connector 幂等创建标签、Milestone 和起始 Issue。

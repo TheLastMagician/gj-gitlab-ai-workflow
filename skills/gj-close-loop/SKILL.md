@@ -8,7 +8,9 @@ description: Close completed GitLab work by capturing lessons and refreshing dur
 ## 工作流程
 
 1. 读取已完成工作项、MR、Pipeline 和测试证据、发布说明、缺陷、跟进项、
-   `.gj/context.yml` 以及相关当前项目文档。
+   `.gj/context.yml`、`docs/standards/11-notification-standard.md`、
+   `docs/standards/12-context-governance.md` 以及相关当前项目文档；涉及版本、发布或部署时
+   再读取 `docs/standards/13-versioning-standard.md`。
 2. 按 flow 调整收尾深度：
    - Fast：记录结果；只有行为变化时才更新长期文档。
    - Standard：总结交付、决策、测试、阻碍和长期上下文更新。

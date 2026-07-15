@@ -8,8 +8,8 @@ description: Accept a new requirement or inspect a GitLab inbox or active work i
 ## 工作流程
 
 1. 判断输入是新需求还是已有 GitLab 工作。新需求先记录目标和已知约束，在创建 Issue 前
-   路由到 `gj-plan-change`。只有人确认需求和 flow 后才创建或设置 Issue 标签；没有
-   GitLab 写权限时返回完整 Issue 草稿。
+   读取 `docs/standards/02-requirement-standard.md` 并路由到 `gj-plan-change`。只有人确认
+   需求和 flow 后才创建或设置 Issue 标签；没有 GitLab 写权限时返回完整 Issue 草稿。
 2. 确认参与人和项目。用户询问个人工作时，优先使用项目中的
    `scripts/gitlab_api.py` 获取 GitLab Todo、已分配 Issue/MR、审阅请求、提及、讨论和
    相关失败或 pending Pipeline；已配置 GitLab connector 可作为替代。
@@ -19,9 +19,10 @@ description: Accept a new requirement or inspect a GitLab inbox or active work i
    - 业务规则、权限、金额、API、数据库、跨模块或验证不清晰的工作使用 Standard。
    - 紧急生产、安全或数据风险使用 Hotfix。
    只推荐一个 `flow::*` 标签，由人在编码前确认。
-5. 独立于 flow 处理版本规划。存在时读取 `.gj/workflow.yml` 的 `versioning`。对将发布的
-   新工作，根据兼容影响和最新已发布 Tag 推荐目标版本及匹配的 GitLab Milestone，由人
-   确认。不要提升 manifest、创建 Tag 或把 Milestone 描述为已发布。
+5. 独立于 flow 处理版本规划。存在时读取 `.gj/workflow.yml` 的 `versioning` 和
+   `docs/standards/13-versioning-standard.md`。对将发布的新工作，根据兼容影响和最新
+   已发布 Tag 推荐目标版本及匹配的 GitLab Milestone，由人确认。不要提升 manifest、
+   创建 Tag 或把 Milestone 描述为已发布。
 6. 判断当前阶段。已有代码但 `01-development-standard.md`、`07-test-standard.md`、模块地图
    或模块上下文仍是占位内容，或者刚完成重大重构时，先路由到 `gj-codebase-map`；其他
    工作路由到 `gj-plan-change`、`gj-develop-change`、`gj-mr-review`、
@@ -32,8 +33,9 @@ description: Accept a new requirement or inspect a GitLab inbox or active work i
 8. 检查 assignee、reviewer、提及、截止日期、目标版本/Milestone 和文档缺口。
    Requirement/Hotfix 是主工作项；只有工作需要独立负责或跟踪时才推荐 Solution、Task
    或 Test Issue，不能替代仓库文档。
-9. 答案保持可执行，并包含证据链接或文件路径。默认只读检查；只有人确认动作后才设置
-   标签或交接工作。
+9. 答案保持可执行，并包含证据链接或文件路径。起草或发布 Issue、MR、评论、讨论或交接
+   消息前读取 `docs/standards/11-notification-standard.md`。默认只读检查；只有人确认动作
+   后才设置标签或交接工作。
 
 ## 输出格式
 

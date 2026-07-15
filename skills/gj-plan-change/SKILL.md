@@ -10,8 +10,9 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
 1. 读取工作项、当前标签、`.gj/context.yml` 和已知约束。涉及代码时读取
    `docs/standards/01-development-standard.md` 和 `07-test-standard.md`，再按预计路径
    加载相关 API、数据库、安全或环境标准；其余上下文只加载 `always_load`、路径匹配的
-   模块和工作项直接关联的功能文档。存在时，以
-   `docs/standards/12-context-governance.md` 作为文档生命周期和内容规范。
+   模块和工作项直接关联的功能文档。规划需求或产品变化时读取
+   `docs/standards/02-requirement-standard.md`；以 `docs/standards/12-context-governance.md`
+   作为文档生命周期和内容规范。
 2. 所有澄清问题和开发阻断项必须能指向工作项、已加载文档、代码或配置中的具体依据。
    不把其他业务、历史演练或通用风险清单中的角色、字段、规则和状态迁移到当前需求。
    对接口、数据、权限、迁移、外部集成等通用影响维度，先判断是否适用；没有命中依据时
@@ -27,9 +28,10 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
      强制跟进。
 5. 根据 `.gj/workflow.yml` 匹配已变更或预计路径。最低 flow 要求更高时，把 Fast 升级为
    Standard 或 Hotfix。
-6. 对将发布的工作，独立于 flow 规划目标版本。根据 SemVer 策略和兼容影响推荐 Major、
-   Minor 或 Patch，并关联 Requirement Issue 和 GitLab Milestone。这是目标版本，不是
-   已发布版本；功能计划阶段不提升项目 manifest 或创建 Tag。
+6. 对将发布的工作，读取 `docs/standards/13-versioning-standard.md`，独立于 flow 规划
+   目标版本。根据 SemVer 策略和兼容影响推荐 Major、Minor 或 Patch，并关联 Requirement
+   Issue 和 GitLab Milestone。这是目标版本，不是已发布版本；功能计划阶段不提升项目
+   manifest 或创建 Tag。
 7. 只有单独负责人、依赖或审阅边界让额外 Issue 有价值时才拆分。Requirement 或 Hotfix
    是主工作项；Solution、Task 或 Test Issue 只记录需单独跟踪的工作，不能替代仓库方案、
    测试计划或其他长期文档。
@@ -53,9 +55,11 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
    确认人并改为 `confirmed`，该状态不代表已部署。每个 API 或数据库决策都要在计划和
    文档决策中同时写出可执行路径及说明 Markdown 路径；未知路径要写具体 `TBD` 和负责
    人。没有定位两种事实时，“更新 schema”不是完整文档动作。
-10. 以文档决策表结尾，包含路径、动作、触发事实、阶段/状态和确认人/跟进项。动作只能是
-   `create`、`update`、`no-change` 或 `follow-up`；`follow-up` 需要 Issue、负责人和
-   期限。默认不另建文档任务。
+10. 起草或发布 Issue、MR、评论、讨论或交接消息前读取
+    `docs/standards/11-notification-standard.md`。以文档决策表结尾，包含路径、动作、触发
+    事实、阶段/状态和确认人/跟进项。动作只能是
+    `create`、`update`、`no-change` 或 `follow-up`；`follow-up` 需要 Issue、负责人和
+    期限。默认不另建文档任务。
 
 ## 输出格式
 

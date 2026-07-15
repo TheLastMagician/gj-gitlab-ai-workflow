@@ -16,8 +16,11 @@ description: Assess and prepare GitLab dev, test, staging, and production releas
 ## 工作流程
 
 1. 确认目标环境以及来源分支、MR、Tag、commit SHA 和最新 Pipeline。
-2. 读取发布 Issue 或 Milestone、包含的 MR、测试结果、已知风险、环境策略、CI 规则和
-   部署脚本。
+2. 读取发布 Issue 或 Milestone、包含的 MR、测试结果、已知风险、CI 规则、部署脚本，
+   以及 `docs/standards/06-release-standard.md`、
+   `docs/standards/10-environment-standard.md`、
+   `docs/standards/11-notification-standard.md` 和
+   `docs/standards/13-versioning-standard.md`。
 3. 读取 `.gj/workflow.yml` 版本策略，根据兼容影响和最新已发布 Tag 确定最终 SemVer，
    并确认 GitLab Milestone 匹配。此时锁定版本。
 4. 核验 Pipeline 状态、未解决讨论、测试证据、配置/数据/权限变化、环境隔离或锁以及

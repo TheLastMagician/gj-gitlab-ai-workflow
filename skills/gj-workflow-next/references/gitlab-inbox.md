@@ -66,7 +66,7 @@ python scripts/gitlab_api.py request --path "todos"
 python scripts/gitlab_api.py request --path "projects/:project/issues?state=opened&assignee_username=zengqinglin"
 python scripts/gitlab_api.py request --path "projects/:project/merge_requests?state=opened&reviewer_username=zengqinglin"
 python scripts/gitlab_api.py request --method PUT --path "projects/:project/issues/12" --body-json '{"assignee_ids":[55]}' --confirm-write
-python scripts/gitlab_api.py request --method POST --path "projects/:project/issues/12/notes" --body-json '{"body":"@zengqinglin please handle QA verification."}' --confirm-write
+python scripts/gitlab_api.py request --method POST --path "projects/:project/issues/12/notes" --body-json '{"body":"@zengqinglin 请处理 QA 验证。"}' --confirm-write
 ```
 
 只有带 `--confirm-write`、路径使用 `:project` 且配置的 GitLab 项目与

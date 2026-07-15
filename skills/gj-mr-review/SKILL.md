@@ -8,7 +8,11 @@ description: Review GitLab merge requests for workflow compliance, code risks, t
 ## 工作流程
 
 1. 读取 MR 标题、描述、关联 Issue、diff、Pipeline 结果和评论。
-2. 检查 MR 必填章节：关联 Issue、变更摘要、自测、风险、回滚、数据库/配置变化、AI 使用。
+2. 读取 `docs/standards/05-review-standard.md`、
+   `docs/standards/09-ai-development-boundary.md`、
+   `docs/standards/11-notification-standard.md` 和
+   `docs/standards/12-context-governance.md`，再检查 MR 必填章节：关联 Issue、变更摘要、
+   自测、风险、回滚、数据库/配置变化、AI 使用。
 3. 根据 `.gj/workflow.yml` 匹配变更路径。
 4. 从 `.gj/context.yml` 加载相关模块上下文；代码变更同时读取
    `docs/standards/01-development-standard.md`、`07-test-standard.md` 和 changed paths
