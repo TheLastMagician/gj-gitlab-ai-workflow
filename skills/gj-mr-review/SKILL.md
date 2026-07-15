@@ -15,8 +15,10 @@ description: Review GitLab merge requests for workflow compliance, code risks, t
    自测、风险、回滚、数据库/配置变化、AI 使用。
 3. 根据 `.gj/workflow.yml` 匹配变更路径。
 4. 从 `.gj/context.yml` 加载相关模块上下文；代码变更同时读取
-   `docs/standards/01-development-standard.md`、`07-test-standard.md` 和 changed paths
-   命中的专项规范。
+   `docs/standards/01-development-standard.md` 和 `07-test-standard.md`。实际变更影响
+   API/事件、持久数据、安全/权限或环境时，分别读取
+   `docs/standards/03-api-standard.md`、`docs/standards/04-database-standard.md`、
+   `docs/standards/08-security-standard.md` 或 `docs/standards/10-environment-standard.md`。
 5. 检查文档影响：
    - MR 描述或 Skill 结果包含文档决策表，含路径、动作、触发事实、阶段/状态和确认人/
      跟进项；

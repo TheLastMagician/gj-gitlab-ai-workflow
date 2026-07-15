@@ -8,8 +8,10 @@ description: Plan GitLab work at the depth required by its flow label. Use when 
 ## 工作流程
 
 1. 读取工作项、当前标签、`.gj/context.yml` 和已知约束。涉及代码时读取
-   `docs/standards/01-development-standard.md` 和 `07-test-standard.md`，再按预计路径
-   加载相关 API、数据库、安全或环境标准；其余上下文只加载 `always_load`、路径匹配的
+   `docs/standards/01-development-standard.md` 和 `07-test-standard.md`。预计影响 API/事件、
+   持久数据、安全/权限或环境时，分别读取 `docs/standards/03-api-standard.md`、
+   `docs/standards/04-database-standard.md`、`docs/standards/08-security-standard.md` 或
+   `docs/standards/10-environment-standard.md`；其余上下文只加载 `always_load`、路径匹配的
    模块和工作项直接关联的功能文档。规划需求或产品变化时读取
    `docs/standards/02-requirement-standard.md`；以 `docs/standards/12-context-governance.md`
    作为文档生命周期和内容规范。

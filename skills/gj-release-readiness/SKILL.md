@@ -24,7 +24,8 @@ description: Assess and prepare GitLab dev, test, staging, and production releas
 3. 读取 `.gj/workflow.yml` 版本策略，根据兼容影响和最新已发布 Tag 确定最终 SemVer，
    并确认 GitLab Milestone 匹配。此时锁定版本。
 4. 核验 Pipeline 状态、未解决讨论、测试证据、配置/数据/权限变化、环境隔离或锁以及
-   回滚目标。
+   回滚目标。发布包含持久数据迁移或安全/权限变化时，分别读取
+   `docs/standards/04-database-standard.md` 或 `docs/standards/08-security-standard.md`。
 5. 从 `.gj/doc-templates/test-report.md` 创建或更新
    `docs/qa/test-reports/<tag>.md`，填写版本、计划 Tag、准确提交/构建、Pipeline、环境、
    包含的 Issue/MR、结果、证据、缺陷和 QA 结论。

@@ -17,8 +17,10 @@ description: Map an existing repository into confirmed engineering standards and
    - 技术栈、构建命令、架构边界、目录和前后端约定：
      `docs/standards/01-development-standard.md`；
    - 测试框架、目录、命令、覆盖和 CI 规则：`docs/standards/07-test-standard.md`；
-   - API、数据库、安全或环境专项事实：对应 `03`、`04`、`08`、`10` 标准，以及按需的
-     API、数据库或技术方案文档；
+   - API、数据库、安全或环境专项事实：分别写入
+     `docs/standards/03-api-standard.md`、`docs/standards/04-database-standard.md`、
+     `docs/standards/08-security-standard.md`、`docs/standards/10-environment-standard.md`，
+     以及按需的 API、数据库或技术方案文档；
    - 模块结构、集成和依赖：`docs/context/module-map.md`、`docs/modules/*.md` 以及按需的
      API/技术方案；
    - 项目级长期限制：`docs/context/current-state.md`；可执行技术债和缺陷输出为

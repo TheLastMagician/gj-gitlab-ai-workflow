@@ -10,9 +10,11 @@ description: Implement GitLab features, small changes, bugs, and hotfixes using 
 1. 读取当前 Issue 或 MR、已确认 flow、必要时已接受的计划、`.gj/context.yml`、
    `.gj/workflow.yml`、`docs/standards/01-development-standard.md`、
    `docs/standards/07-test-standard.md`、`docs/standards/09-ai-development-boundary.md`、
-   `docs/standards/11-notification-standard.md`，以及 changed paths 命中的模块文档、
-   专项规范和 ADR。存在时，以 `docs/standards/12-context-governance.md` 作为文档生命周期
-   依据。
+   `docs/standards/11-notification-standard.md`，以及 changed paths 命中的模块文档和 ADR。
+   实际变更影响 API/事件、持久数据、安全/权限或环境时，分别读取
+   `docs/standards/03-api-standard.md`、`docs/standards/04-database-standard.md`、
+   `docs/standards/08-security-standard.md` 或 `docs/standards/10-environment-standard.md`。
+   存在时，以 `docs/standards/12-context-governance.md` 作为文档生命周期依据。
 2. 确认开发就绪：
    - Fast 需要边界明确的改动、自测和文档影响结论。
    - Standard 需要 Issue、可测试验收标准和已接受的风险行为方案。
